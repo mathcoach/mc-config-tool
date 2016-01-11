@@ -1,8 +1,9 @@
-package de.htwsaarland.laplus;
+package de.htwsaarland.config;
 
+import de.htwsaarland.config.ClasspathBasedConfig;
+import de.htwsaarland.config.EnvConfiguration;
 import org.junit.Test;
 import static org.fest.assertions.api.Assertions.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -13,13 +14,10 @@ public class ClassapathBasedConfigTest {
 	public ClassapathBasedConfigTest() {
 	}
 
-	@Ignore
 	@Test
 	public void constructInstance(){
-		/*
-		EnvConfiguration ec = new ClasspathBasedConfig();
-		String configValue = ec.getConfigValue(JObjectFactory.CLASS_PATH_CONFIG);
+		EnvConfiguration ec = new ClasspathBasedConfig("config-test.xml", null);
+		String configValue = ec.getConfigValue("class-path");
 		assertThat(configValue).isEqualTo("target/test-classes");
-		*/
 	}
 }
