@@ -26,8 +26,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * @author hbui
  */
 @SupportedAnnotationTypes({
-	"de.htwsaarland.laplus.parser.annotation.NeedConfig",
-	"de.htwsaarland.laplus.parser.annotation.NeedConfigs",
+	"de.htwsaarland.config.annotation.NeedConfig",
+	"de.htwsaarland.config.annotation.NeedConfigs",
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedOptions(value = NeedConfigGenerator.CONFIG_PACKAGE)
