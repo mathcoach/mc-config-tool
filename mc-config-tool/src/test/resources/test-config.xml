@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- main config, use for test the config parser -->
+<configuration>
+	<param-a>a</param-a>
+	<param-b> b </param-b>
+	<param-c>    </param-c>
+	<param-d></param-d>
+</configuration>
