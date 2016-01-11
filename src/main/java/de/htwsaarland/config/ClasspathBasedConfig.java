@@ -1,4 +1,4 @@
-package de.htwsaarland.laplus;
+package de.htwsaarland.config;
 
 import java.io.File;
 import java.net.URL;
@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static de.htwsaarland.laplus.EnvConfiguration.parseConfigFile;
+import static de.htwsaarland.config.EnvConfiguration.parseConfigFile;
 
 /**
  * Verwaltet die Konfigurationen in einer Umgebung, wo Laplace Script und

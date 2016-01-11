@@ -1,4 +1,4 @@
-package de.htwsaarland.laplus;
+package de.htwsaarland.config;
 
 import com.google.common.base.Preconditions;
 import java.io.File;
@@ -37,7 +37,7 @@ public interface EnvConfiguration {
 	/**
 	 * @deprecated Don't use this!!!!
 	 *
-	 * @return a {@link de.htwsaarland.laplus.ClasspathBasedConfig} object.
+	 * @return a {@link de.htwsaarland.config.ClasspathBasedConfig} object.
 	 */
 
 	static void parseConfigFile(
