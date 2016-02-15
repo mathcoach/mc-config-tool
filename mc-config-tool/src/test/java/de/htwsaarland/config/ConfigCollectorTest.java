@@ -2,7 +2,6 @@ package de.htwsaarland.config;
 
 import java.util.Collection;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

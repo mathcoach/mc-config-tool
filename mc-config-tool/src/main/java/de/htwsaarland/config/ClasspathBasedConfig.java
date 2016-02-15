@@ -114,7 +114,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		} else {
 			CLASSPATH_BASE_LOGGER.info("Use config file '{}'", configFile.getAbsoluteFile());
 		}
-		parseConfigFile(configFile, configTable);
+		parseConfigFile(configFile, configTable, 0);
 	}
 
 	/**
