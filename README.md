@@ -279,5 +279,82 @@ Sie sind z.B. eine Desktop Anwendung oder eine Web-Anwendung.
   Klasse `WebConfigManager` bzw. `DesktopConfigManager`.
 
 
+#### Automatisch Sammlung von KP und Erstellung von Konfigurationsdatei
+
+Es ist umständlich, ein Software mit umfangreiche KP Deployment zu machen. Die Überblick
+über KP ist schnell verloren. Von daher ist es gut, jede Module verwaltet seine KP
+selbst und eine zentral Stelle sammelt die KP, wenn die Software deploy wird.
+
+Die Annotation `@NeedConfig` ermöglicht eine Klasse, ihre erforderliche KP zu
+*deklarieren*.  Die Nutzung sieht etwa aus:
+
+In POM-Datei:
+
+```xml
+<dependency>
+	<groupId>de.htwsaarland</groupId>
+	<artifactId>mc-config-tool-anotation-processor</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<scope>compile</scope>
+</dependency>
+```
+
+In Java-Datei, welche ein Konfiguration-Parameter braucht.
+
+```java
+@NeedConfig(
+	name= "Name der Konfiguration-parameter 1",
+	description= "Die Beschreibung der KP",
+	sugguestValues= {
+		"Value 1",
+		"Value 2"
+	}
+)
+public class AJavaClass{
+
+}
+```
+
+Seit Java 8 kann man Multiple Annotation benutzen, deshalb kann man für eine
+Klasse auch mehrfach die Annotation `NeedConfig` anwenden. Von Java 7 abwärts kann man 
+etwa so schreiben:
+
+```java
+@NeedConfigs({
+	@NeedConfig(
+		name= "Name der Konfiguration-parameter 1",
+		description= "Die Beschreibung der KP",
+		sugguestValues= {
+			"Value 1",
+			"Value 2"
+		}
+	),
+	@NeedConfig(
+		name= "Name der Konfiguration-parameter 2",
+		description= "Die Beschreibung der KP",
+		sugguestValues= {
+			"Value 1",
+			"Value 2"
+		}
+	)
+})
+public class AJavaClass{
+
+}
+```
+
+Die Annotation hat keine Einfluss auf der Laufzeit einer Klasse, sie dient nur
+dazu die Konfigurationsparameter einer Klasse zu markieren, damit sie während
+der Kompilierungszeit gesammelt werden kann. Wenn man die Klasse der Annotation `@NeedConfig`
+bereits markiert, kann man die KP zur Laufzeit sammeln:
+
+```java
+Map<String, ConfigEntries.Entry> usedConfigParam = ConfigCollector.collectConfigAsMap();
+```
+
+Diese Method ist zum Beispiel praktisch, wenn man die gesamte Anwendung nach der Installation,
+Deployment konfigurieren will. Man kann anhand der Map alle nötigen KP in der Anwendung
+ablesen und in einer Konfigurationsdatei schreiben.
+
 
 
