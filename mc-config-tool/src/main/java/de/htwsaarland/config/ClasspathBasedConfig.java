@@ -3,10 +3,8 @@ package de.htwsaarland.config;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
@@ -14,6 +12,7 @@ import org.apache.commons.io.filefilter.NameFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static de.htwsaarland.config.EnvConfiguration.parseConfigFile;
+import java.util.HashSet;
 
 /**
  * Verwaltet die Konfigurationen in einer Umgebung, wo Laplace Script und
@@ -34,46 +33,11 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 
 	private static final Logger CLASSPATH_BASE_LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
 	private final Map<String, String> configTable;
-	private final List<File> classPathDir;
+	private final Set<File> classPathDir;
 	private File configFile;
 
 
 	/**
-	 * Usage by coding a library, which will be used in many other projects.
-	 * 
-	 * <ul>
-	 * 		<li>
-	 * 			Put the file "test-config.xml" into the ClassPath for test only. 
-	 * 			Importance: This file <i>must not be found</i>
-	 * 			in productive Runtime of the library.
-	 * 		</li>
-	 * 		<li>
-	 * 			For each Project, which uses this the coding library: put the file "productive-config.xml" in to its
-	 * 			Runtime-Classpath.
-	 * 		</li>
-	 * 		<li>
-	 * 			Use a static factory class in the project ( <b>Not in the library</b>) to manage 
-	 * 			the config, like the code below.
-	 * 		</li>
-	 * </ul>
-	 * {@code
-	 * // This Class is a static factory class
-	 * class ProjectConfigManager{
-	 * 		private static ClasspathBasedConfig instance;
-	 * 
-	 * 		public static EnvConfiguration getConfig(){
-	 * 			// check null instance 
-	 * 			if (instance = null){
-	 * 				instance = new ClasspathBasedConfig("test-config.xml", "productive-config.xml");
-	 * 			}
-	 * 			return instance;
-	 * 		}
-	 * }
-	 * }
-	 * 
-	 * Now you can use the class ProjectConfigManager to get configuration in Test and Productive Class
-	 * without changing any code.
-	 * 
 	 * 
 	 * @param primaryConfigFileName this File will be search firstly in the 
 	 * classpath and will be used. If this file is found in Classpath, the search-Process
@@ -86,13 +50,13 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	 */
 	public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
 		configTable = new HashMap<>();
-		classPathDir = new ArrayList<>(10);
+		classPathDir = new HashSet<>(10);
 		// collect classpath'directory in Thread' class loader
-		collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader());
+		collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
 		// collect classpath in the own classloader
-		collectDirInClassPathLoader(getClass().getClassLoader());
+		collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
 		// collect classpath in String sessionClassPath = System.getProperty("java.class.path");
-		collectDirInSystemClassPath();
+		collectDirInSystemClassPath(classPathDir);
 		
 		searchConfigFileInDir(primaryConfigFileName);
 		if (configFile == null) {
@@ -146,7 +110,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		return configTable.get(configParameter);
 	}
 
-	private void collectDirInClassPathLoader(ClassLoader loader) {
+	private void collectDirInClassPathLoader(ClassLoader loader,final Set<File> classPathDir) {
 		try {
 			CLASSPATH_BASE_LOGGER.info("Collect classpath from {}", loader.getClass().getName());
 			URLClassLoader urlCL = (URLClassLoader) loader;
@@ -188,7 +152,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		}
 	}
 
-	private void collectDirInSystemClassPath() {
+	private void collectDirInSystemClassPath(Set<File> classPathDir) {
 		CLASSPATH_BASE_LOGGER.trace("Collect directories in java.class.path");
 		String sessionClassPath = System.getProperty("java.class.path");
 		String[] classpath = sessionClassPath.split(":");
@@ -198,16 +162,13 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 				String absolutPath = f.getAbsolutePath();
 				if (!classPathDir.contains(f.getAbsoluteFile())){
 					classPathDir.add(f.getAbsoluteFile());
-//					classPath.add(absolutPath);
 					CLASSPATH_BASE_LOGGER.trace("Add '{}' to search dir", f.getAbsolutePath());
 				}else{
 					CLASSPATH_BASE_LOGGER.trace("Duplex path {}",absolutPath);
 				}
 			} else if (f.isFile()) {
 				File parentFile = f.getParentFile();
-//				String absolutePath = parentFile.getAbsolutePath();
 				if(!classPathDir.contains(parentFile.getAbsoluteFile())){
-					//classPath.add(absolutePath);
 					classPathDir.add(f.getParentFile().getParentFile().getAbsoluteFile());
 				}
 			}
