@@ -13,28 +13,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static de.htwsaarland.config.EnvConfiguration.parseConfigFile;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.lang3.text.StrBuilder;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
- * Verwaltet die Konfigurationen in einer Umgebung, wo Laplace Script und
- * Laplace Compiler laufen. Diese Klasse sucht zu erst die Konfig Datei
- * "laplus-config-test.xml" in der Klasse Path, Begin mit 
- * {@code Thread.currentThread().getContextClassLoader()}, 
- * dann in {@code getClass().getClassLoader()}, letzendlich in
- * {@code System.getProperty("java.class.path")}. Findet diese Klasse die Konfig-Datei
- * "laplus-config-test.xml", dann nutzen sie es. Findet sie nicht, dann sucht sie
- * die Datein "laplus-config.xml" auch in der Klasse Path. Wenn die Datei "laplus-config.xml"
- * auch nicht gefunden wird, wird die Exception "LSConfigException" ausgeworfen.
- *
- *
  * @author hbui
  * @version $Id: $Id
  */
 public class ClasspathBasedConfig implements EnvConfiguration {
 
 	private static final Logger CLASSPATH_BASE_LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
-	private final Map<String, String> configTable;
+	private static final Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
 	private final Set<File> classPathDir;
 	private File configFile;
+	private final HashMap<String,String> configTable;
 
 
 	/**
@@ -49,7 +43,6 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	 * <p>Constructor for EnvConfiguration.</p>
 	 */
 	public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
-		configTable = new HashMap<>();
 		classPathDir = new HashSet<>(10);
 		// collect classpath'directory in Thread' class loader
 		collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
@@ -78,9 +71,20 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		} else {
 			CLASSPATH_BASE_LOGGER.info("Use config file '{}'", configFile.getAbsoluteFile());
 		}
-		parseConfigFile(configFile, configTable, 0);
+		Map<String,String> temp = new HashMap<>();
+		parseConfigFile(configFile, temp, 0);
+		configTable = new HashMap();
+		try{
+			for (Map.Entry<String,String> e : temp.entrySet() ){
+				String k = e.getKey();
+				String v = StrSubstitutor.replace( e.getValue(), temp) ;
+				configTable.put(k, v);
+			}
+		}catch(IllegalStateException ex){
+			throw new LSConfigException(ex.getMessage(), ex);
+		}
 	}
-
+	
 	/**
 	 * <p>Constructor for EnvConfiguration.</p>
 	 *
@@ -93,7 +97,25 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 
 	
 	protected ClasspathBasedConfig setConfigValue(String configParameter, String newValue){
-		configTable.put(configParameter, newValue);
+		Matcher matcher = VAR_PATTERN.matcher(newValue);
+		if (matcher.find() ){// If the value has a variable
+			StrBuilder b = new StrBuilder(newValue);
+			StrSubstitutor st = new StrSubstitutor(configTable);
+			boolean substable = st.replaceIn(b);
+			if (substable){
+				String resolvedValue = b.build();
+				Matcher afterSubstMatcher = VAR_PATTERN.matcher(resolvedValue);
+				if (afterSubstMatcher.find()){//If there is one or more not resolveable variables
+					throw new LSConfigException("Cannot find the variable '" + afterSubstMatcher.group(0) + "in '" + newValue +"'");
+				}else{
+					configTable.put(configParameter, resolvedValue );
+				}
+			}else{// nothing is replaced!!!
+				throw new LSConfigException("Cannot find any variables in " + newValue);
+			}
+		}else{
+			configTable.put(configParameter, newValue);
+		}
 		return this;
 	}
 	
@@ -110,7 +132,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		return configTable.get(configParameter);
 	}
 
-	private void collectDirInClassPathLoader(ClassLoader loader,final Set<File> classPathDir) {
+	protected final void collectDirInClassPathLoader(ClassLoader loader,final Set<File> classPathDir) {
 		try {
 			CLASSPATH_BASE_LOGGER.info("Collect classpath from {}", loader.getClass().getName());
 			URLClassLoader urlCL = (URLClassLoader) loader;
@@ -141,7 +163,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		}
 	}
 
-	private void searchConfigFileInDir(String configFileName) {
+	protected final void searchConfigFileInDir(String configFileName) {
 		for (File dir : classPathDir) {
 			CLASSPATH_BASE_LOGGER.debug("Search config file in '{}' but not in subdir", dir.getAbsoluteFile() );
 			Collection<File> listFiles = FileUtils.listFiles(dir, new NameFileFilter(configFileName), null);
@@ -152,7 +174,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		}
 	}
 
-	private void collectDirInSystemClassPath(Set<File> classPathDir) {
+	protected final void collectDirInSystemClassPath(Set<File> classPathDir) {
 		CLASSPATH_BASE_LOGGER.trace("Collect directories in java.class.path");
 		String sessionClassPath = System.getProperty("java.class.path");
 		String[] classpath = sessionClassPath.split(":");

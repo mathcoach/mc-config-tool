@@ -33,18 +33,7 @@ public interface EnvConfiguration {
 	 */
 	String getConfigValue(String configParameter);
 	Set<String> getAllConfigKeys();
-
-	/**
-	 * @deprecated Don't use this!!!!
-	 *
-	 * @return a {@link de.htwsaarland.config.ClasspathBasedConfig} object.
-	 */
-
-	static void parseConfigFile(
-			File configFile, 
-			Map<String, String> configTable){
-		parseConfigFile(configFile, configTable, 0);
-	}
+	
 	/**
 	 * <p>parseConfigFile.</p>
 	 *

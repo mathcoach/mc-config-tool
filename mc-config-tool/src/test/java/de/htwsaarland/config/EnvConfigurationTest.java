@@ -39,7 +39,7 @@ public class EnvConfigurationTest {
 		String path = "./src/test/resources/test-config.xml";
 		File simpleConfig = new File(path);
 		Map<String,String> config = new HashMap<>();
-		EnvConfiguration.parseConfigFile(simpleConfig, config);
+		EnvConfiguration.parseConfigFile(simpleConfig, config, 0);
 		assertThat(config.get("param-a")).isEqualTo("a");
 		assertThat(config.get("param-b")).isEqualTo("b");
 		assertThat(config.get("param-c")).isEqualTo("");
@@ -52,7 +52,7 @@ public class EnvConfigurationTest {
 		String path = "./src/test/resources/test-config-with-import.xml";
 		File simpleConfig = new File(path);
 		Map<String,String> config = new HashMap<>();
-		EnvConfiguration.parseConfigFile(simpleConfig, config);
+		EnvConfiguration.parseConfigFile(simpleConfig, config, 0);
 		assertThat(config.get("param-a")).isEqualTo("a");        //only main config has param-a
 		assertThat(config.get("import-param-a")).isEqualTo("A"); //only imported config has param-b
 		assertThat(config.get("param-b")).isEqualTo("b");        //main-config has precedence
@@ -66,7 +66,7 @@ public class EnvConfigurationTest {
 		File simpleConfig = new File(path);
 		Map<String,String> config = new HashMap<>();
 		try{
-			EnvConfiguration.parseConfigFile(simpleConfig, config);
+			EnvConfiguration.parseConfigFile(simpleConfig, config, 0);
 			fail("Expected a " +LSConfigException.class.getName());
 		}catch(LSConfigException ex){
 			ex.printStackTrace();
