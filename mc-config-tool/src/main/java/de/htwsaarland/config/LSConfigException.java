@@ -23,7 +23,7 @@ public class LSConfigException extends RuntimeException{
 	 * @param t a {@link java.lang.Throwable} object.
 	 */
 	public LSConfigException(String msg, Throwable t){
-		super(msg,t);
+		super(msg + " ("+t.getMessage()+")",t);
 	}
 
 	/**

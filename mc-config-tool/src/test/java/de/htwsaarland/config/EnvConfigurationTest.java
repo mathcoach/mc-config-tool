@@ -61,6 +61,28 @@ public class EnvConfigurationTest {
 	}
 
 	@Test
+	public void parserSyntaxError() {
+		try{
+			String path = "./src/test/resources/test-config-with-syntax-error.xml";
+			File simpleConfig = new File(path);
+			Map<String,String> config = new HashMap<>();
+			EnvConfiguration.parseXMLConfigFile(simpleConfig, config, 0);
+		}catch(LSConfigException ex){
+			System.out.println("error msg:" + ex.getMessage());
+		}
+	}
+
+	@Test
+	public void parserNullFile() {
+		try{
+			Map<String,String> config = new HashMap<>();
+			EnvConfiguration.parseXMLConfigFile(null, config, 0);
+		}catch(LSConfigException ex){
+			System.out.println("error msg:" + ex.getMessage());
+		}
+	}
+	
+	@Test
 	public void throwExceptionIfImportCycle() {
 		String path = "./src/test/resources/test-config-cycle.xml";
 		File simpleConfig = new File(path);
