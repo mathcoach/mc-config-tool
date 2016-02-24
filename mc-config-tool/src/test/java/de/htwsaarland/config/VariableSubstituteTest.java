@@ -1,7 +1,5 @@
 package de.htwsaarland.config;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.junit.Test;
 import static org.fest.assertions.api.Assertions.*;
 /**
@@ -27,6 +25,17 @@ public class VariableSubstituteTest {
 		}
 	}
 
+	@Test
+	public void resolveSystemVar(){
+		EnvConfiguration ec = new ClasspathBasedConfig("test-config-subs-system-var.xml", null);
+		String home = ec.getConfigValue("home");
+		System.out.println("home:" + home);
+		assertThat(home).isEqualTo(System.getProperty("user.home"));
+		String workingdir = ec.getConfigValue("working-dir");
+		System.out.println("working dir:" + workingdir);
+		assertThat(workingdir).isEqualTo(System.getProperty("user.dir"));
+	}
+	
 	@Test
 	public void doNotSetNewConfigIfVarNotSolved(){
 		ConfigTest ct = new ConfigTest("test-config.xml", null);

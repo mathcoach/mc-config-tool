@@ -35,14 +35,14 @@ public interface EnvConfiguration {
 	Set<String> getAllConfigKeys();
 	
 	/**
-	 * <p>parseConfigFile.</p>
+	 * <p>parseXMLConfigFile.</p>
 	 *
 	 * @param configFile a {@link java.io.File} object.
 	 * @param configTable a {@link java.util.Map} object.
 	 */
-	static void parseConfigFile(
-			File configFile, 
-			Map<String, String> configTable, 
+	static void parseXMLConfigFile(
+			final File configFile, 
+			final Map<String, String> configTable, 
 			int importedLevel) {
 		if (importedLevel > MAX_IMPORT_LEVEL){
 			throw new LSConfigException("Import to many levels " + configFile.getAbsolutePath());
@@ -102,7 +102,7 @@ public interface EnvConfiguration {
 					String importedPath = resolveSystemProperties(importAtt);
 					File importedFile = new File(importedPath);
 					LOGGER.info("Parse config file {}", importedFile.getAbsolutePath());
-					parseConfigFile(importedFile, configMap, importedLevel+1);
+					parseXMLConfigFile(importedFile, configMap, importedLevel+1);
 				}
 			}
 		}

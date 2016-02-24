@@ -1,0 +1,53 @@
+<configuration debug="true">
+	<jmxConfigurator />
+	<!-- r -->
+	<!-- ${catalina.base} verweist auf die Instalationsordner der Tomcat -->
+	<property name="destination"  value="target" />
+			 
+	
+	<!-- =====================================================================
+		logback hat immer ein defaut appender: STDOUT. Man kann seine Layout 
+		konfigurieren, oder die Standart layout verwenden.
+	======================================================================= -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{ss.SSS} [%thread] %-5level %-5logger [%file:%line] - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>${destination}/module.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%d{ss.SSS} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- ======================================================================
+		setze logger fuer alle classes in de.htwsaarland 
+	======================================================================== -->
+	<logger name="de.htwsaarland" level="ERROR">
+		<appender-ref ref="FILE" />
+	</logger>
+
+	
+	<logger name="de.htwsaarland.config" level="TRACE" />
+	
+	<!-- =================================================================== -->
+	<logger name="ch.qos.logback.classic.LoggerContext" level="TRACE">
+	</logger>
+
+
+	<!-- nur fuer test von generierten Java Klasse -->
+	<logger name="demo" level="TRACE">
+	</logger>
+
+	<!-- turn off all default logger in org.apache.http.* -->
+	<logger name="org.apache.http" level="OFF"/>
+	
+	
+	
+	<!-- setup the root logger -->
+	<root level="FATAL">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
