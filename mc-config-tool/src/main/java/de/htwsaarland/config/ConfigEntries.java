@@ -57,6 +57,10 @@ public interface ConfigEntries {
 			return this;
 		}
 		
+		public Entry addSuggestValue(SuggestValueCalculator cal){
+			suggestValue.add(cal.calculate());
+			return this;
+		}
 		
 		@Override
 		public final boolean equals (Object o){
@@ -92,6 +96,11 @@ public interface ConfigEntries {
 		public int compareTo(Entry o) {
 			return getName().compareTo(o.getName());
 		}
+	}
+	
+	@FunctionalInterface
+	public static interface SuggestValueCalculator{
+		String calculate();
 	}
 	
 	public static class ConfigUser implements Comparable<ConfigUser>{
