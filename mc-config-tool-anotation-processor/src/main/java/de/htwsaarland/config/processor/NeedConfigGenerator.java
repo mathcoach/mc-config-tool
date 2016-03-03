@@ -94,15 +94,15 @@ public class NeedConfigGenerator  extends MCAbstractAnnotationProcessor{
 			if (! configParam.isEmpty() ){
 				MConfigEntry configEntryTemplate = new MConfigEntry(apackage, className);
 				MEntryArray entryArraytemplate = configEntryTemplate.newEntryArray();
-				for (String  c: configParam){
+				configParam.stream().forEach( c -> {
 					MEntry newEntry = entryArraytemplate.newEntry(c);
-					for ( ConfigEntries.ConfigUser u : useIn.get(c)){
-						newEntry.newUseIn( u.name,u.description );
-					}
-					for (String s : suggestValue.get(c)){
-						newEntry.newSuggestValue(s);
-					}
-				}
+					useIn.get(c).stream().forEach( u -> 
+						newEntry.newUseIn( u.name,u.description )
+					);
+					suggestValue.get(c).stream().forEach( s -> 
+						newEntry.newSuggestValue(s)
+					);
+				});
 				writeJavaFileToDisk(configEntryTemplate.toString(), apackage +"." + className);
 			}
 			info("Generate Configuration Information Finish");
