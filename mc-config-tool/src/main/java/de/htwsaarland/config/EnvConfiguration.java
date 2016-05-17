@@ -80,26 +80,25 @@ public interface EnvConfiguration {
 		}
 	}
 
-	static String resolveSystemProperties(String text) {
-		text = text.replace("$HOME", "${user.home}")
+	static String resolveSystemProperties(final String text) {
+		String resolvedText = text.replace("$HOME", "${user.home}")
 			.replace("${HOME}", "${user.home}")
 			.replace("$PWD", "${user.dir}")
 			.replace("${PWD}", "${user.dir}");
-		text = StrSubstitutor.replaceSystemProperties(text);
-		return text;
+		resolvedText = StrSubstitutor.replaceSystemProperties(resolvedText);
+		return resolvedText;
 	}
 
 	class ConfigParser extends DefaultHandler {
 
 		private final Map<String, String> configMap;
-		private final StringBuffer value;
+		private final StringBuilder value;
 		private final int importedLevel;
-		//private final Map<String,String> secondarConfigMap = new HashMap<>();
 
 		public ConfigParser(Map<String, String> configMap, int importedLevel) {
 			Preconditions.checkNotNull(configMap, "Argument configMap must not be null");
 			this.configMap = configMap;
-			value = new StringBuffer(100);
+			value = new StringBuilder(100);
 			this.importedLevel = importedLevel;
 		}
 

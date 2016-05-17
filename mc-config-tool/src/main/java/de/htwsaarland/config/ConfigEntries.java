@@ -10,7 +10,7 @@ import java.util.TreeSet;
 public interface ConfigEntries {
 	Entry[] getEntry();
 	
-	public static abstract class Entry implements Comparable<Entry>{
+	public abstract static class Entry implements Comparable<Entry>{
 		protected Set<ConfigUser> useIn = new TreeSet<>();
 		protected Set<String> suggestValue = new TreeSet<>();
 		private String value;
@@ -73,8 +73,7 @@ public interface ConfigEntries {
 
 		@Override
 		public final int hashCode() {
-			int hash = getName().hashCode();
-			return hash;
+			return getName().hashCode();
 		}
 
 		@Override
@@ -104,20 +103,22 @@ public interface ConfigEntries {
 	}
 	
 	public static class ConfigUser implements Comparable<ConfigUser>{
-		public final String name;
+		
+		public final String name, description;
+		
+		public ConfigUser(String name, String description){
+			this.name=name;
+			this.description = description;
+		}
 
 		public String getName() {
 			return name;
 		}
 
-		public final String description;
 		public String getDescription() {
 			return description;
 		}
-		public ConfigUser(String name, String description){
-			this.name=name;
-			this.description = description;
-		}
+		
 
 		@Override
 		public boolean equals(Object o){

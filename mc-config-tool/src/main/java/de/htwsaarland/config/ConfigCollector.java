@@ -15,6 +15,7 @@ public final class ConfigCollector {
 	}
 
 	/**
+	 * @deprecated use {@link ConfigCollector#collectConfigAsMap() }
 	 * prefer to use ConfigCollector.collectConfigAsMap
 	 */
 	@Deprecated
@@ -27,14 +28,14 @@ public final class ConfigCollector {
 		
 		Collection<? extends ConfigEntries> configLookups
 				= Lookup.getDefault().lookupAll(ConfigEntries.class);
-		configLookups.stream().map((e) -> e.getEntry()).forEach((entries) -> {
+		configLookups.stream().map( e  -> e.getEntry()).forEach( entries  -> {
 			for(ConfigEntries.Entry entry : entries){
 				ConfigEntries.Entry inMapEntry = configs.get(entry.getName());
 				if (inMapEntry == null){
 					configs.put(entry.getName(), entry);
 				}else{ //merge it
-					entry.useIn().forEach((s) -> inMapEntry.addUseIn(s.name, s.description));
-					entry.suggestValue().forEach((s) -> inMapEntry.addSuggestValue(s));
+					entry.useIn().forEach( s  -> inMapEntry.addUseIn(s.name, s.description));
+					entry.suggestValue().forEach( s  -> inMapEntry.addSuggestValue(s));
 				}
 			}
 		});

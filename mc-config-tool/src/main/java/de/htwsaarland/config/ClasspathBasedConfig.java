@@ -48,7 +48,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
 		// collect classpath in the own classloader
 		collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
-		// collect classpath in String sessionClassPath = System.getProperty("java.class.path");
+		// collect classpath in String
 		collectDirInSystemClassPath(classPathDir);
 		
 		searchConfigFileInDir(primaryConfigFileName);
@@ -67,7 +67,6 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 				}
 				throw new LSConfigException("No Config file found");
 			}
-			//return;
 		} else {
 			LOGGER.info("Use config file '{}'", configFile.getAbsoluteFile());
 		}
@@ -78,7 +77,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		}};
 		configTable = new HashMap();
 		try{
-			temp.entrySet().stream().forEach( (entry) -> {
+			temp.entrySet().stream().forEach( entry -> {
 				String k = entry.getKey();
 				String v = StrSubstitutor.replace(entry.getValue(), temp) ;
 				v = StrSubstitutor.replaceSystemProperties(v);
