@@ -8,11 +8,8 @@ package de.htwsaarland.config;
  */
 public class LSConfigException extends RuntimeException{
 	
-	private EnvConfiguration source=null;
-	
 	public LSConfigException(EnvConfiguration source, String msg){
-		super(msg + " [config source: " + source !=null ? source.toString() : "N/A" +"]");
-		this.source = source;
+		super(msg + " [config source: " + (source !=null ? source.toString() : "N/A") +"]" );
 	}
 	
 	/**
@@ -25,8 +22,7 @@ public class LSConfigException extends RuntimeException{
 	}
 	
 	public LSConfigException(EnvConfiguration source, String msg, Throwable t){
-		super(msg + " ("+t.getMessage()+")" + " [config source: " + source !=null ? source.toString() : "N/A" +"]",t);
-		this.source = source;
+		super(msg + " ("+t.getMessage()+")" + " [config source: " + (source !=null ? source.toString() : "N/A") +"]",t);
 	}
 	
 	/**
