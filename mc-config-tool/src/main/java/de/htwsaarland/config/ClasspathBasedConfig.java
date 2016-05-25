@@ -24,7 +24,7 @@ import static de.htwsaarland.config.EnvConfiguration.parseXMLConfigFile;
  */
 public class ClasspathBasedConfig implements EnvConfiguration {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
+	private static final Logger CLASSPATH_CONFIG_LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
 	private static final Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
 	private final Set<File> classPathDir;
 	private File configFile;
@@ -53,22 +53,22 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		
 		searchConfigFileInDir(primaryConfigFileName);
 		if (configFile == null) {
-			LOGGER.info("Test Config file {} not found!", primaryConfigFileName);
-			LOGGER.info("Test Config file is not in following folders");
+			CLASSPATH_CONFIG_LOGGER.info("Test Config file {} not found!", primaryConfigFileName);
+			CLASSPATH_CONFIG_LOGGER.info("Test Config file is not in following folders");
 			for (File f : classPathDir) {
-				LOGGER.info(f.getAbsolutePath());
+				CLASSPATH_CONFIG_LOGGER.info(f.getAbsolutePath());
 			}
 			searchConfigFileInDir(secondaryConfigFileName);
 			if (configFile == null) {
-				LOGGER.error("Config file {} NOT found!", secondaryConfigFileName);
-				LOGGER.error("Config file is NOT in following folders:");
+				CLASSPATH_CONFIG_LOGGER.error("Config file {} NOT found!", secondaryConfigFileName);
+				CLASSPATH_CONFIG_LOGGER.error("Config file is NOT in following folders:");
 				for (File f : classPathDir) {
-					LOGGER.error(f.getAbsolutePath());
+					CLASSPATH_CONFIG_LOGGER.error(f.getAbsolutePath());
 				}
 				throw new LSConfigException("No Config file found");
 			}
 		} else {
-			LOGGER.info("Use config file '{}'", configFile.getAbsoluteFile());
+			CLASSPATH_CONFIG_LOGGER.info("Use config file '{}'", configFile.getAbsoluteFile());
 		}
 		Map<String,String> temp = new HashMap<>();
 		parseXMLConfigFile(configFile, temp, 0);
@@ -77,12 +77,12 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		}};
 		configTable = new HashMap();
 		try{
-			temp.entrySet().stream().forEach( entry -> {
+			temp.entrySet().stream().forEach(entry -> {
 				String k = entry.getKey();
 				String v = StrSubstitutor.replace(entry.getValue(), temp) ;
 				v = StrSubstitutor.replaceSystemProperties(v);
 				v = StrSubstitutor.replace(v, envVar);
-				LOGGER.trace("{} -> {}", k, v);
+				CLASSPATH_CONFIG_LOGGER.trace("{} -> {}", k, v);
 				configTable.put(k, v);
 			});
 		}catch(IllegalStateException ex){
@@ -139,7 +139,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 
 	protected final void collectDirInClassPathLoader(ClassLoader loader,final Set<File> classPathDir) {
 		try {
-			LOGGER.info("Collect classpath from {}", loader.getClass().getName());
+			CLASSPATH_CONFIG_LOGGER.info("Collect classpath from {}", loader.getClass().getName());
 			URLClassLoader urlCL = (URLClassLoader) loader;
 			URL[] url = urlCL.getURLs();
 			for (URL u : url) {
@@ -150,27 +150,27 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 				if (classPathFile.isDirectory()) {
 					File searchDir = classPathFile.getAbsoluteFile();
 					if (!classPathDir.contains(searchDir)) {
-						LOGGER.trace("Add dir '{}' to search dir", searchDir.getAbsolutePath());
+						CLASSPATH_CONFIG_LOGGER.trace("Add dir '{}' to search dir", searchDir.getAbsolutePath());
 						classPathDir.add(searchDir);
 					}
 				} else if (classPathFile.isFile()) {
 					File searchDir = parentDir.getAbsoluteFile();
 					if (!classPathDir.contains(searchDir) ) {
-						LOGGER.trace("Add parent '{}' to search dir", searchDir.getAbsoluteFile());
+						CLASSPATH_CONFIG_LOGGER.trace("Add parent '{}' to search dir", searchDir.getAbsoluteFile());
 						classPathDir.add(searchDir.getAbsoluteFile());
 					}
 				}
 			}
 		} catch (ClassCastException ex) {
-			LOGGER.warn("Cannot serch config file from classloader {}",
+			CLASSPATH_CONFIG_LOGGER.warn("Cannot serch config file from classloader {}",
 					loader.getClass().getName());
-			LOGGER.trace("Cause: {}", ex);
+			CLASSPATH_CONFIG_LOGGER.trace("Cause: {}", ex);
 		}
 	}
 
 	protected final void searchConfigFileInDir(String configFileName) {
 		for (File dir : classPathDir) {
-			LOGGER.debug("Search config file in '{}' but not in subdir", dir.getAbsoluteFile() );
+			CLASSPATH_CONFIG_LOGGER.debug("Search config file in '{}' but not in subdir", dir.getAbsoluteFile() );
 			Collection<File> listFiles = FileUtils.listFiles(dir, new NameFileFilter(configFileName), null);
 			if (!listFiles.isEmpty()) {
 				configFile = listFiles.iterator().next();
@@ -180,7 +180,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	}
 
 	protected final void collectDirInSystemClassPath(Set<File> classPathDir) {
-		LOGGER.trace("Collect directories in java.class.path");
+		CLASSPATH_CONFIG_LOGGER.trace("Collect directories in java.class.path");
 		String sessionClassPath = System.getProperty("java.class.path");
 		String[] classpath = sessionClassPath.split(":");
 		for (String path : classpath) {
@@ -189,9 +189,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 				String absolutPath = f.getAbsolutePath();
 				if (!classPathDir.contains(f.getAbsoluteFile())){
 					classPathDir.add(f.getAbsoluteFile());
-					LOGGER.trace("Add '{}' to search dir", f.getAbsolutePath());
+					CLASSPATH_CONFIG_LOGGER.trace("Add '{}' to search dir", f.getAbsolutePath());
 				}else{
-					LOGGER.trace("Duplex path {}",absolutPath);
+					CLASSPATH_CONFIG_LOGGER.trace("Duplex path {}",absolutPath);
 				}
 			} else if (f.isFile()) {
 				File parentFile = f.getParentFile();
@@ -200,5 +200,12 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 				}
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "[configuration source: " 
+				+ configFile != null ? configFile.getAbsolutePath() : "NA" 
+				+ "]";
 	}
 }

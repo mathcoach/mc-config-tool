@@ -34,7 +34,11 @@ public interface EnvConfiguration {
 	 * @return a {@link java.lang.String} object.
 	 */
 	String getConfigValue(String configParameter);
-
+	/**
+	 * @return the url, from which the config are saved, or null if unknown!
+	 */
+	@Override
+	String toString();
 	Set<String> getAllConfigKeys();
 
 	/**
