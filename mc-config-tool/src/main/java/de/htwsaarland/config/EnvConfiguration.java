@@ -1,6 +1,6 @@
 package de.htwsaarland.config;
 
-import com.google.common.base.Preconditions;
+//import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -100,7 +100,9 @@ public interface EnvConfiguration {
 		private final int importedLevel;
 
 		public ConfigParser(Map<String, String> configMap, int importedLevel) {
-			Preconditions.checkNotNull(configMap, "Argument configMap must not be null");
+			if (configMap == null) {
+				throw new IllegalArgumentException("Argument configMap must not be null");
+			}
 			this.configMap = configMap;
 			value = new StringBuilder(100);
 			this.importedLevel = importedLevel;

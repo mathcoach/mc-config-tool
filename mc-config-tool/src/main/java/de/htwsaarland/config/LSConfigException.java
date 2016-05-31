@@ -13,7 +13,7 @@ public class LSConfigException extends RuntimeException{
 	}
 	
 	/**
-	 * <p>Constructor for LSConfigException.</p>
+	 * <p>Construct a LSConfigException with an error message<p>
 	 *
 	 * @param msg a {@link java.lang.String} object.
 	 */
@@ -21,6 +21,12 @@ public class LSConfigException extends RuntimeException{
 		super(msg);
 	}
 	
+	/** 
+	 * construct a LSConfigException with a error message, the cause and the source of config.
+	 * @param source the configuration source
+	 * @param msg the error message to be shown
+	 * @param t the cause.
+	 */
 	public LSConfigException(EnvConfiguration source, String msg, Throwable t){
 		super(msg + " ("+t.getMessage()+")" + " [config source: " + (source !=null ? source.toString() : "N/A") +"]",t);
 	}

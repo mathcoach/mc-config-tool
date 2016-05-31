@@ -4,7 +4,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- *
+ * This Class is used to represent the configuration entries, which are marked
+ * by the annotation @NeedConfig as the runtime of the annotated class. 
+ * 
+ * An instance of this class can be used to make a template for a config file
+ * when the software is first time installed, or configurated.
+ * 
  * @author hbui
  */
 public interface ConfigEntries {
