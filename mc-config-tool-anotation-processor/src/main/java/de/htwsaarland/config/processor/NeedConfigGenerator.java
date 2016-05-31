@@ -78,7 +78,7 @@ public class NeedConfigGenerator  extends MCAbstractAnnotationProcessor{
 			}
 			
 			String apackage = processingEnv.getOptions().get(CONFIG_PACKAGE) ;
-			info("\tConfigurated package name of GenNeedConfigEntry is '"+ apackage + "'.");
+			info("\tConfigurated package name of GenNeedConfigEntry is " + (apackage==null?"null.":"'"+apackage+"'."));
 			if(apackage == null || apackage.trim().length()== 0 ){
 				warn("\tCannot use given package name of GenNeedConfigEntry '"
 							+ apackage + "'.");
