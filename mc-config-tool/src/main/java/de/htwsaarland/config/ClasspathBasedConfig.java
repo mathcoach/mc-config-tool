@@ -24,7 +24,7 @@ import static de.htwsaarland.config.EnvConfiguration.parseXMLConfigFile;
  */
 public class ClasspathBasedConfig implements EnvConfiguration {
 
-	private static final Logger CLASSPATH_CONFIG_LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
+	private static final Logger CLASSPATH_CONFIG_LOGGER = LoggerFactory.getLogger(EnvConfiguration.class);
 	private static final Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
 	private final Set<File> classPathDir;
 	private File configFile;
