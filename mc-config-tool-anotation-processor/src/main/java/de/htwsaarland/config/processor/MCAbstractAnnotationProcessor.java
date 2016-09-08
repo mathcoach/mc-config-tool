@@ -20,7 +20,7 @@ public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
-		super.init(processingEnv); //To change body of generated methods, choose Tools | Templates.
+		super.init(processingEnv); 
 		messager = processingEnv.getMessager();
 		lw = getLogWriter();
 	}
