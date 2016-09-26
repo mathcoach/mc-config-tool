@@ -1,6 +1,5 @@
 package de.htwsaarland.config;
 
-//import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -120,7 +119,7 @@ public interface EnvConfiguration {
 				if (importAtt != null) {
 					String importedPath = resolveSystemProperties(importAtt);
 					File importedFile = new File(importedPath);
-					LOGGER.info("Parse config file {}", importedFile.getAbsolutePath());
+					LOGGER.info("Parse import file {}", importedFile.getAbsolutePath());
 					parseXMLConfigFile(importedFile, configMap, importedLevel + 1);
 				}
 			}
