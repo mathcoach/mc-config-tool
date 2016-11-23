@@ -9,7 +9,7 @@
 
 	<modules>
 		<module>mc-config-tool</module>
-		<module>mc-config-tool-anotation-processor</module>
+		<module>mc-config-tool-annotation-processor</module>
 		<module>mc-config-test</module>
 	</modules>
 	
