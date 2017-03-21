@@ -182,7 +182,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	protected final void collectDirInSystemClassPath(Set<File> classPathDir) {
 		CLASSPATH_CONFIG_LOGGER.trace("Collect directories in java.class.path");
 		String sessionClassPath = System.getProperty("java.class.path");
-		String[] classpath = sessionClassPath.split(":");
+		String[] classpath = sessionClassPath.split(File.pathSeparator);
 		for (String path : classpath) {
 			File f = new File(path);
 			if (f.isDirectory()) {
