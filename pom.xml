@@ -5,7 +5,7 @@
 	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool-metapom</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 
 	<modules>
 		<module>mc-config-tool</module>
