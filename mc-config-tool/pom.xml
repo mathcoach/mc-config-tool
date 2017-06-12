@@ -20,6 +20,42 @@
 		<sonar.exclusions>file:**/generated-sources/**</sonar.exclusions>
 	</properties>
 	
+	<distributionManagement>
+		<repository>
+			<id>newton</id>
+			<name>newton-releases</name>
+			<url>https://newton.htwsaar.de/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>newton</id>
+			<name>newton-snapshots</name>
+			<url>https://newton.htwsaar.de/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -61,39 +97,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-	<distributionManagement>
-		<repository>
-			<id>newton</id>
-			<name>newton-releases</name>
-			<url>https://newton.htwsaar.de/artifactory/libs-release-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>newton</id>
-			<name>newton-snapshots</name>
-			<url>https://newton.htwsaar.de/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
+

@@ -205,7 +205,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	@Override
 	public String toString() {
 		return "[configuration source: " 
-				+ configFile == null ? "NA" : configFile.toPath().toAbsolutePath().normalize().toString()
+				+ configFile.toPath().toAbsolutePath().normalize().toString()
 				+ "]";
 	}
 }
