@@ -4,7 +4,7 @@ $macro:config_entry(package_name, unique_name)$
 
 package $package_name;
 
-import de.htwsaarland.config.ConfigEntries;
+import de.htwsaar.config.ConfigEntries;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(
