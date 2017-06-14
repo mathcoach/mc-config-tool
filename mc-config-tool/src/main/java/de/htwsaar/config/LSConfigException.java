@@ -25,20 +25,20 @@ public class LSConfigException extends RuntimeException{
 	 * construct a LSConfigException with a error message, the cause and the source of config.
 	 * @param source the configuration source
 	 * @param msg the error message to be shown
-	 * @param t the cause.
+	 * @param cause the cause.
 	 */
-	public LSConfigException(EnvConfiguration source, String msg, Throwable t){
-		super(msg + " ("+t.getMessage()+")" + " [config source: " + (source !=null ? source.toString() : "N/A") +"]",t);
+	public LSConfigException(EnvConfiguration source, String msg, Throwable cause){
+		super(msg + " ("+cause.getMessage()+")" + " [config source: " + (source !=null ? source.toString() : "N/A") +"]",cause);
 	}
 	
 	/**
 	 * <p>Constructor for LSConfigException.</p>
 	 *
 	 * @param msg a {@link java.lang.String} object.
-	 * @param t a {@link java.lang.Throwable} object.
+	 * @param cause a {@link java.lang.Throwable} object.
 	 */
-	public LSConfigException(String msg, Throwable t){
-		super(msg + " ("+t.getMessage()+")",t);
+	public LSConfigException(String msg, Throwable cause){
+		super(msg + " (cause: "+cause.getMessage()+")",cause);
 	}
 
 	/**

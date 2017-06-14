@@ -12,7 +12,7 @@ import java.util.TreeSet;
  * 
  * @author hbui
  */
-public interface ConfigEntries {
+public interface ConfigEntries {//NOSONAR
 	Entry[] getEntry();
 	
 	public abstract static class Entry implements Comparable<Entry>{
@@ -109,7 +109,7 @@ public interface ConfigEntries {
 	
 	public static class ConfigUser implements Comparable<ConfigUser>{
 		
-		public final String name, description;
+		public final String name, description;//NOSONAR
 		
 		public ConfigUser(String name, String description){
 			this.name=name;

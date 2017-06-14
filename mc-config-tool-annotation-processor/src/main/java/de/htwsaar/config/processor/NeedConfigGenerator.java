@@ -97,11 +97,9 @@ public class NeedConfigGenerator  extends MCAbstractAnnotationProcessor{
 				configParam.stream().forEach( c -> {
 					MEntry newEntry = entryArraytemplate.newEntry(c);
 					useIn.get(c).stream().forEach( u -> 
-						newEntry.newUseIn( u.name,u.description )
+						newEntry.newUseIn( u.name, u.description )
 					);
-					suggestValue.get(c).stream().forEach( s -> 
-						newEntry.newSuggestValue(s)
-					);
+					suggestValue.get(c).stream().forEach(newEntry::newSuggestValue);
 				});
 				writeJavaFileToDisk(configEntryTemplate.toString(), apackage +"." + className);
 			}

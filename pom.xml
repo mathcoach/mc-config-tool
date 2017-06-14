@@ -37,6 +37,7 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.7.6.201602180812</version>
+				<!--
 				<configuration>
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					<append>true</append>
@@ -49,6 +50,8 @@
 						</goals>
 					</execution>
 				</executions>
+				-->
+				<executions></executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,8 +1,5 @@
 package de.htwsaar.config;
 
-import de.htwsaar.config.ClasspathBasedConfig;
-import de.htwsaar.config.LSConfigException;
-import de.htwsaar.config.EnvConfiguration;
 import java.util.Set;
 import org.junit.Test;
 import static org.fest.assertions.api.Assertions.*;

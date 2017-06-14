@@ -1,7 +1,5 @@
 package de.htwsaar.config;
 
-import static de.htwsaar.config.EnvConfiguration.MAX_IMPORT_LEVEL;
-import static de.htwsaar.config.EnvConfiguration.resolveSystemProperties;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -22,36 +20,32 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author hbui
  */
-class XMLConfigParser {
+public class XMLConfigParser implements ConfigParser {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EnvConfiguration.class);
 	
-	Map<String,String> parseConfigFile(File configFile){
+	@Override
+	public Map<String,String> parseConfigFile(File configFile){
 		Map<String,String> configTable = new HashMap<>();
-		parseXMLConfigFile(configFile, configTable, 0);
+		parseXMLConfigFile(configFile, configTable);
 		return configTable;
 	}
 	
+	
 	private void parseXMLConfigFile(
 		final File configFile,
-		final Map<String, String> configTable,
-		int importedLevel) {
+		final Map<String, String> configTable) {
 
 		try {
-			if (importedLevel > MAX_IMPORT_LEVEL) {
-				throw new LSConfigException("Import to many levels " + configFile.getAbsolutePath());
-			}
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			spf.setNamespaceAware(true);
 			SAXParser saxParser = spf.newSAXParser();
 			XMLReader xmlReader = saxParser.getXMLReader();
-			xmlReader.setContentHandler(new ConfigParser(configTable, importedLevel));
+			xmlReader.setContentHandler(new ConfigParser(configTable/*, importedLevel*/));
 			xmlReader.parse(configFile.toURI().getPath());
 			if (LOGGER.isTraceEnabled()) {
 				Set<Map.Entry<String, String>> entrySet = configTable.entrySet();
-				for (Map.Entry<String, String> config : entrySet) {
-					LOGGER.trace("{} -> {}", config.getKey(), config.getValue());
-				}
+				entrySet.forEach( config -> LOGGER.trace("{} -> {}", config.getKey(), config.getValue()) );
 			}
 		} catch (ParserConfigurationException | SAXException | IOException ex) {
 			String fileName = "null";
@@ -72,15 +66,10 @@ class XMLConfigParser {
 
 		private final Map<String, String> configMap;
 		private final StringBuilder value;
-		private final int importedLevel;
 
-		public ConfigParser(Map<String, String> configMap, int importedLevel) {
-//			if (configMap == null) {
-//				throw new IllegalArgumentException("Argument configMap must not be null");
-//			}
+		public ConfigParser(Map<String, String> configMap) {
 			this.configMap = configMap;
 			value = new StringBuilder(100);
-			this.importedLevel = importedLevel;
 		}
 
 		@Override
@@ -92,11 +81,8 @@ class XMLConfigParser {
 			LOGGER.trace("Start element '{}'", localName);
 			if ("configuration".equals(qName)) {
 				String importAtt = attributes.getValue("import");
-				if (importAtt != null) {
-					String importedPath = resolveSystemProperties(importAtt);
-					File importedFile = new File(importedPath);
-					LOGGER.info("Parse import file {}", importedFile.getAbsolutePath());
-					parseXMLConfigFile(importedFile, configMap, importedLevel + 1);
+				if(importAtt!=null){
+					this.configMap.put("import", importAtt);
 				}
 			}
 		}
