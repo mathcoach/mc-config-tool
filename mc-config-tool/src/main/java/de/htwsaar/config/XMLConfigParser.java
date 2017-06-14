@@ -1,5 +1,6 @@
 package de.htwsaar.config;
 
+import static de.htwsaar.config.EnvConfiguration.IMPORT_KEY;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -80,9 +81,9 @@ public class XMLConfigParser implements ConfigParser {
 			throws SAXException {
 			LOGGER.trace("Start element '{}'", localName);
 			if ("configuration".equals(qName)) {
-				String importAtt = attributes.getValue("import");
+				String importAtt = attributes.getValue(IMPORT_KEY);
 				if(importAtt!=null){
-					this.configMap.put("import", importAtt);
+					this.configMap.put(IMPORT_KEY, importAtt);
 				}
 			}
 		}

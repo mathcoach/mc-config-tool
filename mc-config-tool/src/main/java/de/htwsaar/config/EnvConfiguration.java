@@ -32,17 +32,17 @@ public interface EnvConfiguration {
 	String toString();
 	Set<String> getAllConfigKeys();
 
-	public static Map<String,String> resolveImportConfig(File configFile, XMLConfigParser parser){
+	public static Map<String,String> resolveImportConfig(File configFile, ConfigParser parser){
 		final Logger logger = LoggerFactory.getLogger(EnvConfiguration.class);
 		try {
 			//XMLConfigParser parser = new XMLConfigParser();
 			Map<String, String> temp = parser.parseConfigFile(configFile);
 			int importLevel = 0;
 			while(temp.containsKey(IMPORT_KEY)){
+				++importLevel;
 				if(importLevel > MAX_IMPORT_LEVEL){
 					throw new LSConfigException("Import too many levels " + configFile.getAbsolutePath());
 				}else{
-					++importLevel;
 					parser.reset();
 					File importedFile = new File(resolveSystemProperties(temp.get(IMPORT_KEY)));
 					temp.remove(IMPORT_KEY);

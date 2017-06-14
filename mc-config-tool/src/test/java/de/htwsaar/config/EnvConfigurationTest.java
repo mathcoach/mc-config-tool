@@ -1,6 +1,7 @@
 package de.htwsaar.config;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import static org.fest.assertions.api.Assertions.*;
@@ -33,13 +34,12 @@ public class EnvConfigurationTest {
 			.hasSize(home.length() + "/mypath/test.xml".length());
 	}
 
-	//@Ignore
+	
 	@Test
 	public void parserAConfigFileWithImportRelativeFile() {
-		String path = "./src/test/resources/test-config-with-import.xml";
-		File simpleConfig = new File(path);
-		//Map<String,String> config = parser.parseConfigFile(simpleConfig);
-		Map<String,String> config = EnvConfiguration.resolveImportConfig(simpleConfig, new XMLConfigParser());
+		
+		File simpleConfig = new File(MAIN_CONFIG_FILE);//Dummy file only
+		Map<String,String> config = EnvConfiguration.resolveImportConfig(simpleConfig, new DummyConfigParser());
 		assertThat(config.get("param-a")).isEqualTo("a");        //only main config has param-a
 		assertThat(config.get("import-param-a")).isEqualTo("A"); //only imported config has import-param-a
 		assertThat(config.get("param-b")).isEqualTo("B");        //imported config has precedence
@@ -47,18 +47,70 @@ public class EnvConfigurationTest {
 		assertThat(config.get("param-e")).isNull();              //neither nor is configed
 	}
 	
-	//@Ignore
 	@Test
 	public void throwExceptionIfImportCycle() {
-		String path = "./src/test/resources/test-config-cycle.xml";
-		File simpleConfig = new File(path);
+		
+		File simpleConfig = new File(MAIN_CONFIG_FILE);
 		try{
-			//parser.parseConfigFile(simpleConfig);
-			EnvConfiguration.resolveImportConfig(simpleConfig, new XMLConfigParser() );
+			EnvConfiguration.resolveImportConfig(simpleConfig, new CycleConfigParser() );
 			failBecauseExceptionWasNotThrown(LSConfigException.class);
 		}catch(LSConfigException ex){
 			//ex.printStackTrace();
 			assertThat(ex).hasMessageContaining("Import too many level");
 		}
+	}
+	
+	final String IMPORT_CONFIG_FILE = "imported-config";
+	final String MAIN_CONFIG_FILE = "main-config";
+	class DummyConfigParser implements ConfigParser{
+		
+		final Map<String,String> masterConfig = new HashMap<String,String>(){{
+			put(EnvConfiguration.IMPORT_KEY, IMPORT_CONFIG_FILE);
+			put("param-a", "a");
+			put("param-b", "b");
+			put("param-c", "c");
+		}};
+		
+		final Map<String,String> importedConfig = new HashMap<String,String>(){{
+			put("import-param-a","A");
+			put("param-b", "B");
+		}};
+		
+		
+		@Override
+		public Map<String, String> parseConfigFile(File configFile) {
+			String fileName = configFile.getName();
+			if (fileName.endsWith(MAIN_CONFIG_FILE)){
+				return masterConfig;
+			}else if(fileName.endsWith(IMPORT_CONFIG_FILE)) {
+				return importedConfig;
+			}else{
+				throw new IllegalStateException("Geht nicht");
+			}
+		}
+	}
+	
+	class CycleConfigParser implements ConfigParser{
+		
+		final Map<String,String> masterConfig = new HashMap<String,String>(){{
+			put(EnvConfiguration.IMPORT_KEY, IMPORT_CONFIG_FILE);
+		}};
+		
+		final Map<String,String> importedConfig = new HashMap<String,String>(){{
+			put(EnvConfiguration.IMPORT_KEY, MAIN_CONFIG_FILE);
+		}};
+		
+		@Override
+		public Map<String, String> parseConfigFile(File configFile) {
+			String fileName = configFile.getName();
+			if (fileName.endsWith(MAIN_CONFIG_FILE)){
+				return masterConfig;
+			}else if(fileName.endsWith(IMPORT_CONFIG_FILE)) {
+				return importedConfig;
+			}else{
+				throw new IllegalStateException("Geht nicht");
+			}
+		}
+		
 	}
 }
