@@ -1,5 +1,6 @@
 package de.htwsaar.config;
 
+import static de.htwsaar.config.EnvConfiguration.resolveConfigVariables;
 import static de.htwsaar.config.EnvConfiguration.resolveImportConfig;
 import java.io.File;
 import java.net.URL;
@@ -12,10 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.apache.commons.lang3.text.StrBuilder;
-import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
  * @author hbui
@@ -24,7 +21,7 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 public class ClasspathBasedConfig implements EnvConfiguration {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EnvConfiguration.class);
-	private static final Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
+	//private static final Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
 	private final Set<File> classPathDir;
 	private File configFile;
 	private final Map<String, String> configTable;
@@ -72,7 +69,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		} else {
 			LOGGER.info("Use primary config file '{}'", configFile.getAbsoluteFile());
 		}
-		configTable = resolveImportConfig(configFile, new XMLConfigParser());
+		configTable = resolveConfigVariables(resolveImportConfig(configFile, new XMLConfigParser()));
 	}
 
 	/**
@@ -97,32 +94,6 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	public String getConfigValue(String configParameter) {
 		return configTable.get(configParameter);
 	}
-	
-	
-	
-	protected final ClasspathBasedConfig setConfigValue(String configParameter, String newValue) {
-		Matcher matcher = VAR_PATTERN.matcher(newValue);
-		if (matcher.find()) {// If the value has a variable
-			StrBuilder b = new StrBuilder(newValue);
-			StrSubstitutor st = new StrSubstitutor(configTable);
-			boolean substable = st.replaceIn(b);
-			if (substable) {
-				String resolvedValue = b.build();
-				Matcher afterSubstMatcher = VAR_PATTERN.matcher(resolvedValue);
-				if (afterSubstMatcher.find()) {//If there is one or more not resolveable variables
-					throw new LSConfigException("Cannot find the variable '" + afterSubstMatcher.group(0) + "in '" + newValue + "'");
-				} else {
-					configTable.put(configParameter, resolvedValue);
-				}
-			} else {// nothing is replaced!!!
-				throw new LSConfigException("Cannot find any variables in " + newValue);
-			}
-		} else {
-			configTable.put(configParameter, newValue);
-		}
-		return this;
-	}
-
 	
 
 	protected final void collectDirInClassPathLoader(ClassLoader loader, final Set<File> classPathDir) {

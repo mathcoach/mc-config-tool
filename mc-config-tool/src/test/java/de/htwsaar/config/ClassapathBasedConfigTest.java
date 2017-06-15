@@ -40,4 +40,32 @@ public class ClassapathBasedConfigTest {
 			assertThat(ex).hasMessage("No Config file found");
 		}
 	}
+	
+	@Test
+	public void resolveSimpleRef(){
+		EnvConfiguration ec = new ClasspathBasedConfig("test-config-subs-var.xml", null);
+		String b = ec.getConfigValue("b");
+		assertThat(b).isEqualTo(ec.getConfigValue("a"));
+	}
+	
+	@Test
+	public void detectCycle(){
+		try{
+			EnvConfiguration ec = new ClasspathBasedConfig("test-config-subs-var-cycle.xml", null);
+			failBecauseExceptionWasNotThrown(LSConfigException.class);
+		}catch(LSConfigException ex){
+			assertThat(ex).hasMessageContaining("Infinite loop in property interpolation of ${d}");
+		}
+	}
+	
+	@Test
+	public void resolveSystemVar(){
+		EnvConfiguration ec = new ClasspathBasedConfig("test-config-subs-system-var.xml", null);
+		String home = ec.getConfigValue("home");
+		System.out.println("home:" + home);
+		assertThat(home).isEqualTo(System.getProperty("user.home"));
+		String workingdir = ec.getConfigValue("working-dir");
+		System.out.println("working dir:" + workingdir);
+		assertThat(workingdir).isEqualTo(System.getProperty("user.dir"));
+	}
 }

@@ -37,7 +37,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.htwsaar</groupId>
-			<artifactId>mc-config-tool</artifactId>
+			<artifactId>mc-config-annotation</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
@@ -45,6 +45,12 @@
 			<groupId>de.htwsaar</groupId>
 			<artifactId>mc-config-tool-collector</artifactId>
 			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
 			<type>jar</type>
 		</dependency>
 		<dependency>

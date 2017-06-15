@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.htwsaar</groupId>
-			<artifactId>mc-config-tool-annotation</artifactId>
+			<artifactId>mc-config-annotation</artifactId>
 			<version>${mc.config.version}</version>
 		</dependency>
 		<dependency>

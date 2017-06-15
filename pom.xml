@@ -12,6 +12,7 @@
 		<module>mc-config-tool-annotation-processor</module>
 		<module>mc-config-tool-collector</module>
 		<module>mc-config-test</module>
+		<module>mc-config-annotation</module>
 	</modules>
 	
 	<properties>
@@ -39,6 +40,17 @@
 			<url>https://newton.htwsaar.de/artifactory/libs-snapshot-local</url>
 		</snapshotRepository>
 	</distributionManagement>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.4</version>
+				<type>jar</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	
 	<build>
 		<pluginManagement>

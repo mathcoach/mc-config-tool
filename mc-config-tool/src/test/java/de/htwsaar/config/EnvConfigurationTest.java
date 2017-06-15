@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import static org.fest.assertions.api.Assertions.*;
+import org.fest.assertions.data.MapEntry;
 /**
  *
  * @author hbui
@@ -34,6 +35,106 @@ public class EnvConfigurationTest {
 			.hasSize(home.length() + "/mypath/test.xml".length());
 	}
 
+	@Test
+	public void resolveVariables(){
+		Map<String,String> originConfig = new HashMap<String,String>(){{
+			put("a", "A");
+			put("b", "${a}");
+		}};
+		Map<String,String> config = EnvConfiguration.resolveConfigVariables(originConfig);
+		assertThat(config).hasSameSizeAs(originConfig.entrySet())
+				.contains(MapEntry.entry("a", "A"))
+				.contains(MapEntry.entry("b", "A"));
+	}
+	
+	@Test
+	public void detectCycleInVariableResolution(){
+		Map<String,String> originConfig = new HashMap<String,String>(){{
+			put("a", "A");
+			put("b", "${a}");
+			
+			put("c", "${d}");
+			put("d", "${e}");
+			put("e", "${c}");
+		}};
+		try{
+			EnvConfiguration.resolveConfigVariables(originConfig);
+		}catch(LSConfigException ex){
+			assertThat(ex).hasMessageContaining("Infinite loop in property interpolation of ${d}");
+		}
+	}
+	
+	@Test
+	public void resolveSystemVar(){
+		Map<String,String> originConfig = new HashMap<String,String>(){{
+			put("home", "${HOME}");
+			put("working-dir", "${user.dir}");
+		}};
+		Map<String,String> config = EnvConfiguration.resolveConfigVariables(originConfig);
+		assertThat(config).hasSameSizeAs(originConfig.entrySet())
+			.contains(MapEntry.entry("home", System.getProperty("user.home")))
+			.contains(MapEntry.entry("working-dir", System.getProperty("user.dir")));
+	}
+	
+	
+	@Test
+	public void doNotSetNewConfigIfVarNotSolved(){
+		Map<String,String> originConfig = new HashMap<String,String>(){{
+			put("param-a", "a");
+			put("pram-b", "b");
+		}};
+		try{
+			EnvConfiguration.setConfigValue("new-param","string mit var ${not-def}",originConfig);
+		}catch(LSConfigException ex){
+			assertThat(ex).hasMessageContaining("${not-def}")
+				.hasMessageContaining("Cannot find");
+			assertThat(originConfig).doesNotContainKey("new-param");
+		}
+	}
+	
+	@Test
+	public void doNotSetNewConfigIfVarNotSolved2(){
+		Map<String,String> originConfig = new HashMap<String,String>(){{
+			put("param-a", "a");
+			put("param-b", "b");
+		}};
+		try{
+			EnvConfiguration.setConfigValue("new-param","string mit var ${not-def} und var ${param-a}",originConfig);
+		}catch(LSConfigException ex){
+			assertThat(ex).hasMessageContaining("${not-def}")
+				.hasMessageContaining("Cannot find");
+			assertThat(originConfig).hasSize(2)
+					.doesNotContainKey("new-param")
+					.contains(MapEntry.entry("param-b", "b"))
+					.contains(MapEntry.entry("param-a", "a"));
+		}
+	}
+	
+	@Test
+	public void setNewConfigIfVarSolved(){
+		Map<String,String> originConfig = new HashMap<String,String>(){{
+			put("param-a", "a");
+			put("param-b", "b");
+		}};
+		EnvConfiguration.setConfigValue("new-param", "use param-a |${param-a}|",originConfig);
+		assertThat(originConfig)
+			.contains(MapEntry.entry("param-a", "a"))
+			.contains(MapEntry.entry("param-b", "b"))
+			.contains(MapEntry.entry("new-param", "use param-a |a|"));
+	}
+	
+	@Test
+	public void setNewConfigIfNoVarRef(){
+		Map<String,String> originConfig = new HashMap<String,String>(){{
+			put("param-a", "a");
+			put("param-b", "b");
+		}};
+		EnvConfiguration.setConfigValue("new-param", "new-config", originConfig);
+		assertThat(originConfig)
+			.contains(MapEntry.entry("param-a", "a"))
+			.contains(MapEntry.entry("param-b", "b"))
+			.contains(MapEntry.entry("new-param", "new-config"));
+	}
 	
 	@Test
 	public void parserAConfigFileWithImportRelativeFile() {

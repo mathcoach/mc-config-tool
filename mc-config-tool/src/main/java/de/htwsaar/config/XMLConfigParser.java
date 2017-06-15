@@ -63,7 +63,7 @@ public class XMLConfigParser implements ConfigParser {
 		}
 	}
 	
-	private class ConfigParser extends DefaultHandler {
+	private static class ConfigParser extends DefaultHandler {
 
 		private final Map<String, String> configMap;
 		private final StringBuilder value;
