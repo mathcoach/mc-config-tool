@@ -1,4 +1,4 @@
-package de.htwsaar.config;
+//package de.htwsaar.config;
 
 //import de.htwsaar.config.ConfigEntries;
 
@@ -11,27 +11,27 @@ package de.htwsaar.config;
 
 //use in generated file: @ServiceProvider(
 //		service = ConfigEntries.class)
-public class ExampleConfigEntriesImp implements ConfigEntries{
-
-	@Override
-	public Entry[] getEntry() {
-		return new Entry[]{
-			new Entry() {
-				@Override
-				public String getName() {
-					return "author-root";
-				}
-				
-				{
-//					
-					useIn.add(new ConfigUser("de.htwsaarland.laplus", "NA"));
+//public class ExampleConfigEntriesImp implements ConfigEntries{
 //
-					suggestValue.add("WEB-INF/virtua-file-system");
-				}		
-				
-				
-			},
-		};
-	}
-	
-}
+//	@Override
+//	public Entry[] getEntry() {
+//		return new Entry[]{
+//			new Entry() {
+//				@Override
+//				public String getName() {
+//					return "author-root";
+//				}
+//				
+//				{
+////					
+//					useIn.add(new ConfigUser("de.htwsaarland.laplus", "NA"));
+////
+//					suggestValue.add("WEB-INF/virtua-file-system");
+//				}		
+//				
+//				
+//			},
+//		};
+//	}
+//	
+//}

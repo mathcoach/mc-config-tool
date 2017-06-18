@@ -1,4 +1,4 @@
-package de.htwsaar.config.mock;
+package de.htwsaar.config;
 
 import de.htwsaar.config.annotation.NeedConfig;
 

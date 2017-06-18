@@ -89,9 +89,4 @@ public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 	}
 }
 
-interface LogWriter {
-	void error(CharSequence msg);
-	void warn(CharSequence msg);
-	void info(CharSequence msg);
-	void debug(CharSequence msg);
-}
+

@@ -1,7 +1,7 @@
 package de.htwsaar.config.processor;
 
+import de.htwsaar.config.ConfigEntries.Entry;
 import de.htwsaar.config.annotation.NeedConfig;
-import de.htwsaar.config.ConfigEntries;
 import de.htwsaar.config.annotation.NeedConfigs;
 import de.htwsaar.config.macros.MConfigEntry;
 import de.htwsaar.config.macros.MEntry;
@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
@@ -41,42 +40,29 @@ public class NeedConfigGenerator  extends MCAbstractAnnotationProcessor{
 		info("NeedConfigGenerator called");
 		try{
 			int i = 0;
-			Set<String> configParam = new TreeSet<>();
-			//useIn: {
-			//	config-name1 -> {class1 -> description1, class2 -> description2, ...} 
-			//	config-name2 -> {class1 -> description1, class3 -> description3, ...}     
-			//}
-			Map<String, Set<ConfigEntries.ConfigUser> > useIn = new HashMap<>();
-			// sugguestValue :{
-			//  config-name1 -> [value1, value2, value3],
-			//  config-name2 -> [value4, value5]
-			//}
-			Map<String, Set<String>> suggestValue = new HashMap<>();
+			Map<String, Entry> configParam = new HashMap<>();
 			List<String> packages = new ArrayList<>();
 			info("Element.length " + roundEnv.getElementsAnnotatedWith(NeedConfigs.class).size());
+			// Process multiple annotations
 			for (Element elem : roundEnv.getElementsAnnotatedWith(NeedConfigs.class)) {
-				String userName = getElementName(elem);
+				final String userName = getElementName(elem);
 				updatePackage(packages, userName);
 				NeedConfigs param = elem.getAnnotation(NeedConfigs.class);
-				NeedConfig[] params = param.value();
-				for (NeedConfig p : params){
-					generateConfigEntry(p, configParam, useIn, userName, suggestValue);
+				/*NeedConfig[] params = param.value();*/
+				for (NeedConfig p : param.value() ){
+					transform(userName, p, configParam);
 				}
-				
 				String msg =  "\t" + (++i) + " " + elem.getSimpleName().toString();
 				info(msg);
-				info("\t"+useIn.toString());
 			}
+			// Process simple annotation
 			for (Element elem : roundEnv.getElementsAnnotatedWith(NeedConfig.class)) {
-				String userName = getElementName(elem);
+				final String userName = getElementName(elem);
 				updatePackage(packages, userName);
 				NeedConfig param = elem.getAnnotation(NeedConfig.class);
-				generateConfigEntry(param, configParam, useIn, userName, suggestValue);
-				String msg =  "\t" + (++i) + " " + elem.getSimpleName().toString();
-				info(msg);
-				info("\t"+useIn.toString());
+				transform(userName, param, configParam);
 			}
-			
+			//Prepair java class and package information for configuration
 			String apackage = processingEnv.getOptions().get(CONFIG_PACKAGE) ;
 			info("\tConfigurated package name of GenNeedConfigEntry is " + (apackage==null?"null.":"'"+apackage+"'."));
 			if(apackage == null || apackage.trim().length()== 0 ){
@@ -94,12 +80,16 @@ public class NeedConfigGenerator  extends MCAbstractAnnotationProcessor{
 			if (! configParam.isEmpty() ){
 				MConfigEntry configEntryTemplate = new MConfigEntry(apackage, className);
 				MEntryArray entryArraytemplate = configEntryTemplate.newEntryArray();
-				configParam.stream().forEach( c -> {
-					MEntry newEntry = entryArraytemplate.newEntry(c);
-					useIn.get(c).stream().forEach( u -> 
-						newEntry.newUseIn( u.name, u.description )
+				configParam.forEach( (configParameterName, configEntry) -> {
+					MEntry newEntry = entryArraytemplate.newEntry(configParameterName);
+					configEntry.useIn().forEach( u -> 
+						newEntry.newUseIn(
+								StringEscapeUtils.escapeJava(u.name), 
+								StringEscapeUtils.escapeJava(u.description) )
 					);
-					suggestValue.get(c).stream().forEach(newEntry::newSuggestValue);
+					configEntry.suggestValue().forEach(
+							s -> newEntry.newSuggestValue (StringEscapeUtils.escapeJava(s)) 
+					);
 				});
 				writeJavaFileToDisk(configEntryTemplate.toString(), apackage +"." + className);
 			}
@@ -111,36 +101,24 @@ public class NeedConfigGenerator  extends MCAbstractAnnotationProcessor{
 				warn(trace.toString());
 			}
 		}
-		
 		return true;
 	}
-
-	private void generateConfigEntry(
-				NeedConfig p, 
-				Set<String> configParam, 
-				Map<String, Set<ConfigEntries.ConfigUser>> useIn, 
-				String userName, 
-				Map<String, Set<String>> suggestValue)
-	{
-		final String configParamName =  StringEscapeUtils.escapeJava( p.name() );
-		configParam.add(p.name());
-		Set<ConfigEntries.ConfigUser> u = useIn.get(configParamName);
-		if (u==null){
-			u = new TreeSet<>();
-			useIn.put( configParamName, u );
+	
+	private void transform(String userName, NeedConfig annotation, Map<String,Entry> entries){
+		final String configName = annotation.name();
+		Entry e = entries.get(configName);
+		if (e == null){
+			e = new Entry() {
+				@Override
+				public String getName() {
+					return configName;
+				}
+			};
+			entries.put(configName, e);
 		}
-		String d = getDescription(p.description());
-		u.add(new ConfigEntries.ConfigUser(userName, d) );
-		
-		Set<String> s = suggestValue.get(configParamName);
-		if (s == null){
-			s = new TreeSet<>();
-			suggestValue.put(configParamName, s);
-		}
-		for(String sugguest : p.sugguestValues()){
-			if(sugguest.trim().length()>0){
-				s.add(sugguest.trim());
-			}
+		e.addUseIn(userName, getDescription(annotation.description()) );
+		for(String s: annotation.sugguestValues() ){
+			e.addSuggestValue(s);
 		}
 	}
 	
@@ -186,14 +164,11 @@ public class NeedConfigGenerator  extends MCAbstractAnnotationProcessor{
 		return "GenConfigEntry";
 	}
 
-	
-	
 	private static String getDescription(String[] descriptionArray){
 		if (descriptionArray==null||descriptionArray.length==0){
 			return "";
 		}else{
-			String d = String.join("", descriptionArray);
-			return StringEscapeUtils.escapeJava(d) ;
+			return String.join("", descriptionArray);
 		}
 	}
 }

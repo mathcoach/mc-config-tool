@@ -1,5 +1,6 @@
 package de.htwsaar.config.mock;
 
+import de.htwsaar.config.ConfigMockGenerator;
 import de.htwsaar.config.ConfigEntries;
 import org.openide.util.lookup.ServiceProvider;
 

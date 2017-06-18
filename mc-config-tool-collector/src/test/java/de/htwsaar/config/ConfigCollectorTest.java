@@ -1,7 +1,5 @@
 package de.htwsaar.config;
 
-import de.htwsaar.config.mock.ConfigMockGenerator;
-import de.htwsaar.config.mock.OtherConfigMockGenerator;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

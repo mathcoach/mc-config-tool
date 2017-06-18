@@ -13,3 +13,4 @@ hs_err_pid*
 target/
 /mc-config-tool/nbproject/
 
+/mc-config-tool-annotation-processor/nbproject/

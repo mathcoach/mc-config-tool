@@ -1,4 +1,4 @@
-package de.htwsaar.config.mock;
+package de.htwsaar.config;
 
 import de.htwsaar.config.annotation.NeedConfig;
 
@@ -8,8 +8,8 @@ import de.htwsaar.config.annotation.NeedConfig;
  */
 @NeedConfig(
 	name = ConfigMockGenerator.DUMMY_CONFIG,
-	description = "a description about the dummy-config",
-	sugguestValues = "Nothing"
+	description = "a description \"about\" the dummy-config",
+	sugguestValues = "No\thing"
 )
 @NeedConfig(
 	name = ConfigMockGenerator.ARTIFICIAL_CONFIG
