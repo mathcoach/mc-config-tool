@@ -15,15 +15,10 @@ public final class ArtificialGenConfigEntry implements ConfigEntries{
 	public Entry[] getEntry() {
 		return 
 new Entry[]{
-			new Entry() {
-				@Override
-				public String getName() {
-					return ConfigMockGenerator.ARTIFICIAL_CONFIG;
-				}
-				{
-					useIn.add(new ConfigUser(ArtificialGenConfigEntry.class.getName() , "an artificial description about the dummy-config" ) );
-				}		
-			}
+			new Entry(ConfigMockGenerator.ARTIFICIAL_CONFIG)
+				.addUseIn(ArtificialGenConfigEntry.class.getName() , "an artificial description about the dummy-config")
+				.addSuggestValue("sugguested")
+			,
 		}
 		;
 	}

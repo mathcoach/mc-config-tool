@@ -20,10 +20,12 @@ public class PropertiesConfigParser implements ConfigParser {
 			Map<String,String> configTable = new HashMap<>();
 			Properties p = new Properties();
 			p.load(s);
-			p.forEach( (key, value) -> configTable.put(key.toString(), value.toString() ));
+			p.forEach( (key, value) -> configTable.put(key.toString(), value.toString().trim() ));
 			return configTable;
-		}catch(IOException ex){
+		}catch(IOException ex){//NOSONAR
 			throw new LSConfigException(ex);
+		}catch(NullPointerException ex){
+			throw new LSConfigException("Config file must not be null");
 		}
 	}
 	

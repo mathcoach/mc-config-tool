@@ -69,7 +69,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		} else {
 			LOGGER.info("Use primary config file '{}'", configFile.getAbsoluteFile());
 		}
-		configTable = resolveConfigVariables(resolveImportConfig(configFile, new XMLConfigParser()));
+		configTable = resolveConfigVariables(resolveImportConfig(configFile,  ConfigParserFactory.getParserForFile(configFile) ));
 	}
 
 	/**

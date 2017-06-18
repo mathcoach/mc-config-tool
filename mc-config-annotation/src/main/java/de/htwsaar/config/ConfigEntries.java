@@ -1,5 +1,6 @@
 package de.htwsaar.config;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,15 +16,22 @@ import java.util.TreeSet;
 public interface ConfigEntries {//NOSONAR
 	Entry[] getEntry();
 	
-	public abstract static class Entry implements Comparable<Entry>{
-		protected Set<ConfigUser> useIn = new TreeSet<>();
-		protected Set<String> suggestValue = new TreeSet<>();
-		private String value;
+	public static final class Entry implements Comparable<Entry>{
+		protected final Set<ConfigUser> useIn = new TreeSet<>();
+		protected final Set<String> suggestValue = new TreeSet<>();
 		
+		private String value;
+		private final String name;
+		
+		public Entry(String name){
+			this.name = name;
+		}
 		/**
 		 * name der configuration-parameter
 		 */
-		public abstract String getName();
+		public String getName(){
+			return name;
+		};
 		
 		/**
 		 * set the value of this configuration parameter.
@@ -42,14 +50,14 @@ public interface ConfigEntries {//NOSONAR
 		}
 		
 		/**
-		 * The set of @{ConfigUser}s, which use this configuration parameters.
+		 * The set of {@link ConfigUser}s, which use this configuration parameters.
 		 */
 		public Set<ConfigUser> useIn(){
-			return this.useIn;
+			return new HashSet<>(useIn);
 		}
 		
 		public Set<String> suggestValue(){
-			return suggestValue;
+			return new HashSet<>(suggestValue);
 		}
 		
 		public Entry addUseIn(String clazz, String description){
@@ -62,8 +70,13 @@ public interface ConfigEntries {//NOSONAR
 			return this;
 		}
 		
-		public Entry addSuggestValue(SuggestValueCalculator cal){
-			suggestValue.add(cal.calculate());
+		public Entry addSuggestValue(SimpleValueCalculator calculator){
+			suggestValue.add(calculator.calculate());
+			return this;
+		}
+		
+		public Entry addParametrizedSuggestValue(Object parametrizedConfiValue,ParametrizedValueCalculator cal){
+			suggestValue.add(cal.calculate(parametrizedConfiValue) );
 			return this;
 		}
 		
@@ -103,11 +116,16 @@ public interface ConfigEntries {//NOSONAR
 	}
 	
 	@FunctionalInterface
-	public static interface SuggestValueCalculator{
+	public static interface ParametrizedValueCalculator{
+		String calculate(Object parametrizedConfigValue);
+	}
+	
+	@FunctionalInterface
+	public static interface SimpleValueCalculator {
 		String calculate();
 	}
 	
-	public static class ConfigUser implements Comparable<ConfigUser>{
+	public static final class ConfigUser implements Comparable<ConfigUser>{
 		
 		public final String name, description;//NOSONAR
 		

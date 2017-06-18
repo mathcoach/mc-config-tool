@@ -16,35 +16,23 @@ public final class $unique_name implements ConfigEntries{
 
 	@Override
 	public Entry[] getEntry() {
-		return 
-$expand:entry_array$		
-		;
+		return new Entry[] {
+$expand:entry, separator= ",\n"$		
+		};
 	}	
 }
 //End of file
 $end:config_entry$
 
-
-
-
-$macro:entry_array$
-		new Entry[]{
 $macro:entry(name)$
-			new Entry() {
-				@Override
-				public String getName() {
-					return "$name";
-				}
-				{
+				new Entry("$name")
 $macro:use_in(target, description)$					
-					useIn.add(new ConfigUser("$target", "$description" ) );
+					.addUseIn( "$target", "$description" )
 $end:use_in$
 $macro:suggest_value(value)$
-					suggestValue.add("$value");
+					.addSuggestValue("$value")
 $end:suggest_value$
-				}		
-			},
 $end:entry$
-		}
-$end:entry_array$
+
+
 
