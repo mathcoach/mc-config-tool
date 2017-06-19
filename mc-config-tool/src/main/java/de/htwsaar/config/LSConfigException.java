@@ -9,7 +9,7 @@ package de.htwsaar.config;
 public class LSConfigException extends RuntimeException{
 	
 	public LSConfigException(EnvConfiguration source, String msg){
-		super(msg + " [config source: " + (source !=null ? source.toString() : "N/A") +"]" );
+		super(msg + " [config source: " + source +"]" );
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class LSConfigException extends RuntimeException{
 	 * @param cause the cause.
 	 */
 	public LSConfigException(EnvConfiguration source, String msg, Throwable cause){
-		super(msg + " ("+cause.getMessage()+")" + " [config source: " + (source !=null ? source.toString() : "N/A") +"]",cause);
+		super(msg + " ("+ cause +")" + " [config source: " + source +"]", cause);
 	}
 	
 	/**

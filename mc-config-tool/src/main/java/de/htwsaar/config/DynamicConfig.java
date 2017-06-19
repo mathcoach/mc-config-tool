@@ -19,7 +19,7 @@ public class DynamicConfig implements EnvConfiguration {
 	
 	public DynamicConfig(EnvConfiguration origin){
 		config = new HashMap<>();
-		_mergConfig(origin);
+		_mergeConfig(origin);
 	}
 	
 	public DynamicConfig(Map<String,String> musterConfig){
@@ -35,13 +35,13 @@ public class DynamicConfig implements EnvConfiguration {
 	public Set<String> getAllConfigKeys() {
 		return config.keySet();
 	}
-	private void _mergConfig(EnvConfiguration origin){
-		origin.getAllConfigKeys().stream().forEach((configKey) -> {
-			config.put(configKey, origin.getConfigValue(configKey));
-		});
+	private void _mergeConfig(EnvConfiguration origin){ //NOSONAR (_ is used for internal)
+		origin.getAllConfigKeys().stream().forEach( configKey -> 
+			config.put(configKey, origin.getConfigValue(configKey))
+		);
 	}
 	public DynamicConfig mergeConfig(EnvConfiguration origin){
-		_mergConfig(origin);
+		_mergeConfig(origin);
 		return this;
 	}
 	
