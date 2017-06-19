@@ -10,18 +10,12 @@ import org.openide.util.Lookup;
  * @author hbui
  */
 public final class ConfigCollector {
+	
 	private ConfigCollector(){
-		
+		// Prevent to create an instance of this class
 	}
 
-	/**
-	 * @deprecated use {@link ConfigCollector#collectConfigAsMap() }
-	 * prefer to use ConfigCollector.collectConfigAsMap
-	 */
-	@Deprecated
-	public static final Collection<ConfigEntries.Entry> collectConfig(){
-		return collectConfigAsMap().values();
-	}	
+	
 
 	public static final Map<String,ConfigEntries.Entry> collectConfigAsMap(){
 		Map<String,ConfigEntries.Entry> configs = new TreeMap<>();

@@ -1,6 +1,5 @@
 package de.htwsaar.config;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Test;
@@ -12,18 +11,7 @@ import org.fest.assertions.core.Condition;
  */
 public class ConfigCollectorTest {
 	
-	public ConfigCollectorTest() {
-	}
-	
-	@Test
-	public void collectAllConfig() {
-		Collection<ConfigEntries.Entry> collectConfig = ConfigCollector.collectConfig();
-		assertThat(collectConfig).isNotEmpty();
-		for (ConfigEntries.Entry e : collectConfig){
-			System.out.println(e.toString());
-		}
-	}
-	
+
 	@Test
 	public void validateName() {
 		Map<String, ConfigEntries.Entry> configEntryMap = ConfigCollector.collectConfigAsMap();
