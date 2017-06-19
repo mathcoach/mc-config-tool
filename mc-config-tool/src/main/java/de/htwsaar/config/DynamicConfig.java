@@ -5,11 +5,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class is intended to be used in tests.
+ * This class is intended to be use in Unit test as a Mock Object of {@link EnvConfiguration}.
+ * 
  * @author hbui
  */
-public final class DynamicConfig implements EnvConfiguration{
-	
+public class DynamicConfig implements EnvConfiguration {
+
 	private final Map<String,String> config;
 
 	public DynamicConfig(){
@@ -22,8 +23,7 @@ public final class DynamicConfig implements EnvConfiguration{
 	}
 	
 	public DynamicConfig(Map<String,String> musterConfig){
-		config = new HashMap<>();
-		config.putAll(musterConfig);
+		config = EnvConfiguration.resolveConfigVariables(musterConfig);
 	}
 	
 	@Override
@@ -44,8 +44,10 @@ public final class DynamicConfig implements EnvConfiguration{
 		_mergConfig(origin);
 		return this;
 	}
+	
 	public DynamicConfig config(String key, String value){
-		config.put(key, value);
+		EnvConfiguration.setConfigValue(key, value, config);
 		return this;
 	}
+	
 }
