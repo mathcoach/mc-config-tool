@@ -1,6 +1,8 @@
 package de.htwsaar.config;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -48,10 +50,19 @@ public interface EnvConfiguration {
 				throw new LSConfigException("Import too many levels " + configFile.getAbsolutePath());
 			} else {
 				parser.reset();
+				Path importedPath = Paths.get(resolveSystemProperties(temp.get(IMPORT_KEY)))
+						.toAbsolutePath().normalize();
+				// Not need to check if file exists it make the code in ConfigParser.parseConfigFile
+				temp.remove(IMPORT_KEY);
+				Map<String, String> importedConfig = parser.parseConfigFile(importedPath.toFile());
+				temp.putAll(importedConfig);
+				
+				/*
 				File importedFile = new File(resolveSystemProperties(temp.get(IMPORT_KEY)));
 				temp.remove(IMPORT_KEY);
 				Map<String, String> importedConfig = parser.parseConfigFile(importedFile);
 				temp.putAll(importedConfig);
+				 */
 			}
 		}
 		return temp;
@@ -87,8 +98,8 @@ public interface EnvConfiguration {
 				.replace("${HOME}", "${user.home}")
 				.replace("$PWD", "${user.dir}")
 				.replace("${PWD}", "${user.dir}");
-		resolvedText = StrSubstitutor.replaceSystemProperties(resolvedText);
-		return resolvedText;
+		return StrSubstitutor.replaceSystemProperties(resolvedText);
+		//return resolvedText;
 	}
 
 	static void setConfigValue(

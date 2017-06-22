@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public class ClasspathBasedConfig implements EnvConfiguration {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EnvConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
 	
 	private final HashSet<Path> classPathDir;
 	private File configFile;
@@ -112,27 +113,22 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 			LOGGER.trace("Cause: {}", ex);
 		}
 	}
-
 	protected final void collectDirFromURL(URL classPath, final Set<Path> classPathDir) {
 		final String path = classPath.getPath();
-		final File classPathFile = new File(path);
-		final File parentDir = classPathFile.getParentFile();
+		final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();
 		LOGGER.trace("path: {}", path);
-		if (classPathFile.isDirectory()) {
-			Path searchDir = classPathFile.toPath().toAbsolutePath().normalize();
-			if (!classPathDir.contains(searchDir)) {
-				LOGGER.trace("Add dir '{}' to search dir", searchDir/*.getAbsolutePath()*/);
-				classPathDir.add( searchDir );
+		if ( Files.isDirectory(classPathFile) ) {
+			if ( classPathDir.add(classPathFile) ){
+				LOGGER.trace("Add dir '{}' to search dir", classPathFile);
 			}
-		} else if (classPathFile.isFile()) {
-			Path searchDir = parentDir.toPath().toAbsolutePath().normalize() ;
-			if (!classPathDir.contains(searchDir)) {
+		} else if ( Files.isRegularFile(classPathFile) ) {
+			Path searchDir = classPathFile.getParent(); 
+			if (classPathDir.add(searchDir)){
 				LOGGER.trace("Add parent '{}' to search dir", searchDir);
-				classPathDir.add( searchDir );
 			}
 		}
 	}
-	
+
 	protected final void searchConfigFileInDir(String configFileName) {
 		for(Path dir : classPathDir){
 			try{
@@ -183,7 +179,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	
 	public final String getSearchDir(){
 		return classPathDir.stream()
-				.map(p -> p.toString())
+				.map( Path::toString )
 				.collect(Collectors.joining(File.pathSeparator));
 	}
 }

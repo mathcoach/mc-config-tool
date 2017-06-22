@@ -23,9 +23,9 @@ public class PropertiesConfigParser implements ConfigParser {
 			p.forEach( (key, value) -> configTable.put(key.toString(), value.toString().trim() ));
 			return configTable;
 		}catch(IOException ex){//NOSONAR
-			throw new LSConfigException(ex);
+			throw new LSConfigException(ex);//NOSONAR
 		}catch(NullPointerException ex){
-			throw new LSConfigException("Config file must not be null");
+			throw new LSConfigException("Config file must not be null", ex);
 		}
 	}
 	

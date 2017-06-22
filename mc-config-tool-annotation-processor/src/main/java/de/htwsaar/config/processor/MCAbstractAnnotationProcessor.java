@@ -13,8 +13,15 @@ import javax.tools.JavaFileObject;
  * @author hbui
  */
 public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
-	protected static final String PACKAGE_REG_VALIDATOR = 
-		"([a-zA-Z]+[a-zA-Z0-9]*)(\\.[a-zA-Z]+[a-zA-Z0-9]*)*";
+	
+	public  static final String PACKAGE_REG_VALIDATOR = 
+		//"([a-zA-Z]+[a-zA-Z0-9]*)(\\.[a-zA-Z]+[a-zA-Z0-9]*)*";
+		//"(?i)^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+[0-9a-z_]$" 
+		"(?i)^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$" 
+	;
+	
+	public static final int MAX_PACKAGE_NAME_LENGTH = 256;
+	
 	private Messager messager;
 	private LogWriter lw;
 
@@ -61,8 +68,10 @@ public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 	}
 
 	protected final boolean validePackageName(String packageName){
-		return packageName.matches(PACKAGE_REG_VALIDATOR);
+		return packageName.length() <= MAX_PACKAGE_NAME_LENGTH  // catch RegDOS by checking length of packageName
+				&& packageName.matches(PACKAGE_REG_VALIDATOR) ; //NOSONAR
 	}
+	
 
 	protected final LogWriter getLogWriter(){
 		return new LogWriter() {

@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,7 +24,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLConfigParser implements ConfigParser {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EnvConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(XMLConfigParser.class);
 	
 	@Override
 	public Map<String,String> parseConfigFile(File configFile){
@@ -42,7 +43,9 @@ public class XMLConfigParser implements ConfigParser {
 			spf.setNamespaceAware(true);
 			SAXParser saxParser = spf.newSAXParser();
 			XMLReader xmlReader = saxParser.getXMLReader();
-			xmlReader.setContentHandler(new ConfigParser(configTable/*, importedLevel*/));
+			xmlReader.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			xmlReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			xmlReader.setContentHandler(new ConfigParser(configTable));
 			xmlReader.parse(configFile.toURI().getPath());
 			if (LOGGER.isTraceEnabled()) {
 				Set<Map.Entry<String, String>> entrySet = configTable.entrySet();

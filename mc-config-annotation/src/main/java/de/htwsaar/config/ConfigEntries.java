@@ -154,9 +154,10 @@ public interface ConfigEntries {//NOSONAR
 
 		@Override
 		public int hashCode() {
-			int hash = 7;
-			hash = 89 * hash + name.hashCode();
-			return hash;
+//			int hash = 7;
+//			hash = 89 * hash + name.hashCode();
+//			return hash;
+			return 89 * 7 + name.hashCode();
 		}
 
 		@Override

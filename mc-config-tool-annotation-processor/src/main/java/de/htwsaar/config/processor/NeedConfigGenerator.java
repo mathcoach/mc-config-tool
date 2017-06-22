@@ -48,7 +48,7 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 				for (NeedConfig p : param.value()) {
 					transform(userName, p, configParam);
 				}
-				String msg = "\t" + (++i) + " " + elem.getSimpleName().toString();
+				String msg = "\t" + (++i) + " " + elem.getSimpleName();
 				info(msg);
 			}
 			// Process simple annotation
