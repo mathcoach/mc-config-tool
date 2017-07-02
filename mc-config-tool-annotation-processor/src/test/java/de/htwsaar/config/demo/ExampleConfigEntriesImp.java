@@ -17,7 +17,7 @@ public class ExampleConfigEntriesImp implements ConfigEntries{
 	public Entry[] getEntry() {
 		return new Entry[]{
 			new Entry("example-config")
-				.addUseIn("de.htwsaarland.laplus", "NA")
+				.addUseIn("de.htwsaar.laplus", "NA")
 				.addSuggestValue("WEB-INF/virtua-file-system")
 			,
 		};

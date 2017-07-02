@@ -8,8 +8,7 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
     
-    <artifactId>mc-config-tool-collector</artifactId>
-    <name>mc-config-tool-collector</name>
+    <artifactId>mc-config-tool-collector</artifactId> 
     <packaging>jar</packaging>
 	
     <properties>
