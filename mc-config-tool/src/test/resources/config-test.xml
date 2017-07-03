@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration import="${HOME}/mathcoach/laplus-config-test.xml">
+<configuration importNOUSE="${HOME}/mathcoach/laplus-config-test.xml">
     <class-path>target/test-classes</class-path>
     <author-root>src/test/resources/virtual-file-system</author-root>
 	<application-path>/tmp/mathcoach-app</application-path>
