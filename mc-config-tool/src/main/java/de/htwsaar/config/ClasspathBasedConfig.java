@@ -63,9 +63,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 				LOGGER.error("Config file {} NOT found!", secondaryConfigFileName);
 				LOGGER.error("Config file is NOT in following folders:");
 				if (LOGGER.isErrorEnabled()) {
-					classPathDir.forEach( f -> LOGGER.error(f.toString() /*.getAbsolutePath()*/ ) );
+					classPathDir.forEach( f -> LOGGER.error("{}" ,f ) );
 				}
-				throw new LSConfigException("No Config file found");
+				throw new LSConfigException("Primary config file '" + primaryConfigFileName + "' and secondary config file '" + secondaryConfigFileName + "' not found.");
 			}else{
 				LOGGER.info("Use secondary config file '{}'", configFile.getAbsoluteFile());
 			}
