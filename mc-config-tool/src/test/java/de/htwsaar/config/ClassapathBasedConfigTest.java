@@ -52,8 +52,8 @@ public class ClassapathBasedConfigTest {
 	public void thowExceptionIfBothConfigFilesNotFound() {
 		try {
 			EnvConfiguration ec = new ClasspathBasedConfig("config-file-not-found.xml", "secondary-config-test.xml");
-			failBecauseExceptionWasNotThrown(LSConfigException.class);
-		} catch (LSConfigException ex) {
+			failBecauseExceptionWasNotThrown(ConfigFileNotFoundException.class);
+		} catch (ConfigFileNotFoundException ex) {
 			assertThat(ex).hasMessageContaining("Primary config file").hasMessageContaining("not found")
 					.hasMessageContaining("secondary config file");
 		}
