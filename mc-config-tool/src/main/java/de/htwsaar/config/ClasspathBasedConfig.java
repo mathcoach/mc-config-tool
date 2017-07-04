@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author hbui
@@ -117,11 +118,11 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		final String path = classPath.getPath();
 		final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();
 		LOGGER.trace("path: {}", path);
-		if ( Files.isDirectory(classPathFile) ) {
+		if ( classPathFile.toFile().isDirectory()  ) {
 			if ( classPathDir.add(classPathFile) ){
 				LOGGER.trace("Add dir '{}' to search dir", classPathFile);
 			}
-		} else if ( Files.isRegularFile(classPathFile) ) {
+		} else if (  classPathFile .toFile().isFile()  ) {
 			Path searchDir = classPathFile.getParent(); 
 			if (classPathDir.add(searchDir)){
 				LOGGER.trace("Add parent '{}' to search dir", searchDir);
@@ -133,9 +134,12 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		for(Path dir : classPathDir){
 			try{
 				LOGGER.debug("Search config file name '{}' in '{}' but not in subdir",configFileName, dir);
-				Optional<Path> configPath = Files.list( dir )
-						.filter(p -> Files.isRegularFile(p) && p.getFileName().toString().equals(configFileName) )
-						.findFirst();
+				final Optional<Path> configPath;
+				try (Stream<Path> stream = Files.list( dir )) {
+					configPath = stream
+							.filter(p -> p.toFile().isFile() && p.getFileName().toString().equals(configFileName) )
+							.findFirst();
+				}
 				if (configPath.isPresent() ){
 					configFile = configPath.get().toFile();
 					return;

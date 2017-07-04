@@ -99,7 +99,7 @@ Für die automatische Sammlung von Konfigurationsparameters:
 
 ```xml
 <dependency>
-	<groupId>de.htwsaarland</groupId>
+	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<scope>compile</scope>
@@ -292,7 +292,7 @@ In POM-Datei:
 
 ```xml
 <dependency>
-	<groupId>de.htwsaarland</groupId>
+	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<scope>compile</scope>
