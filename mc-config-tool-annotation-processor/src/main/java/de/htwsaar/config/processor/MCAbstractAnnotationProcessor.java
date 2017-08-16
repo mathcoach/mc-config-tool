@@ -92,7 +92,7 @@ public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 
 			@Override
 			public void debug(CharSequence msg) {
-				messager.printMessage(Diagnostic.Kind.MANDATORY_WARNING, msg);
+				messager.printMessage(Diagnostic.Kind.NOTE, msg);
 			}
 		};
 	}
