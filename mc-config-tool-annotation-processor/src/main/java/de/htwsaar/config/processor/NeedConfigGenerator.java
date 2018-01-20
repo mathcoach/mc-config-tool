@@ -34,12 +34,12 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-		info("NeedConfigGenerator called");
+		debug("NeedConfigGenerator called");
 		try {
 			int i = 0;
 			Map<String, Entry> configParam = new HashMap<>();
 			List<String> packages = new ArrayList<>();
-			info("Element.length " + roundEnv.getElementsAnnotatedWith(NeedConfigs.class).size());
+			debug("Element.length " + roundEnv.getElementsAnnotatedWith(NeedConfigs.class).size());
 			// Process multiple annotations
 			for (Element elem : roundEnv.getElementsAnnotatedWith(NeedConfigs.class)) {
 				final String userName = getElementName(elem);
@@ -60,7 +60,7 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 			}
 
 			String apackage = buildPackage(packages);
-			warn("\tFinal package name of GenNeedConfigEntry is '" + apackage + "'.");
+			info("\tFinal package name of GenNeedConfigEntry is '" + apackage + "'.");
 			String className = buildUUIDClassName();
 			if (!configParam.isEmpty()) {
 				MConfigEntry configEntryTemplate = new MConfigEntry(apackage, className);
@@ -113,7 +113,7 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 		if (packages.isEmpty()) {
 			info("package is empty");
 			for (int i = 0; i < split.length - 1; i++) {
-				info("add " + split[i] + " to package");
+				debug("add " + split[i] + " to package");
 				packages.add(split[i]);
 			}
 		} else {
