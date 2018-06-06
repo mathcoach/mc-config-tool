@@ -17,7 +17,7 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jacoco.version>0.7.6.201602180812</jacoco.version>
+		<jacoco.version>0.8.1</jacoco.version>
 		<sonar.exclusions>file:**/generated-sources/**</sonar.exclusions>
 		<!-- Sonar -->
 		<!--
@@ -41,16 +41,7 @@
 		</snapshotRepository>
 	</distributionManagement>
 	
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-text</artifactId>
-				<version>1.1</version>
-				<type>jar</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+
 	
 	<build>
 		<pluginManagement>
@@ -66,7 +57,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.6.201602180812</version>
+				<version>${jacoco.version}</version>
 				<configuration></configuration>
 				<executions></executions>
 			</plugin>
@@ -99,5 +90,25 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-text</artifactId>
+				<version>1.1</version>
+				<type>jar</type>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+			</dependency>
+			<dependency>
+				<groupId>org.easytesting</groupId>
+				<artifactId>fest-assert-core</artifactId>
+				<version>2.0M10</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

@@ -34,6 +34,69 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+					<optimize>true</optimize>
+					<debug>true</debug>
+					<fork>true</fork>
+					<verbose>true</verbose>
+					<!-- -proc:none is important -->
+					<compilerArgument>-proc:none</compilerArgument>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>de.htwds</groupId>
+				<artifactId>objectmacro-maven-plugin</artifactId>
+				<version>2.1.3-support-unittest</version>
+				<executions>
+					<execution>
+						<id>config-entry</id>
+						<configuration>
+							<packagename>de.htwsaar.config.macros</packagename>
+							<template>config-entry.java.objectmacro</template>
+						</configuration>
+						<goals>
+							<goal>objectmacro</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>de/htwsaar/config/macros/**/*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
 	<dependencies>
 		<dependency>
 			<groupId>de.htwsaar</groupId>
@@ -65,85 +128,14 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.easytesting</groupId>
 			<artifactId>fest-assert-core</artifactId>
-			<version>2.0M10</version>
 			<scope>test</scope>
 			<type>jar</type>
 		</dependency>
-
-
 	</dependencies>
-
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>UTF-8</encoding>
-					<optimize>true</optimize>
-					<debug>true</debug>
-					<fork>true</fork>
-					<verbose>true</verbose>
-					<!-- -proc:none is important -->
-					<compilerArgument>-proc:none</compilerArgument>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>de.htwds</groupId>
-				<artifactId>objectmacro-maven-plugin</artifactId>
-				<version>2.1.3</version>
-				<configuration>
-					<packagename>de.htwsaar.config.macros</packagename>
-				</configuration>
-				<executions>
-					<execution>
-						<id>config-entry</id>
-						<configuration>
-							<template>config-entry.java.objectmacro</template>
-						</configuration>
-						<goals>
-							<goal>objectmacro</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<configuration>
-					<excludes>
-						<exclude>de/htwsaar/config/macros/**/*</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-		</plugins>
-	</build>
 </project>

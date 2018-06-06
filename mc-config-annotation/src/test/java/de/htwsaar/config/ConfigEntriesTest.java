@@ -76,5 +76,29 @@ public class ConfigEntriesTest {
 			fail("Not expected any exeption but got " + ex.getClass(), ex);
 		}
 	}
+
+	@Test
+	public void equalityConcernOnlyName() {
+		String entryName = "test-entry-name";
+		Entry e1 = new Entry(entryName).setValue("e1");
+		Entry e2 = new Entry(entryName).setValue("e2");
+		assertThat(e1).isEqualTo(e2);
+	}
+
+	@Test
+	public void notEqualityConcernOnlyName() {
+		String entryName = "test-entry-name";
+		Entry e1 = new Entry(entryName).setValue("e1");
+		Entry e2 = new Entry(entryName+ "-extra").setValue("e1");
+		assertThat(e1).isNotEqualTo(e2);
+	}
+
+	@Test
+	public void compareBadType() {
+		String entryName = "test-entry-name";
+		Entry e1 = new Entry(entryName).setValue("e1");
+		assertThat(e1.equals(entryName)).isFalse();
+		assertThat(e1.getName()).isEqualTo(entryName);
+	}
 	
 }
