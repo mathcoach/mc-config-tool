@@ -160,7 +160,52 @@ public class EnvConfigurationTest {
 			assertThat(ex).hasMessageContaining("Import too many level");
 		}
 	}
-	
+
+	@Test
+	public void useDefaultValueWhenConfigurationNotExist() {
+		EnvConfiguration configuration = new DynamicConfig();
+		String defaultValue = "myValue";
+		String configValue = configuration.getConfigValue("not-exist-config", defaultValue);
+		assertThat(configValue).isEqualTo(defaultValue);
+	}
+
+	@Test
+	public void useConfiguredValueWhenConfigurationExist() {
+		String myConfig = "my-config";
+		String myValue = "my-value";
+		EnvConfiguration configuration = new DynamicConfig(
+			new HashMap<String,String>(){{
+				put(myConfig, myValue);
+			}}
+		);
+		String defaultValue = "default-value";
+		String configValue = configuration.getConfigValue(myConfig, defaultValue);
+		assertThat(configValue).isEqualTo(myValue);
+	}
+
+	@Test
+	public void useHandlerWhenConfigurationNotExist() {
+		EnvConfiguration configuration = new DynamicConfig();
+		String defaultValue = "myValue";
+		String configValue = configuration.getConfigValue("not-exist-config", (config) -> defaultValue );
+		assertThat(configValue).isEqualTo(defaultValue);
+	}
+
+	@Test
+	public void doNotCallHandlerWhenConfigurationExist() {
+		String myConfig = "my-config";
+		String myValue = "my-value";
+		EnvConfiguration configuration = new DynamicConfig(
+			new HashMap<String,String>(){{
+				put(myConfig, myValue);
+			}}
+		);
+		String defaultValue = "default-value";
+		String configValue = configuration.getConfigValue(myConfig, (config) -> defaultValue );
+		assertThat(configValue).isEqualTo(myValue);
+	}
+
+
 	final String IMPORT_CONFIG_FILE = "imported-config";
 	final String MAIN_CONFIG_FILE = "main-config";
 	class DummyConfigParser implements ConfigParser{

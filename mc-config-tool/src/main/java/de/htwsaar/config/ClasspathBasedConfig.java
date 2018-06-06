@@ -80,7 +80,6 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	 * <p>
 	 * Constructor for EnvConfiguration.</p>
 	 *
-	 * @param configFile a {@link java.io.File} object.
 	 */
 	@Override
 	public Set<String> getAllConfigKeys() {
@@ -116,7 +115,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	}
 	protected final void collectDirFromURL(URL classPath, final Set<Path> classPathDir) {
 		final String path = classPath.getPath();
-		final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();
+		final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();  //NOSONAR (checked)
 		LOGGER.trace("path: {}", path);
 		if ( classPathFile.toFile().isDirectory()  ) {
 			if ( classPathDir.add(classPathFile) ){

@@ -19,18 +19,51 @@ import org.slf4j.LoggerFactory;
  */
 public interface EnvConfiguration {
 
-	static final int MAX_IMPORT_LEVEL = 1;
-	static final String IMPORT_KEY = "import";
-	static final Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
+	int MAX_IMPORT_LEVEL = 1;
+	String IMPORT_KEY = "import";
+	Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.+?)\\}");
 
 	/**
 	 * Gibt den Konfiguration-Wert zurück oder {@code null} wenn die
-	 * Konfiguration-Param nicht in dem {@link #configTable} existiert.
+	 * Konfiguration-Param nicht in dem  eigenen Configurationstabelle existiert.
 	 *
 	 * @param configParameter a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
 	String getConfigValue(String configParameter);
+
+	/**
+	 * Gibt den Konfigurations-Wert zurück, oder den Default Wert wenn der
+	 * Konfigurations-Parameter nicht im eigene Konfigurationstabelle existiert,
+	 *
+	 * @param configParameter Der Konfigurationsparameter
+	 * @param defaultValue Default Value wenn der Konfigurationsparameter nicht existert
+	 * @return Wie in der Beschreibung
+	 * */
+	default String getConfigValue(String configParameter, String defaultValue) {
+		String configValue = getConfigValue(configParameter);
+		if (configValue == null) {
+			return defaultValue;
+		}
+		return configValue;
+	}
+
+	/**
+	 * Gibt den Konfigurations-Wert zurück, oder ruft den gegeben handler auf wenn der Konfig nicht existiert.
+	 *
+	 * @param configParameter Der Parameter
+	 * @param handler Handles missing configuration
+	 *
+	 * @return as description
+	 *
+	 * */
+	default String getConfigValue(String configParameter, MissingConfigurationHandler handler) {
+		String configValue = getConfigValue(configParameter);
+		if (configValue == null) {
+			return handler.handleMissingConfiguration(configParameter);
+		}
+		return configValue;
+	}
 
 	/**
 	 * @return the url, from which the config are saved, or null if unknown!
@@ -50,7 +83,7 @@ public interface EnvConfiguration {
 				throw new LSConfigException("Import too many levels " + configFile.getAbsolutePath());
 			} else {
 				parser.reset();
-				Path importedPath = Paths.get(resolveSystemProperties(temp.get(IMPORT_KEY)))
+				Path importedPath = Paths.get(resolveSystemProperties(temp.get(IMPORT_KEY))) //NOSONAR
 						.toAbsolutePath().normalize();
 				// Not need to check if file exists it make the code in ConfigParser.parseConfigFile
 				temp.remove(IMPORT_KEY);
@@ -126,5 +159,10 @@ public interface EnvConfiguration {
 		} else {
 			configTable.put(configParameter, newValue);
 		}
+	}
+
+	@FunctionalInterface
+	interface MissingConfigurationHandler {
+		String handleMissingConfiguration(String configurationParameter);
 	}
 }

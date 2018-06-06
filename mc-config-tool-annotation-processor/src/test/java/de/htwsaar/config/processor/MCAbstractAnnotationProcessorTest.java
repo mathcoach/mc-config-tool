@@ -23,25 +23,25 @@ public class MCAbstractAnnotationProcessorTest {
 	RegTester regtester = new RegTester();
 	
 	@Test
-	public void regexReconizeCorrectPackage(){
+	public void regexRecognizeCorrectPackage(){
 		boolean valid = regtester.validePackageName("aAaa.Bbb.ccC");
 		assertThat(valid).isTrue();
 	}
 	
 	@Test
-	public void regexReconizeCorrectPackage2(){		
+	public void regexRecognizeCorrectPackage2(){
 		boolean valid = regtester.validePackageName("a1A.b2Bb.cC3");
 		assertThat(valid).isTrue();
 	}
 	
 	@Test
-	public void regexReconizeCorrectPackage3(){		
+	public void regexRecognizeCorrectPackage3(){
 		boolean valid = regtester.validePackageName("a_1.b2.ccc");
 		assertThat(valid).isTrue();
 	}
 	
 	@Test
-	public void regexReconizeCorrectPackage4(){		
+	public void regexRecognizeCorrectPackage4(){
 		boolean valid = regtester.validePackageName("abc");
 		assertThat(valid).isTrue();
 	}
@@ -49,7 +49,7 @@ public class MCAbstractAnnotationProcessorTest {
 	// Test of ReDoS, s. https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS
 	// this tesh should not take too much time, about < 6 ms
 	@Test 
-	public void regexReconizeCorrectPackage5(){
+	public void regexRecognizeCorrectPackage5(){
 		StringBuffer b = new StringBuffer(MCAbstractAnnotationProcessor.MAX_PACKAGE_NAME_LENGTH);
 		while(b.length() < MCAbstractAnnotationProcessor.MAX_PACKAGE_NAME_LENGTH){
 			b.append("a");
@@ -59,7 +59,7 @@ public class MCAbstractAnnotationProcessorTest {
 	}
 	
 	@Test 
-	public void regexReconizeCorrectPackage6(){
+	public void regexRecognizeCorrectPackage6(){
 		StringBuffer b = new StringBuffer(MCAbstractAnnotationProcessor.MAX_PACKAGE_NAME_LENGTH);
 		while(b.length() < MCAbstractAnnotationProcessor.MAX_PACKAGE_NAME_LENGTH){
 			b.append("a");
@@ -70,31 +70,31 @@ public class MCAbstractAnnotationProcessorTest {
 	}
 	
 	@Test
-	public void regexNotRegconizeIncorrectPackage(){		
+	public void regexNotRecognizeIncorrectPackage(){
 		boolean valid = regtester.validePackageName("1a.b2.ccc");
 		assertThat(valid).isFalse();
 	}
 	
 	@Test
-	public void regexNotRegconizeIncorrectPackage2(){		
+	public void regexNotRecognizeIncorrectPackage2(){
 		boolean valid = regtester.validePackageName("$a.b2.ccc");
 		assertThat(valid).isFalse();
 	}
 	
 	@Test
-	public void regexNotRegconizeIncorrectPackage3(){		
+	public void regexNotRecognizeIncorrectPackage3(){
 		boolean valid = regtester.validePackageName("!a.b2.ccc");
 		assertThat(valid).isFalse();
 	}
 	
 	@Test
-	public void regexNotRegconizeIncorrectPackage4(){		
+	public void regexNotRecognizeIncorrectPackage4(){
 		boolean valid = regtester.validePackageName("a!b.b2.ccc");
 		assertThat(valid).isFalse();
 	}
 	
 	@Test
-	public void regexNotRegconizeIncorrectPackage5(){		
+	public void regexNotRecognizeIncorrectPackage5(){
 		boolean valid = regtester.validePackageName("aab.2b.ccc");
 		assertThat(valid).isFalse();
 	}
