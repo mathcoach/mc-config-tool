@@ -15,3 +15,8 @@ target/
 
 /mc-config-tool-annotation-processor/nbproject/
 /mc-config-annotation/nbproject/
+
+# IDEs
+.idea/
+*.iml
+
