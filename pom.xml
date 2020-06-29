@@ -17,8 +17,8 @@
 	
 	<properties>
 		<java.version>1.8</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jacoco.version>0.8.1</jacoco.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
+		<jacoco.version>0.8.5</jacoco.version>
 		<sonar.exclusions>file:**/generated-sources/**</sonar.exclusions>
 		<!-- Sonar -->
 		<!--
@@ -28,20 +28,18 @@
 		<sonar.language>java</sonar.language>
 		-->
 	</properties>
-	
 	<distributionManagement>
 		<repository>
-			<id>newton</id>
-			<name>newton-releases</name>
-			<url>https://newton.htwsaar.de/artifactory/libs-release-local</url>
+			<id>central</id>
+			<name>libs-releases</name>
+			<url>https://bayes.htwsaar.de/artifactory/libs-release-local</url>
 		</repository>
 		<snapshotRepository>
-			<id>newton</id>
-			<name>newton-snapshots</name>
-			<url>https://newton.htwsaar.de/artifactory/libs-snapshot-local</url>
+			<id>snapshots</id>
+			<name>lib-snapshots</name>
+			<url>https://bayes.htwsaar.de/artifactory/libs-snapshot-local</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
 
 	
 	<build>
@@ -67,8 +65,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
-				<configuration>
-					<executable>${jdk8.home}/bin/javac</executable>
+				<configuration>					
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 					<encoding>UTF-8</encoding>
@@ -84,9 +81,10 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<plugin>
+			<plugin>				
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -99,8 +97,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
 				<configuration>
-					<additionalOptions>-Xdoclint:none</additionalOptions>
+					<additionalOptions>-Xdoclint:none -html5</additionalOptions>
 				</configuration>
 				<executions>
 					<execution>
