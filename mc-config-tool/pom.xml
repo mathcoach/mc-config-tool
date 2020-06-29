@@ -42,23 +42,22 @@
 				<!-- Java Compiler / Annotation Processor Options -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<executable>${jdk8.home}/bin/javac</executable>
+				<version>3.8.1</version>
+				<configuration>					
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 					<encoding>UTF-8</encoding>
 					<optimize>true</optimize>
 					<debug>true</debug>
 					<fork>true</fork>
-				</configuration>
-				<dependencies>
+				</configuration>				
+				<!--dependencies>
 					<dependency>
 						<groupId>org.ow2.asm</groupId>
 						<artifactId>asm</artifactId>
 						<version>6.2</version>
 					</dependency>
-				</dependencies>
+				</dependencies-->
 			</plugin>
 		</plugins>
 	</build>

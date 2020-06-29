@@ -30,15 +30,13 @@
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<artifactId>junit</artifactId>			
 			<scope>test</scope>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.easytesting</groupId>
-			<artifactId>fest-assert-core</artifactId>
-			<version>2.0M10</version>
+			<artifactId>fest-assert-core</artifactId>			
 			<scope>test</scope>
 			<type>jar</type>
 		</dependency>
@@ -48,8 +46,7 @@
 		<plugins>
 			<plugin>
 				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
+				<artifactId>jacoco-maven-plugin</artifactId>				
 				<executions>
 					<execution>
 						<goals>
