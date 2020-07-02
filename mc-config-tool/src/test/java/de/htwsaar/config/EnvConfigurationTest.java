@@ -4,8 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import static org.fest.assertions.api.Assertions.*;
-import org.fest.assertions.data.MapEntry;
+import static org.assertj.core.api.Assertions.*;
+import org.assertj.core.data.MapEntry;
+
 /**
  *
  * @author hbui

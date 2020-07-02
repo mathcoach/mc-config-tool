@@ -2,7 +2,7 @@ package de.htwsaar.config;
 
 import java.io.File;
 import org.junit.jupiter.api.Test;
-import static org.fest.assertions.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  *

@@ -6,11 +6,12 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.Set;
+import static org.assertj.core.api.Assertions.*;
 
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
-import static org.fest.assertions.api.Assertions.*;
+
 
 /**
  *

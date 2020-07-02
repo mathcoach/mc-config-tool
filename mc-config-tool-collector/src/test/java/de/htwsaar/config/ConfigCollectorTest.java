@@ -3,8 +3,9 @@ package de.htwsaar.config;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
-import static org.fest.assertions.api.Assertions.*;
-import org.fest.assertions.core.Condition;
+import static org.assertj.core.api.Assertions.*;
+import org.assertj.core.api.Condition;
+//import org.fest.assertions.core.Condition;
 /**
  *
  * @author hbui

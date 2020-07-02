@@ -7,7 +7,7 @@ package de.htwsaar.config;
 
 import java.io.File;
 import java.util.Map;
-import static org.fest.assertions.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
