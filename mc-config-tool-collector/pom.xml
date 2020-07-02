@@ -5,22 +5,17 @@
     <parent>
         <groupId>de.htwsaar</groupId>
         <artifactId>mc-config-tool-metapom</artifactId>
-        <version>2.2-SNAPSHOT</version>
+        <version>2.3-SNAPSHOT</version>
     </parent>
     
     <artifactId>mc-config-tool-collector</artifactId> 
     <packaging>jar</packaging>
 	
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
 			<artifactId>org-openide-util-lookup</artifactId>
-			<version>RELEASE82</version>
+			<version>RELEASE120-1</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
