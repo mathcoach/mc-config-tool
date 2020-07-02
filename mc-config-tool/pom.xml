@@ -51,14 +51,7 @@
 					<debug>true</debug>
 					<fork>true</fork>
 				</configuration>				
-				<!--dependencies>
-					<dependency>
-						<groupId>org.ow2.asm</groupId>
-						<artifactId>asm</artifactId>
-						<version>6.2</version>
-					</dependency>
-				</dependencies-->
-			</plugin>
+			</plugin>			
 		</plugins>
 	</build>
 	

@@ -100,6 +100,7 @@
 				<version>3.2.0</version>
 				<configuration>
 					<additionalOptions>-Xdoclint:none -html5</additionalOptions>
+					<source>8</source>
 				</configuration>
 				<executions>
 					<execution>
