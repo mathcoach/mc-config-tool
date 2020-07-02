@@ -8,8 +8,8 @@ package de.htwsaar.config;
 import java.io.File;
 import java.util.Map;
 import static org.fest.assertions.api.Assertions.*;
-import org.junit.Test;
-import org.junit.Before;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  *
@@ -19,7 +19,7 @@ public class PropertiesConfigParserTest {
 
 	private PropertiesConfigParser parser;
 	
-	@Before
+	@BeforeAll
 	public void init(){
 		parser = new PropertiesConfigParser();
 	}

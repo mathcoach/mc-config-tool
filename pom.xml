@@ -19,6 +19,7 @@
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
 		<jacoco.version>0.8.5</jacoco.version>
+		<junit.jupiter.version>5.6.2</junit.jupiter.version>
 		<sonar.exclusions>file:**/generated-sources/**</sonar.exclusions>
 		<!-- Sonar -->
 		<!--
@@ -27,6 +28,7 @@
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.language>java</sonar.language>
 		-->
+		
 	</properties>
 	<distributionManagement>
 		<repository>
@@ -115,9 +117,22 @@
 			</dependency>
 
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${junit.jupiter.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit.jupiter.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>          
+				<version>${junit.jupiter.version}</version>  
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.easytesting</groupId>

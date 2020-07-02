@@ -7,8 +7,9 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.Set;
 
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 import static org.fest.assertions.api.Assertions.*;
 
 /**
@@ -24,7 +25,7 @@ public class ClassapathBasedConfigTest {
 		assertThat(configValue).isEqualTo("target/test-classes");
 	}
 
-	@Ignore
+	@Disabled
 	@Test
 	public void experimental() throws Exception{
 

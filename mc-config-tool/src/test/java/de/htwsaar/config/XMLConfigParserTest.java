@@ -2,9 +2,9 @@ package de.htwsaar.config;
 
 import java.io.File;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.fest.assertions.api.Assertions.*;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 /**
  *
  * @author hbui
@@ -13,7 +13,7 @@ public class XMLConfigParserTest {
 	
 	private XMLConfigParser parser;
 	
-	@Before
+	@BeforeAll
 	public void init(){
 		parser = new XMLConfigParser();
 	}

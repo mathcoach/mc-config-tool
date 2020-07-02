@@ -3,7 +3,7 @@ package de.htwsaar.config.processor;
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.fest.assertions.api.Assertions.*;
 
 /**
