@@ -31,7 +31,7 @@ Die Bibliothek `lib-a` wird in einem Maven-Projekt eingegliedert. Die
 Web-Anwendung `Web-x` und die Desktop-Anwendung `App-z` werden jeweils in einem
 Maven-Projekt eingegliedert.
 
-Da Maven trennt die Source Datei strikt in zweit Teilen: Produktives Code
+Da Maven die Source Datei strikt in zweit Teilen trennt: Produktives Code
 (`src/main`) und Test Code (`src/test`), kann man eine Konfiguration-Datei in
 Classpath (abk.: CP) platzieren, eine für Produktives Code und eine für Test
 Code. Die Konfigurationsdatei wird in CP ausgelesen und geparsert.
@@ -56,8 +56,8 @@ lib-a
     |--main
     |--test
        |--resources
-	        |--config-alternative-1.xml (Nicht sichtbar in Web-x)
-			|--config-alternative-2.xml (Nicht sichtbar in Web-x) 
+	        |--config-alternative-1.properties (Nicht sichtbar in Web-x)
+			|--config-alternative-2.properties (Nicht sichtbar in Web-x) 
 
 Web-x (gilt auch für App-z)
  |--src
@@ -66,8 +66,8 @@ Web-x (gilt auch für App-z)
 	|       |--config.xml
 	|--test
 	    |--resources
-		    |--config-alternative-1.xml (Nur in Test-Phase sichtbar)
-			|--config-alternative-2.xml (Nur in Test-Phase sichtbar)
+		    |--config-alternative-1.properties (Nur in Test-Phase sichtbar)
+			|--config-alternative-2.properties (Nur in Test-Phase sichtbar)
 ```
 
 (Über die Format der Konfigurationsdatei (XML, Property, JSON) diskutieren wir
@@ -91,7 +91,7 @@ Für die Nutzung von API:
 <dependency>
 	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>2.3</version>
 </dependency>
 ```
 
@@ -101,85 +101,62 @@ Für die automatische Sammlung von Konfigurationsparameters:
 <dependency>
 	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>2.3</version>
 	<scope>compile</scope>
 </dependency>
 ```
 
 ### Die Konfigurationsdatei
 
-Die aktuelle Implementierung nutzt aus historische Grund die XML-Format um die
-KP zu speichern.  Die Konfigurationsdatei sieht etwa so aus:
+Die aktuelle Implementierung verwendet Properties-Format. 
+Die Konfigurationsdatei sieht etwa so aus:
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration import="[path in file system]">
-	<config-param-1>wert-1</config-param-1>
-	<config-param-2>wert-2</config-param-2>
-</configuration>	
+```properties
+# Laufzeit-Umgebung abhängig Parameter kann in einem Datei außerhalb der Source Code
+# mit Hilfe von import konfiguriert werden:
+#import=${HOME}/[application-name]/configuration.properties
 ```
 
-Der Root-Element der Konfigurationsdatei ist `configuration`. Es hat ein
-optionales Attribute `import`, das nur abgelesen wird, wenn die
-Konfigurationsdatei in CP ist.
+Ein konkretes Beispiel:
 
-Jede KP ist durch ein Element (wir nennen es Konfiguration-Element)
-repräsentiert, dessen Kind-Node ist entweder ein Text-Node oder CDATA-Node, und
-repräsentiert dessen Konfigurationswerten.  Die führenden Leerzeichen und die
-endende Leerzeichen werden einfach ignoriert. Regel:
+```properties
+# Filename: ${project.base}/src/main/resources/configuration.properties
 
-* Existiert kein Konfiguration-Element, wird dessen Wert als `null`
-  repräsentiert. Ist der Konfigurationswert ein Leerstring, ist es auch als
-  Leerstring repräsentiert.
+import=${HOME}/online-glossary/configuration.properties
 
-* Kommt ein KP sowohl ind CP-Konfigurationsdatei als auch in
-  `import`-Konfigurationsdateien vor, wird der Wert in CP-Konfigurationsdatei
-  verwendet.
-
-* Kommt das Attribute `import` in einer `import`-Konfigurationsdatei vor, wird
-  ein Exception ausgeworfen. In `import` kann man folgenden Variable benutzen:
-
-  * `${HOME}` bzw. `$HOME`, oder `${user.home}` das Home-Verzeichnis der User,
-	welche das Java-Prozess startet.  Es wird in `user.home`-Sytem Property
-	übersetzt.
-  * `${PWD}` bzw. `$PWD`, oder `${user.dir}` das aktuelle Verzeichnis des
-	Java-Prozesses. Man soll diese Variable vermeiden wenn es möglich ist.
-
-Konkrete Beispiel:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- File config-test.xml in CP -->
-<configuration import="${HOME}/mathcoach/laplus-config-test.xml">
-    <class-path>target/test-classes</class-path>
-    <author-root>src/test/resources/virtual-file-system</author-root>
-	<application-path>/tmp/mathcoach-app</application-path>
-</configuration>
+# NOTE:
+# There is no sensible data in this file!
 ```
 
-und 
+```properties
+# Filename: $HOME/online-glossary/configuration.properties
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- File ${HOME}/mathcoach/laplus-config-test.xml in File System -->
-<configuration>
-    <db-password>topsecret</db-password>
-</configuration>
+glossary.database.url=jdbc:postgresql:glossary
+glossary.database.username=sysad
+glossary.database.password=topsecret
+
+# NOTE:
+# Sensible data are stored in a local machine-specified file, outside of 
+# project source base.
 ```
+
+
 
 Mit der obigen Konfigurationsdatei kann man z.B. den Konfigurationsparameter
-`author-root` als `target/test-classes` und `db-password` als `topsecret`
+`glossary.database.username` als `sysad` und `glossary.database.password` als `topsecret`
 erwarten. Man bekommt diesen Wert durch etwa
 
 ```java
-EnvConfiguration env = ... ; //Obtain the Instance here, see section below
-env.getConfigValue("author-root");
+// a static Factory class can be used to get an instance of EnvConfiguration at a
+// position in application
+EnvConfiguration env = new ClasspathBasedConfig("test-configuration.properties", "configuration.properties") ; //Obtain the Instance here
+
+// ... some where in code
+env.getConfigValue("glossary.database.username"); // → sysad
 ```
-bekommen. 
 
 > Bemerkung: Die Interpretation von `target/test-classes` hängt natürlich von
-> der Anwendung ab,
-  hat nichts mit Config zu tun.
+> der Anwendung ab, hat nichts mit Config zu tun.
 
 ### Die Application Programming Interface
 
@@ -294,7 +271,7 @@ In POM-Datei:
 <dependency>
 	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>2.3</version>
 	<scope>compile</scope>
 </dependency>
 ```
