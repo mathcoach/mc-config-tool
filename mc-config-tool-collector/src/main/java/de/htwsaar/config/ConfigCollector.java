@@ -29,7 +29,7 @@ public final class ConfigCollector {
 					configs.put(entry.getName(), entry);
 				}else{ //merge it
 					entry.useIn().forEach( s  -> inMapEntry.addUseIn(s.name, s.description));
-					entry.suggestValue().forEach(inMapEntry::addSuggestValue);
+					entry.suggestValue().stream().forEach(inMapEntry::addSuggestValue);
 				}
 			}
 		});

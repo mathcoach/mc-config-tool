@@ -16,5 +16,5 @@ import java.lang.annotation.Target;
 public @interface NeedConfig {
 	String name ();
 	String [] description() default {};
-	String [] sugguestValues() default {""};
+	String [] sugguestValues() default {};
 }
