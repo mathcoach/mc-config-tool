@@ -85,17 +85,13 @@ public interface EnvConfiguration {
 				parser.reset();
 				Path importedPath = Paths.get(resolveSystemProperties(temp.get(IMPORT_KEY))) //NOSONAR
 						.toAbsolutePath().normalize();
-				// Not need to check if file exists it make the code in ConfigParser.parseConfigFile
-				temp.remove(IMPORT_KEY);
-				Map<String, String> importedConfig = parser.parseConfigFile(importedPath.toFile());
-				temp.putAll(importedConfig);
-				
-				/*
-				File importedFile = new File(resolveSystemProperties(temp.get(IMPORT_KEY)));
-				temp.remove(IMPORT_KEY);
-				Map<String, String> importedConfig = parser.parseConfigFile(importedFile);
-				temp.putAll(importedConfig);
-				 */
+				if(importedPath.toFile().isFile() ) {
+					temp.remove(IMPORT_KEY);
+					Map<String, String> importedConfig = parser.parseConfigFile(importedPath.toFile());
+					temp.putAll(importedConfig);
+				}else {
+					throw new ImportCfgFileNotFound(importedPath);
+				}
 			}
 		}
 		return temp;

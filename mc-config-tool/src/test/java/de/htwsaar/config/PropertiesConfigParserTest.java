@@ -10,6 +10,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  *
@@ -19,7 +20,7 @@ public class PropertiesConfigParserTest {
 
 	private PropertiesConfigParser parser;
 	
-	@BeforeAll
+	@BeforeEach
 	public void init(){
 		parser = new PropertiesConfigParser();
 	}

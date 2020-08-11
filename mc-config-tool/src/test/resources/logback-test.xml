@@ -30,7 +30,7 @@
 	</logger>
 
 	
-	<logger name="de.htwsaar.config" level="TRACE" />
+	<logger name="de.htwsaar.config" level="INFO" />
 	
 	<!-- =================================================================== -->
 	<logger name="ch.qos.logback.classic.LoggerContext" level="TRACE">

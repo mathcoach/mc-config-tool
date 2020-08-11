@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Disabled;
  *
  * @author hbui
  */
-public class ClassapathBasedConfigTest {
+class ClassapathBasedConfigTest {
 
 	@Test
-	public void constructInstance() {
+	void constructInstance() {
 		EnvConfiguration ec = new ClasspathBasedConfig("config-test.xml", null);
 		String configValue = ec.getConfigValue("class-path");
 		assertThat(configValue).isEqualTo("target/test-classes");
@@ -28,7 +28,7 @@ public class ClassapathBasedConfigTest {
 
 	@Disabled
 	@Test
-	public void experimental() throws Exception{
+	void experimental() throws Exception{
 
 		Path p = addTheTestClasseDirToClassPath();
 
@@ -40,21 +40,21 @@ public class ClassapathBasedConfigTest {
 	}
 
 	@Test
-	public void countTheConfigParam() {
+	void countTheConfigParam() {
 		EnvConfiguration ec = new ClasspathBasedConfig("config-count-test.xml", null);
 		Set<String> configParam = ec.getAllConfigKeys();
 		assertThat(configParam).hasSize(3);
 	}
 
 	@Test
-	public void useSecondaryConfigFileIfPrimaryNotFound() {
+	void useSecondaryConfigFileIfPrimaryNotFound() {
 		EnvConfiguration ec = new ClasspathBasedConfig("config-file-not-found.xml", "config-test.xml");
 		String configValue = ec.getConfigValue("class-path");
 		assertThat(configValue).isEqualTo("target/test-classes");
 	}
 
 	@Test
-	public void thowExceptionIfBothConfigFilesNotFound() {
+	void thowExceptionIfBothConfigFilesNotFound() {
 		try {
 			EnvConfiguration ec = new ClasspathBasedConfig("config-file-not-found.xml", "secondary-config-test.xml");
 			failBecauseExceptionWasNotThrown(ConfigFileNotFoundException.class);
@@ -65,14 +65,14 @@ public class ClassapathBasedConfigTest {
 	}
 
 	@Test
-	public void resolveSimpleRef() {
+	void resolveSimpleRef() {
 		EnvConfiguration ec = new ClasspathBasedConfig("test-config-subs-var.xml", null);
 		String b = ec.getConfigValue("b");
 		assertThat(b).isEqualTo(ec.getConfigValue("a"));
 	}
 
 	@Test
-	public void detectCycle() {
+	void detectCycle() {
 		try {
 			EnvConfiguration ec = new ClasspathBasedConfig("test-config-subs-var-cycle.xml", null);
 			failBecauseExceptionWasNotThrown(LSConfigException.class);
@@ -82,7 +82,7 @@ public class ClassapathBasedConfigTest {
 	}
 
 	@Test
-	public void resolveSystemVar() {
+	void resolveSystemVar() {
 		EnvConfiguration ec = new ClasspathBasedConfig("test-config-subs-system-var.xml", null);
 		String home = ec.getConfigValue("home");
 		System.out.println("home:" + home);

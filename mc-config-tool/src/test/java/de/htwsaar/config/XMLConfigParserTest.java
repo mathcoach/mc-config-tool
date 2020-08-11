@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 /**
  *
  * @author hbui
@@ -13,7 +13,7 @@ public class XMLConfigParserTest {
 	
 	private XMLConfigParser parser;
 	
-	@BeforeAll
+	@BeforeEach
 	public void init(){
 		parser = new XMLConfigParser();
 	}
