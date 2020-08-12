@@ -64,7 +64,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 				LOGGER.error("Config file {} NOT found!", secondaryConfigFileName);
 				if (LOGGER.isErrorEnabled()) {
 					LOGGER.error("Config file is NOT in following folders:");
-					classPathDir.forEach( f -> LOGGER.error("{}" ,f ) );
+					classPathDir.forEach( f -> LOGGER.error(" ->{}" ,f ) );
 				}
 				throw new ConfigFileNotFoundException(primaryConfigFileName ,secondaryConfigFileName);
 			}else{
@@ -77,9 +77,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	}
 
 	/**
-	 * <p>
-	 * Constructor for EnvConfiguration.</p>
-	 *
+	 * 
+	 * 
+	 * @return all configuration keys
 	 */
 	@Override
 	public Set<String> getAllConfigKeys() {
