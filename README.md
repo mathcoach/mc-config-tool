@@ -1,5 +1,7 @@
 # Anleitung
 
+Version: 2.4.x
+
 ## Problem
 
 Die Bibliothek `lib-a` braucht zur Laufzeit die Konfigurationsparameter (abk.:KP)
@@ -27,20 +29,20 @@ die KP nicht in einem festen Datei, die in Source Code Management System
 
 ## Abstrakte Konzept für Maven Projekten
 
-Die Bibliothek `lib-a` wird in einem Maven-Projekt eingegliedert. Die
+Die Bibliothek `lib-a` wird als einem Maven-Projekt organisiert. Die
 Web-Anwendung `Web-x` und die Desktop-Anwendung `App-z` werden jeweils in einem
-Maven-Projekt eingegliedert.
+Maven-Projekt organisiert.
 
 Da Maven die Source Datei strikt in zweit Teilen trennt: Produktives Code
-(`src/main`) und Test Code (`src/test`), kann man eine Konfiguration-Datei in
+(`src/main`) und Test Code (`src/test`), kann man die Konfiguration-Dateien in
 Classpath (abk.: CP) platzieren, eine für Produktives Code und eine für Test
-Code. Die Konfigurationsdatei wird in CP ausgelesen und geparsert.
+Code. Die Konfigurationsdateien werden in CP ausgelesen und geparsert.
 
 Maven inkludiert Dateien und Ordner in `src/main/resource` bzw.
 `src/test/resources` in jar-Datei, bzw in CP in der Test-Phase eingebunden.
 
 Da ein Bibliothek in meisten Fälle keine `main()`-Method hat, welche die
-Java-Code ausführt, braucht man für eine Bibliothek eine Konfigurationsdatei in
+Java-Code ausführt, braucht man für eine Bibliothek keine Konfigurationsdatei in
 (`src/main/resources`) zu platzieren, sondern nur eine Konfigurationsdatei in
 (`src/test/resources`). Die Konfiguration-Datei in `src/test/resouces` ist nur
 in Test-Phase der Bibliothek in CP sichtbar.
@@ -63,7 +65,7 @@ Web-x (gilt auch für App-z)
  |--src
     |--main
 	|   |--resources
-	|       |--config.xml
+	|       |--config.xml   (dient lediglig um Konfigurationsdatei in locale Umgebung zu verwerten)
 	|--test
 	    |--resources
 		    |--config-alternative-1.properties (Nur in Test-Phase sichtbar)
@@ -74,12 +76,12 @@ Web-x (gilt auch für App-z)
 später.)
 
 Mit diesem Konzept kann man die Konfiguration für Test und Laufzeit trennen.
-Nun müssen wir die Konfiguration für die Besonderheit jeweiliger
-Runtime-Umgebung, sprich Rechner von Entwickler, Server, ect.
+Nun haben wir die Konfigurationsdateien für die Besonderheit jeweiliger
+Umgebung, sprich Rechner von Entwickler, Server, ect.
 
-Wir erweitern die Konfigurationsdateien in CP so, dass sie
-Konfigurationsdateien in Runtime-Umgebung inkludieren und statt die KP in
-CP-Konfigurationsdateien die KP in Runtime-Umgebung nutzen.
+Wir können die Konfigurationsdateien in CP so erweitern, dass sie
+Konfigurationsdateien in Runtime-Umgebung inkludieren, die Parameter in der inkludierte
+Konfigurationsdateien verwenden.
 
 ## Konkrete Implementierung
 
@@ -91,7 +93,7 @@ Für die Nutzung von API:
 <dependency>
 	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool</artifactId>
-	<version>2.3</version>
+	<version>${mc.config.version}</version>
 </dependency>
 ```
 
@@ -101,7 +103,7 @@ Für die automatische Sammlung von Konfigurationsparameters:
 <dependency>
 	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
-	<version>2.3</version>
+	<version>${mc.config.version}</version>
 	<scope>compile</scope>
 </dependency>
 ```
@@ -155,8 +157,6 @@ EnvConfiguration env = new ClasspathBasedConfig("test-configuration.properties",
 env.getConfigValue("glossary.database.username"); // → sysad
 ```
 
-> Bemerkung: Die Interpretation von `target/test-classes` hängt natürlich von
-> der Anwendung ab, hat nichts mit Config zu tun.
 
 ### Die Application Programming Interface
 
@@ -232,10 +232,10 @@ public doTestWithConfigAlternative_2(){
 ```
 
 Braucht man zusätzlich Konfigurationsparameter, die von Runtime-Umgebung abhängig sind,
-kann man wie oben schon erwähnt, ein `import` Attribute in `configuration`-Element
-hinzufügen. Sinnvolle Runtime-Umgebung-Konfigurationsparameter sind etwa Zugang-Daten
-für Test Datenbank (aus Sicherheitsgrund), Timeout für *Longlife*-Thread (hängt von
-Kapazität der Rechner ab (CPU/RAM/Network)).
+kann man wie oben schon erwähnt, ein `import`-Property hinzufügen. Sinnvolle 
+Runtime-Umgebung-Konfigurationsparameter sind etwa Zugang-Daten für Test Datenbank 
+(aus Sicherheitsgrund), Timeout für *Longlife*-Thread (hängt von Kapazität der 
+Rechner ab (CPU/RAM/Network)).
 
 
 #### Anwendung in Application-Artig Projekt
@@ -243,10 +243,10 @@ Kapazität der Rechner ab (CPU/RAM/Network)).
 Application-Artig Projekten sind Projekten, die von (End)-Benutzer benutzt werden.
 Sie sind z.B. eine Desktop Anwendung oder eine Web-Anwendung.
 
-* Im Test-Bereich von Application-artige Projekt kann man die Konzept wie ein
+* Im Test-Phase (`src/test/resources`) von Application-artige Projekt kann man die Konzept wie ein
   Bibliothek-artige Projekt verwenden. 
 
-* In der Main-Bereich (`src/main`) erstellt man eine Klasse, die eine Instanz
+* In der Betrieb-Phase (`src/main/resources`) erstellt man eine Klasse, die eine Instanz
   der Interface `EnvConfiguration` erstellt etwa `WebConfigManager` oder
   `DesktopConfigManager`, und verwendet nur diese Klasse um andere Klasse in
   Bibliothek (etwa `ConfigUser`) oder in eignen Main-Bereich zu konfigurieren.
@@ -271,7 +271,7 @@ In POM-Datei:
 <dependency>
 	<groupId>de.htwsaar</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
-	<version>2.3</version>
+	<version>${mc.config.version}</version>
 	<scope>compile</scope>
 </dependency>
 ```
