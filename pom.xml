@@ -34,11 +34,11 @@
 	<distributionManagement>
 		<repository>
 			<id>central</id>			
-			<url>https://bayes.htwsaar.de/artifactory/libs-release-local</url>
+			<url>https://bayes.htwsaar.de/nexus/repository/maven-releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>			
-			<url>https://bayes.htwsaar.de/artifactory/libs-snapshot-local</url>
+			<url>https://bayes.htwsaar.de/nexus/repository/maven-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
