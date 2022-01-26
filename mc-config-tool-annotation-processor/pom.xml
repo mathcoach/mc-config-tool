@@ -96,8 +96,7 @@
 
 		<dependency>
 			<groupId>org.netbeans.api</groupId>
-			<artifactId>org-openide-util-lookup</artifactId>
-			<version>RELEASE126</version>
+			<artifactId>org-openide-util-lookup</artifactId>			
 			<type>jar</type>
 		</dependency>
 
