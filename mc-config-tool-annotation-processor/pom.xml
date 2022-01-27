@@ -38,7 +38,7 @@
 			<plugin>
 				<groupId>de.htwsaar.mc</groupId>
 				<artifactId>objectmacro-maven-plugin</artifactId>
-				<version>2.1.4-BETA</version>
+				<version>3.0.1</version>
 				<executions>
 					<execution>
 						<id>config-entry</id>
