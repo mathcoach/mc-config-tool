@@ -110,7 +110,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		} catch (ClassCastException ex) {
 			LOGGER.warn("Cannot search config file from classloader {}",
 					loader.getClass().getName());
-			LOGGER.trace("Cause: {}", ex);
+			LOGGER.trace("Cause:", ex);
 		}
 	}
 	protected final void collectDirFromURL(URL classPath, final Set<Path> classPathDir) {
