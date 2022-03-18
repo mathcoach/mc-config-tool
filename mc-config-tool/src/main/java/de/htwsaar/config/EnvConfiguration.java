@@ -9,12 +9,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 //import org.apache.commons.lang3.text.StrBuilder;
-//import org.apache.commons.text.TextStringBuilder;
-import de.htwsaar.config.text.TextStringBuilder;
+import org.apache.commons.text.TextStringBuilder;
+//import de.htwsaar.config.text.TextStringBuilder;
 
 //import org.apache.commons.lang3.text.StrSubstitutor;
-//import org.apache.commons.text.StringSubstitutor;
-import de.htwsaar.config.text.StringSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
+//import de.htwsaar.config.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
