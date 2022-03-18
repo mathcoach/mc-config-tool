@@ -8,8 +8,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.text.StrBuilder;
-import org.apache.commons.lang3.text.StrSubstitutor;
+//import org.apache.commons.lang3.text.StrBuilder;
+//import org.apache.commons.text.TextStringBuilder;
+import de.htwsaar.config.text.TextStringBuilder;
+
+//import org.apache.commons.lang3.text.StrSubstitutor;
+//import org.apache.commons.text.StringSubstitutor;
+import de.htwsaar.config.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,9 +114,9 @@ public interface EnvConfiguration {
 			HashMap<String, String> configTable = new HashMap();
 			originConfigTable.entrySet().stream().forEach(entry -> {
 				String k = entry.getKey();
-				String v = StrSubstitutor.replace(entry.getValue(), originConfigTable);
-				v = StrSubstitutor.replaceSystemProperties(v);
-				v = StrSubstitutor.replace(v, envVar);
+				String v = StringSubstitutor.replace(entry.getValue(), originConfigTable);
+				v = StringSubstitutor.replaceSystemProperties(v);
+				v = StringSubstitutor.replace(v, envVar);
 				logger.trace("{} -> {}", k, v);
 				configTable.put(k, v);
 			});
@@ -127,7 +132,7 @@ public interface EnvConfiguration {
 				.replace("${HOME}", "${user.home}")
 				.replace("$PWD", "${user.dir}")
 				.replace("${PWD}", "${user.dir}");
-		return StrSubstitutor.replaceSystemProperties(resolvedText);
+		return StringSubstitutor.replaceSystemProperties(resolvedText);
 		//return resolvedText;
 	}
 
@@ -138,8 +143,8 @@ public interface EnvConfiguration {
 	) {
 		Matcher matcher = VAR_PATTERN.matcher(newValue);
 		if (matcher.find()) {// If the value has a variable
-			StrBuilder b = new StrBuilder(newValue);
-			StrSubstitutor st = new StrSubstitutor(configTable);
+			TextStringBuilder b = new TextStringBuilder(newValue);
+			StringSubstitutor st = new StringSubstitutor(configTable);
 			boolean substable = st.replaceIn(b);
 			if (substable) {
 				String resolvedValue = b.build();

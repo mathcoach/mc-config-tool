@@ -48,7 +48,7 @@ public class DynamicConfigTest {
 	}
 	
 	@Test
-	public void variableIsReolvedBySetANewConfig(){
+	public void variableIsResolvedBySetANewConfig(){
 		Map<String,String> musterConfig = new HashMap<String,String>(){{
 			put("config-dir","${HOME}/my-config"); // System variable
 			put("param-a", "a");
