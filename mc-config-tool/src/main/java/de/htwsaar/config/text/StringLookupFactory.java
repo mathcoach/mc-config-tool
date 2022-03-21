@@ -404,16 +404,16 @@ public final class StringLookupFactory {
      * @param stringLookupMap the map of string lookups.
      * @since 1.5
      */
-    public void addDefaultStringLookups(final Map<String, StringLookup> stringLookupMap) {
-        if (stringLookupMap != null) {
-            // "base64" is deprecated in favor of KEY_BASE64_DECODER.
-            stringLookupMap.put("base64", StringLookupFactory.INSTANCE_BASE64_DECODER);
-            for (final DefaultStringLookup stringLookup : DefaultStringLookup.values()) {
-                stringLookupMap.put(InterpolatorStringLookup.toKey(stringLookup.getKey()),
-                    stringLookup.getStringLookup());
-            }
-        }
-    }
+//    public void addDefaultStringLookups(final Map<String, StringLookup> stringLookupMap) {
+//        if (stringLookupMap != null) {
+//            // "base64" is deprecated in favor of KEY_BASE64_DECODER.
+//            stringLookupMap.put("base64", StringLookupFactory.INSTANCE_BASE64_DECODER);
+//            for (final DefaultStringLookup stringLookup : DefaultStringLookup.values()) {
+//                stringLookupMap.put(InterpolatorStringLookup.toKey(stringLookup.getKey()),
+//                    stringLookup.getStringLookup());
+//            }
+//        }
+//    }
 
     /**
      * Returns the Base64DecoderStringLookup singleton instance to decode Base64 strings.
@@ -703,9 +703,9 @@ public final class StringLookupFactory {
      *
      * @return a new InterpolatorStringLookup.
      */
-    public StringLookup interpolatorStringLookup() {
-        return InterpolatorStringLookup.INSTANCE;
-    }
+//    public StringLookup interpolatorStringLookup() {
+//        return InterpolatorStringLookup.INSTANCE;
+//    }
 
     /**
      * Returns a new InterpolatorStringLookup using the {@link StringLookupFactory default lookups}.

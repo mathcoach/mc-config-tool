@@ -1228,7 +1228,8 @@ public class StringSubstitutor {
      * @throws IllegalArgumentException if the prefix matcher is null
      */
     private StringSubstitutor setVariablePrefixMatcher(final StringMatcher prefixMatcher) {
-        Validate.isTrue(prefixMatcher != null, "Variable prefix matcher must not be null!");
+        ///*Validate.*/isTrue(prefixMatcher != null, "Variable prefix matcher must not be null!");
+        Objects.requireNonNull(prefixMatcher, "Variable prefix matcher must not be null!");
         this.prefixMatcher = prefixMatcher;
         return this;
     }
@@ -1286,7 +1287,8 @@ public class StringSubstitutor {
      * @throws IllegalArgumentException if the suffix matcher is null
      */
     private StringSubstitutor setVariableSuffixMatcher(final StringMatcher suffixMatcher) {
-        Validate.isTrue(suffixMatcher != null, "Variable suffix matcher must not be null!");
+        ///*Validate.*/isTrue(suffixMatcher != null, "Variable suffix matcher must not be null!");
+        Objects.requireNonNull(suffixMatcher, "Variable suffix matcher must not be null!");
         this.suffixMatcher = suffixMatcher;
         return this;
     }
@@ -1466,5 +1468,13 @@ public class StringSubstitutor {
             }
         }
         return new Result(altered, lengthChange);
+    }
+    
+    
+    
+    private static void isTrue(final boolean expression, final String message, final Object... values) {
+        if (!expression) {
+            throw new IllegalArgumentException(String.format(message, values));
+        }
     }
 }

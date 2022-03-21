@@ -18,6 +18,9 @@
 package de.htwsaar.config.text;
 
 //import org.apache.commons.lang3.ArrayUtils;
+
+import java.lang.reflect.Array;
+
 //import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -221,7 +224,7 @@ public final class StringMatcherFactory {
      * @since 1.9
      */
     public StringMatcher stringMatcher(final char... chars) {
-        final int length = ArrayUtils.getLength(chars);
+        final int length = /*ArrayUtils.getLength*/getArrayLength(chars);
         return length == 0 ? NONE_MATCHER
             : length == 1 ? new AbstractStringMatcher.CharMatcher(chars[0])
                 : new AbstractStringMatcher.CharArrayMatcher(chars);
@@ -255,4 +258,11 @@ public final class StringMatcherFactory {
 //        return TRIM_MATCHER;
 //    }
 
+    
+    private static int getArrayLength(final Object array) {
+        if (array == null) {
+            return 0;
+        }
+        return Array.getLength(array);
+    }
 }

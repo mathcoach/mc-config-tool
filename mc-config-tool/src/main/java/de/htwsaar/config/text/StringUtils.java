@@ -3546,18 +3546,18 @@ public class StringUtils {
      * @since 2.0
      * @since 3.0 Changed signature from isBlank(String) to isBlank(CharSequence)
      */
-    public static boolean isBlank(final CharSequence cs) {
-        final int strLen = length(cs);
-        if (strLen == 0) {
-            return true;
-        }
-        for (int i = 0; i < strLen; i++) {
-            if (!Character.isWhitespace(cs.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
+//    public static boolean isBlank(final CharSequence cs) {
+//        final int strLen = length(cs);
+//        if (strLen == 0) {
+//            return true;
+//        }
+//        for (int i = 0; i < strLen; i++) {
+//            if (!Character.isWhitespace(cs.charAt(i))) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     // Empty checks
     //-----------------------------------------------------------------------
@@ -8573,16 +8573,16 @@ public class StringUtils {
      *  {@code null} if null String input
      * @since 3.11
      */
-    public static String substringAfter(final String str, final int separator) {
-        if (isEmpty(str)) {
-            return str;
-        }
-        final int pos = str.indexOf(separator);
-        if (pos == INDEX_NOT_FOUND) {
-            return EMPTY;
-        }
-        return str.substring(pos + 1);
-    }
+//    public static String substringAfter(final String str, final int separator) {
+//        if (isEmpty(str)) {
+//            return str;
+//        }
+//        final int pos = str.indexOf(separator);
+//        if (pos == INDEX_NOT_FOUND) {
+//            return EMPTY;
+//        }
+//        return str.substring(pos + 1);
+//    }
 
     /**
      * <p>Gets the substring after the first occurrence of a separator.
@@ -8612,19 +8612,19 @@ public class StringUtils {
      *  {@code null} if null String input
      * @since 2.0
      */
-    public static String substringAfter(final String str, final String separator) {
-        if (isEmpty(str)) {
-            return str;
-        }
-        if (separator == null) {
-            return EMPTY;
-        }
-        final int pos = str.indexOf(separator);
-        if (pos == INDEX_NOT_FOUND) {
-            return EMPTY;
-        }
-        return str.substring(pos + separator.length());
-    }
+//    public static String substringAfter(final String str, final String separator) {
+//        if (isEmpty(str)) {
+//            return str;
+//        }
+//        if (separator == null) {
+//            return EMPTY;
+//        }
+//        final int pos = str.indexOf(separator);
+//        if (pos == INDEX_NOT_FOUND) {
+//            return EMPTY;
+//        }
+//        return str.substring(pos + separator.length());
+//    }
 
     // startsWith
     //-----------------------------------------------------------------------
@@ -8655,16 +8655,16 @@ public class StringUtils {
      *  {@code null} if null String input
      * @since 3.11
      */
-    public static String substringAfterLast(final String str, final int separator) {
-        if (isEmpty(str)) {
-            return str;
-        }
-        final int pos = str.lastIndexOf(separator);
-        if (pos == INDEX_NOT_FOUND || pos == str.length() - 1) {
-            return EMPTY;
-        }
-        return str.substring(pos + 1);
-    }
+//    public static String substringAfterLast(final String str, final int separator) {
+//        if (isEmpty(str)) {
+//            return str;
+//        }
+//        final int pos = str.lastIndexOf(separator);
+//        if (pos == INDEX_NOT_FOUND || pos == str.length() - 1) {
+//            return EMPTY;
+//        }
+//        return str.substring(pos + 1);
+//    }
 
     /**
      * <p>Gets the substring after the last occurrence of a separator.

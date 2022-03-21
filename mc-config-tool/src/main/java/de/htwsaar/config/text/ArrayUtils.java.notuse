@@ -785,21 +785,21 @@ public class ArrayUtils {
      * @since 2.1
      * @throws IllegalArgumentException if both arguments are null
      */
-    public static <T> T[] add(final T[] array, final T element) {
-        Class<?> type;
-        if (array != null) {
-            type = array.getClass().getComponentType();
-        } else if (element != null) {
-            type = element.getClass();
-        } else {
-            throw new IllegalArgumentException("Arguments cannot both be null");
-        }
-        @SuppressWarnings("unchecked") // type must be T
-        final
-        T[] newArray = (T[]) copyArrayGrow1(array, type);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
+//    public static <T> T[] add(final T[] array, final T element) {
+//        Class<?> type;
+//        if (array != null) {
+//            type = array.getClass().getComponentType();
+//        } else if (element != null) {
+//            type = element.getClass();
+//        } else {
+//            throw new IllegalArgumentException("Arguments cannot both be null");
+//        }
+//        @SuppressWarnings("unchecked") // type must be T
+//        final
+//        T[] newArray = (T[]) copyArrayGrow1(array, type);
+//        newArray[newArray.length - 1] = element;
+//        return newArray;
+//    }
 
     /**
      * <p>Adds all the elements of the given arrays into a new array.
@@ -1057,34 +1057,34 @@ public class ArrayUtils {
      * @since 2.1
      * @throws IllegalArgumentException if the array types are incompatible
      */
-    public static <T> T[] addAll(final T[] array1, @SuppressWarnings("unchecked") final T... array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        final Class<?> type1 = array1.getClass().getComponentType();
-        @SuppressWarnings("unchecked") // OK, because array is of type T
-        final T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        try {
-            System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        } catch (final ArrayStoreException ase) {
-            // Check if problem was due to incompatible types
-            /*
-             * We do this here, rather than before the copy because:
-             * - it would be a wasted check most of the time
-             * - safer, in case check turns out to be too strict
-             */
-            final Class<?> type2 = array2.getClass().getComponentType();
-            if (!type1.isAssignableFrom(type2)) {
-                throw new IllegalArgumentException("Cannot store " + type2.getName() + " in an array of "
-                        + type1.getName(), ase);
-            }
-            throw ase; // No, so rethrow original
-        }
-        return joinedArray;
-    }
+//    public static <T> T[] addAll(final T[] array1, @SuppressWarnings("unchecked") final T... array2) {
+//        if (array1 == null) {
+//            return clone(array2);
+//        } else if (array2 == null) {
+//            return clone(array1);
+//        }
+//        final Class<?> type1 = array1.getClass().getComponentType();
+//        @SuppressWarnings("unchecked") // OK, because array is of type T
+//        final T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);
+//        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
+//        try {
+//            System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
+//        } catch (final ArrayStoreException ase) {
+//            // Check if problem was due to incompatible types
+//            /*
+//             * We do this here, rather than before the copy because:
+//             * - it would be a wasted check most of the time
+//             * - safer, in case check turns out to be too strict
+//             */
+//            final Class<?> type2 = array2.getClass().getComponentType();
+//            if (!type1.isAssignableFrom(type2)) {
+//                throw new IllegalArgumentException("Cannot store " + type2.getName() + " in an array of "
+//                        + type1.getName(), ase);
+//            }
+//            throw ase; // No, so rethrow original
+//        }
+//        return joinedArray;
+//    }
 
     /**
      * Copies the given array and adds the given element at the beginning of the new array.
@@ -1495,12 +1495,12 @@ public class ArrayUtils {
      * @param array  the array to shallow clone, may be {@code null}
      * @return the cloned array, {@code null} if {@code null} input
      */
-    public static <T> T[] clone(final T[] array) {
-        if (array == null) {
-            return null;
-        }
-        return array.clone();
-    }
+//    public static <T> T[] clone(final T[] array) {
+//        if (array == null) {
+//            return null;
+//        }
+//        return array.clone();
+//    }
 
     /**
      * <p>Checks if the value is in the given array.
@@ -1646,15 +1646,15 @@ public class ArrayUtils {
      * size 1 array of this type.
      * @return A new copy of the array of size 1 greater than the input.
      */
-    private static Object copyArrayGrow1(final Object array, final Class<?> newArrayComponentType) {
-        if (array != null) {
-            final int arrayLength = Array.getLength(array);
-            final Object newArray = Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
-            System.arraycopy(array, 0, newArray, 0, arrayLength);
-            return newArray;
-        }
-        return Array.newInstance(newArrayComponentType, 1);
-    }
+//    private static Object copyArrayGrow1(final Object array, final Class<?> newArrayComponentType) {
+//        if (array != null) {
+//            final int arrayLength = Array.getLength(array);
+//            final Object newArray = Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
+//            System.arraycopy(array, 0, newArray, 0, arrayLength);
+//            return newArray;
+//        }
+//        return Array.newInstance(newArrayComponentType, 1);
+//    }
 
     /**
      * Gets the nTh element of an array or null if the index is out of bounds or the array is null.
