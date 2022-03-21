@@ -10,12 +10,7 @@ import static org.assertj.core.api.Assertions.*;
  */
 public class ConfigParserFactoryTest {
 	
-	@Test
-	public void pickXMLParser(){
-		File f = new File("my-config.xml");
-		ConfigParser p = ConfigParserFactory.getParserForFile(f);
-		assertThat(p).isInstanceOf(XMLConfigParser.class);
-	}
+	
 	
 	@Test
 	public void pickPropertiesParser(){

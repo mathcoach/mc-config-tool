@@ -303,9 +303,9 @@ public class StringSubstitutor {
      * @see StringLookupFactory#interpolatorStringLookup()
      * @since 1.8
      */
-    public static StringSubstitutor createInterpolator() {
-        return new StringSubstitutor(StringLookupFactory.INSTANCE.interpolatorStringLookup());
-    }
+//    public static StringSubstitutor createInterpolator() {
+//        return new StringSubstitutor(StringLookupFactory.INSTANCE.interpolatorStringLookup());
+//    }
 
     /**
      * Replaces all the occurrences of variables in the given source object with their matching values from the map.
@@ -333,10 +333,10 @@ public class StringSubstitutor {
      * @throws IllegalArgumentException if the prefix or suffix is null
      * @throws IllegalArgumentException if a variable is not found and enableUndefinedVariableException is true
      */
-    public static <V> String replace(final Object source, final Map<String, V> valueMap, final String prefix,
-        final String suffix) {
-        return new StringSubstitutor(valueMap, prefix, suffix).replace(source);
-    }
+//    public static <V> String replace(final Object source, final Map<String, V> valueMap, final String prefix,
+//        final String suffix) {
+//        return new StringSubstitutor(valueMap, prefix, suffix).replace(source);
+//    }
 
     /**
      * Replaces all the occurrences of variables in the given source object with their matching values from the
@@ -347,19 +347,19 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if a variable is not found and enableUndefinedVariableException is true
      */
-    public static String replace(final Object source, final Properties valueProperties) {
-        if (valueProperties == null) {
-            return source.toString();
-        }
-        final Map<String, String> valueMap = new HashMap<>();
-        final Enumeration<?> propNames = valueProperties.propertyNames();
-        while (propNames.hasMoreElements()) {
-            final String propName = (String) propNames.nextElement();
-            final String propValue = valueProperties.getProperty(propName);
-            valueMap.put(propName, propValue);
-        }
-        return StringSubstitutor.replace(source, valueMap);
-    }
+//    public static String replace(final Object source, final Properties valueProperties) {
+//        if (valueProperties == null) {
+//            return source.toString();
+//        }
+//        final Map<String, String> valueMap = new HashMap<>();
+//        final Enumeration<?> propNames = valueProperties.propertyNames();
+//        while (propNames.hasMoreElements()) {
+//            final String propName = (String) propNames.nextElement();
+//            final String propValue = valueProperties.getProperty(propName);
+//            valueMap.put(propName, propValue);
+//        }
+//        return StringSubstitutor.replace(source, valueMap);
+//    }
 
     /**
      * Replaces all the occurrences of variables in the given source object with their matching values from the system
@@ -445,9 +445,9 @@ public class StringSubstitutor {
      * @param suffix the suffix for variables, not null
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix) {
-        this(StringLookupFactory.INSTANCE.mapStringLookup(valueMap), prefix, suffix, DEFAULT_ESCAPE);
-    }
+//    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix) {
+//        this(StringLookupFactory.INSTANCE.mapStringLookup(valueMap), prefix, suffix, DEFAULT_ESCAPE);
+//    }
 
     /**
      * Creates a new instance and initializes it.
@@ -459,10 +459,10 @@ public class StringSubstitutor {
      * @param escape the escape character
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
-        final char escape) {
-        this(StringLookupFactory.INSTANCE.mapStringLookup(valueMap), prefix, suffix, escape);
-    }
+//    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
+//        final char escape) {
+//        this(StringLookupFactory.INSTANCE.mapStringLookup(valueMap), prefix, suffix, escape);
+//    }
 
     /**
      * Creates a new instance and initializes it.
@@ -475,17 +475,17 @@ public class StringSubstitutor {
      * @param valueDelimiter the variable default value delimiter, may be null
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
-        final char escape, final String valueDelimiter) {
-        this(StringLookupFactory.INSTANCE.mapStringLookup(valueMap), prefix, suffix, escape, valueDelimiter);
-    }
+//    public <V> StringSubstitutor(final Map<String, V> valueMap, final String prefix, final String suffix,
+//        final char escape, final String valueDelimiter) {
+//        this(StringLookupFactory.INSTANCE.mapStringLookup(valueMap), prefix, suffix, escape, valueDelimiter);
+//    }
 
     /**
      * Creates a new instance and initializes it.
      *
      * @param variableResolver the variable resolver, may be null
      */
-    public StringSubstitutor(final StringLookup variableResolver) {
+    private StringSubstitutor(final StringLookup variableResolver) {
         this(variableResolver, DEFAULT_PREFIX, DEFAULT_SUFFIX, DEFAULT_ESCAPE);
     }
 
@@ -498,14 +498,14 @@ public class StringSubstitutor {
      * @param escape the escape character
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public StringSubstitutor(final StringLookup variableResolver, final String prefix, final String suffix,
-        final char escape) {
-        this.setVariableResolver(variableResolver);
-        this.setVariablePrefix(prefix);
-        this.setVariableSuffix(suffix);
-        this.setEscapeChar(escape);
-        this.setValueDelimiterMatcher(DEFAULT_VALUE_DELIMITER);
-    }
+//    public StringSubstitutor(final StringLookup variableResolver, final String prefix, final String suffix,
+//        final char escape) {
+//        this.setVariableResolver(variableResolver);
+//        this.setVariablePrefix(prefix);
+//        this.setVariableSuffix(suffix);
+//        this.setEscapeChar(escape);
+//        this.setValueDelimiterMatcher(DEFAULT_VALUE_DELIMITER);
+//    }
 
     /**
      * Creates a new instance and initializes it.
@@ -517,14 +517,14 @@ public class StringSubstitutor {
      * @param valueDelimiter the variable default value delimiter string, may be null
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public StringSubstitutor(final StringLookup variableResolver, final String prefix, final String suffix,
-        final char escape, final String valueDelimiter) {
-        this.setVariableResolver(variableResolver);
-        this.setVariablePrefix(prefix);
-        this.setVariableSuffix(suffix);
-        this.setEscapeChar(escape);
-        this.setValueDelimiter(valueDelimiter);
-    }
+//    public StringSubstitutor(final StringLookup variableResolver, final String prefix, final String suffix,
+//        final char escape, final String valueDelimiter) {
+//        this.setVariableResolver(variableResolver);
+//        this.setVariablePrefix(prefix);
+//        this.setVariableSuffix(suffix);
+//        this.setEscapeChar(escape);
+//        this.setValueDelimiter(valueDelimiter);
+//    }
 
     /**
      * Creates a new instance and initializes it.
@@ -535,7 +535,7 @@ public class StringSubstitutor {
      * @param escape the escape character
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public StringSubstitutor(final StringLookup variableResolver, final StringMatcher prefixMatcher,
+    private StringSubstitutor(final StringLookup variableResolver, final StringMatcher prefixMatcher,
         final StringMatcher suffixMatcher, final char escape) {
         this(variableResolver, prefixMatcher, suffixMatcher, escape, DEFAULT_VALUE_DELIMITER);
     }
@@ -550,7 +550,7 @@ public class StringSubstitutor {
      * @param valueDelimiterMatcher the variable default value delimiter matcher, may be null
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public StringSubstitutor(final StringLookup variableResolver, final StringMatcher prefixMatcher,
+    private StringSubstitutor(final StringLookup variableResolver, final StringMatcher prefixMatcher,
         final StringMatcher suffixMatcher, final char escape, final StringMatcher valueDelimiterMatcher) {
         this.setVariableResolver(variableResolver);
         this.setVariablePrefixMatcher(prefixMatcher);
@@ -565,17 +565,17 @@ public class StringSubstitutor {
      * @param other The StringSubstitutor is use as the source.
      * @since 1.9
      */
-    public StringSubstitutor(final StringSubstitutor other) {
-        disableSubstitutionInValues = other.isDisableSubstitutionInValues();
-        enableSubstitutionInVariables = other.isEnableSubstitutionInVariables();
-        enableUndefinedVariableException = other.isEnableUndefinedVariableException();
-        escapeChar = other.getEscapeChar();
-        prefixMatcher = other.getVariablePrefixMatcher();
-        preserveEscapes = other.isPreserveEscapes();
-        suffixMatcher = other.getVariableSuffixMatcher();
-        valueDelimiterMatcher = other.getValueDelimiterMatcher();
-        variableResolver = other.getStringLookup();
-    }
+//    public StringSubstitutor(final StringSubstitutor other) {
+//        disableSubstitutionInValues = other.isDisableSubstitutionInValues();
+//        enableSubstitutionInVariables = other.isEnableSubstitutionInVariables();
+//        enableUndefinedVariableException = other.isEnableUndefinedVariableException();
+//        escapeChar = other.getEscapeChar();
+//        prefixMatcher = other.getVariablePrefixMatcher();
+//        preserveEscapes = other.isPreserveEscapes();
+//        suffixMatcher = other.getVariableSuffixMatcher();
+//        valueDelimiterMatcher = other.getValueDelimiterMatcher();
+//        variableResolver = other.getStringLookup();
+//    }
 
     /**
      * Checks if the specified variable is already in the stack (list) of variables.
@@ -716,14 +716,14 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final char[] source) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(source.length).append(source);
-        substitute(buf, 0, source.length);
-        return buf.toString();
-    }
+//    public String replace(final char[] source) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(source.length).append(source);
+//        substitute(buf, 0, source.length);
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source
@@ -739,14 +739,14 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final char[] source, final int offset, final int length) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
-        substitute(buf, 0, length);
-        return buf.toString();
-    }
+//    public String replace(final char[] source, final int offset, final int length) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
+//        substitute(buf, 0, length);
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source as
@@ -756,12 +756,12 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final CharSequence source) {
-        if (source == null) {
-            return null;
-        }
-        return replace(source, 0, source.length());
-    }
+//    public String replace(final CharSequence source) {
+//        if (source == null) {
+//            return null;
+//        }
+//        return replace(source, 0, source.length());
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source as
@@ -777,14 +777,14 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final CharSequence source, final int offset, final int length) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source.toString(), offset, length);
-        substitute(buf, 0, length);
-        return buf.toString();
-    }
+//    public String replace(final CharSequence source, final int offset, final int length) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(length).append(source.toString(), offset, length);
+//        substitute(buf, 0, length);
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables in the given source object with their matching values from the
@@ -794,7 +794,7 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if a variable is not found and enableUndefinedVariableException is true
      */
-    public String replace(final Object source) {
+    private String replace(final Object source) {
         if (source == null) {
             return null;
         }
@@ -811,16 +811,16 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final String source) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(source);
-        if (!substitute(buf, 0, source.length())) {
-            return source;
-        }
-        return buf.toString();
-    }
+//    public String replace(final String source) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(source);
+//        if (!substitute(buf, 0, source.length())) {
+//            return source;
+//        }
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source
@@ -836,16 +836,16 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final String source, final int offset, final int length) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
-        if (!substitute(buf, 0, length)) {
-            return source.substring(offset, offset + length);
-        }
-        return buf.toString();
-    }
+//    public String replace(final String source, final int offset, final int length) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
+//        if (!substitute(buf, 0, length)) {
+//            return source.substring(offset, offset + length);
+//        }
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source
@@ -855,14 +855,14 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final StringBuffer source) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(source.length()).append(source);
-        substitute(buf, 0, buf.length());
-        return buf.toString();
-    }
+//    public String replace(final StringBuffer source) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(source.length()).append(source);
+//        substitute(buf, 0, buf.length());
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source
@@ -878,14 +878,14 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final StringBuffer source, final int offset, final int length) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
-        substitute(buf, 0, length);
-        return buf.toString();
-    }
+//    public String replace(final StringBuffer source, final int offset, final int length) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
+//        substitute(buf, 0, length);
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source
@@ -895,14 +895,14 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final TextStringBuilder source) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder builder = new TextStringBuilder(source.length()).append(source);
-        substitute(builder, 0, builder.length());
-        return builder.toString();
-    }
+//    public String replace(final TextStringBuilder source) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder builder = new TextStringBuilder(source.length()).append(source);
+//        substitute(builder, 0, builder.length());
+//        return builder.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables with their matching values from the resolver using the given source
@@ -918,14 +918,14 @@ public class StringSubstitutor {
      * @return The result of the replace operation
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public String replace(final TextStringBuilder source, final int offset, final int length) {
-        if (source == null) {
-            return null;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
-        substitute(buf, 0, length);
-        return buf.toString();
-    }
+//    public String replace(final TextStringBuilder source, final int offset, final int length) {
+//        if (source == null) {
+//            return null;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
+//        substitute(buf, 0, length);
+//        return buf.toString();
+//    }
 
     /**
      * Replaces all the occurrences of variables within the given source buffer with their matching values from the
@@ -934,12 +934,12 @@ public class StringSubstitutor {
      * @param source the buffer to replace in, updated, null returns zero
      * @return true if altered
      */
-    public boolean replaceIn(final StringBuffer source) {
-        if (source == null) {
-            return false;
-        }
-        return replaceIn(source, 0, source.length());
-    }
+//    public boolean replaceIn(final StringBuffer source) {
+//        if (source == null) {
+//            return false;
+//        }
+//        return replaceIn(source, 0, source.length());
+//    }
 
     /**
      * Replaces all the occurrences of variables within the given source buffer with their matching values from the
@@ -955,17 +955,17 @@ public class StringSubstitutor {
      * @return true if altered
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public boolean replaceIn(final StringBuffer source, final int offset, final int length) {
-        if (source == null) {
-            return false;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
-        if (!substitute(buf, 0, length)) {
-            return false;
-        }
-        source.replace(offset, offset + length, buf.toString());
-        return true;
-    }
+//    public boolean replaceIn(final StringBuffer source, final int offset, final int length) {
+//        if (source == null) {
+//            return false;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
+//        if (!substitute(buf, 0, length)) {
+//            return false;
+//        }
+//        source.replace(offset, offset + length, buf.toString());
+//        return true;
+//    }
 
     /**
      * Replaces all the occurrences of variables within the given source buffer with their matching values from the
@@ -974,12 +974,12 @@ public class StringSubstitutor {
      * @param source the buffer to replace in, updated, null returns zero
      * @return true if altered
      */
-    public boolean replaceIn(final StringBuilder source) {
-        if (source == null) {
-            return false;
-        }
-        return replaceIn(source, 0, source.length());
-    }
+//    public boolean replaceIn(final StringBuilder source) {
+//        if (source == null) {
+//            return false;
+//        }
+//        return replaceIn(source, 0, source.length());
+//    }
 
     /**
      * Replaces all the occurrences of variables within the given source builder with their matching values from the
@@ -995,17 +995,17 @@ public class StringSubstitutor {
      * @return true if altered
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public boolean replaceIn(final StringBuilder source, final int offset, final int length) {
-        if (source == null) {
-            return false;
-        }
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
-        if (!substitute(buf, 0, length)) {
-            return false;
-        }
-        source.replace(offset, offset + length, buf.toString());
-        return true;
-    }
+//    public boolean replaceIn(final StringBuilder source, final int offset, final int length) {
+//        if (source == null) {
+//            return false;
+//        }
+//        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
+//        if (!substitute(buf, 0, length)) {
+//            return false;
+//        }
+//        source.replace(offset, offset + length, buf.toString());
+//        return true;
+//    }
 
     /**
      * Replaces all the occurrences of variables within the given source builder with their matching values from the
@@ -1036,12 +1036,12 @@ public class StringSubstitutor {
      * @return true if altered
      * @throws IllegalArgumentException if variable is not found when its allowed to throw exception
      */
-    public boolean replaceIn(final TextStringBuilder source, final int offset, final int length) {
-        if (source == null) {
-            return false;
-        }
-        return substitute(source, offset, length);
-    }
+//    public boolean replaceIn(final TextStringBuilder source, final int offset, final int length) {
+//        if (source == null) {
+//            return false;
+//        }
+//        return substitute(source, offset, length);
+//    }
 
     /**
      * Internal method that resolves the value of a variable.
@@ -1061,7 +1061,7 @@ public class StringSubstitutor {
      * @param endPos the end position of the variable including the suffix, valid
      * @return The variable's value or <b>null</b> if the variable is unknown
      */
-    protected String resolveVariable(final String variableName, final TextStringBuilder buf, final int startPos,
+    private String resolveVariable(final String variableName, final TextStringBuilder buf, final int startPos,
         final int endPos) {
         final StringLookup resolver = getStringLookup();
         if (resolver == null) {
@@ -1076,10 +1076,10 @@ public class StringSubstitutor {
      * @param disableSubstitutionInValues true if substitution in variable value are disabled
      * @return this, to enable chaining
      */
-    public StringSubstitutor setDisableSubstitutionInValues(final boolean disableSubstitutionInValues) {
-        this.disableSubstitutionInValues = disableSubstitutionInValues;
-        return this;
-    }
+//    public StringSubstitutor setDisableSubstitutionInValues(final boolean disableSubstitutionInValues) {
+//        this.disableSubstitutionInValues = disableSubstitutionInValues;
+//        return this;
+//    }
 
     /**
      * Sets a flag whether substitution is done in variable names. If set to <b>true</b>, the names of variables can
@@ -1089,10 +1089,10 @@ public class StringSubstitutor {
      * @param enableSubstitutionInVariables the new value of the flag
      * @return this, to enable chaining
      */
-    public StringSubstitutor setEnableSubstitutionInVariables(final boolean enableSubstitutionInVariables) {
-        this.enableSubstitutionInVariables = enableSubstitutionInVariables;
-        return this;
-    }
+//    public StringSubstitutor setEnableSubstitutionInVariables(final boolean enableSubstitutionInVariables) {
+//        this.enableSubstitutionInVariables = enableSubstitutionInVariables;
+//        return this;
+//    }
 
     /**
      * Sets a flag whether exception should be thrown if any variable is undefined.
@@ -1100,10 +1100,10 @@ public class StringSubstitutor {
      * @param failOnUndefinedVariable true if exception should be thrown on undefined variable
      * @return this, to enable chaining
      */
-    public StringSubstitutor setEnableUndefinedVariableException(final boolean failOnUndefinedVariable) {
-        this.enableUndefinedVariableException = failOnUndefinedVariable;
-        return this;
-    }
+//    public StringSubstitutor setEnableUndefinedVariableException(final boolean failOnUndefinedVariable) {
+//        this.enableUndefinedVariableException = failOnUndefinedVariable;
+//        return this;
+//    }
 
     /**
      * Sets the escape character. If this character is placed before a variable reference in the source text, this
@@ -1112,7 +1112,7 @@ public class StringSubstitutor {
      * @param escapeCharacter the escape character (0 for disabling escaping)
      * @return this, to enable chaining
      */
-    public StringSubstitutor setEscapeChar(final char escapeCharacter) {
+    private StringSubstitutor setEscapeChar(final char escapeCharacter) {
         this.escapeChar = escapeCharacter;
         return this;
     }
@@ -1126,10 +1126,10 @@ public class StringSubstitutor {
      * @param preserveEscapes true if escapes are to be preserved
      * @return this, to enable chaining
      */
-    public StringSubstitutor setPreserveEscapes(final boolean preserveEscapes) {
-        this.preserveEscapes = preserveEscapes;
-        return this;
-    }
+//    public StringSubstitutor setPreserveEscapes(final boolean preserveEscapes) {
+//        this.preserveEscapes = preserveEscapes;
+//        return this;
+//    }
 
     /**
      * Sets the variable default value delimiter to use.
@@ -1141,9 +1141,9 @@ public class StringSubstitutor {
      * @param valueDelimiter the variable default value delimiter character to use
      * @return this, to enable chaining
      */
-    public StringSubstitutor setValueDelimiter(final char valueDelimiter) {
-        return setValueDelimiterMatcher(StringMatcherFactory.INSTANCE.charMatcher(valueDelimiter));
-    }
+//    public StringSubstitutor setValueDelimiter(final char valueDelimiter) {
+//        return setValueDelimiterMatcher(StringMatcherFactory.INSTANCE.charMatcher(valueDelimiter));
+//    }
 
     /**
      * Sets the variable default value delimiter to use.
@@ -1159,13 +1159,13 @@ public class StringSubstitutor {
      * @param valueDelimiter the variable default value delimiter string to use, may be null or empty
      * @return this, to enable chaining
      */
-    public StringSubstitutor setValueDelimiter(final String valueDelimiter) {
-        if (valueDelimiter == null || valueDelimiter.length() == 0) {
-            setValueDelimiterMatcher(null);
-            return this;
-        }
-        return setValueDelimiterMatcher(StringMatcherFactory.INSTANCE.stringMatcher(valueDelimiter));
-    }
+//    public StringSubstitutor setValueDelimiter(final String valueDelimiter) {
+//        if (valueDelimiter == null || valueDelimiter.length() == 0) {
+//            setValueDelimiterMatcher(null);
+//            return this;
+//        }
+//        return setValueDelimiterMatcher(StringMatcherFactory.INSTANCE.stringMatcher(valueDelimiter));
+//    }
 
     /**
      * Sets the variable default value delimiter matcher to use.
@@ -1181,7 +1181,7 @@ public class StringSubstitutor {
      * @param valueDelimiterMatcher variable default value delimiter matcher to use, may be null
      * @return this, to enable chaining
      */
-    public StringSubstitutor setValueDelimiterMatcher(final StringMatcher valueDelimiterMatcher) {
+    private StringSubstitutor setValueDelimiterMatcher(final StringMatcher valueDelimiterMatcher) {
         this.valueDelimiterMatcher = valueDelimiterMatcher;
         return this;
     }
@@ -1196,9 +1196,9 @@ public class StringSubstitutor {
      * @param prefix the prefix character to use
      * @return this, to enable chaining
      */
-    public StringSubstitutor setVariablePrefix(final char prefix) {
-        return setVariablePrefixMatcher(StringMatcherFactory.INSTANCE.charMatcher(prefix));
-    }
+//    public StringSubstitutor setVariablePrefix(final char prefix) {
+//        return setVariablePrefixMatcher(StringMatcherFactory.INSTANCE.charMatcher(prefix));
+//    }
 
     /**
      * Sets the variable prefix to use.
@@ -1211,10 +1211,10 @@ public class StringSubstitutor {
      * @return this, to enable chaining
      * @throws IllegalArgumentException if the prefix is null
      */
-    public StringSubstitutor setVariablePrefix(final String prefix) {
-        Validate.isTrue(prefix != null, "Variable prefix must not be null!");
-        return setVariablePrefixMatcher(StringMatcherFactory.INSTANCE.stringMatcher(prefix));
-    }
+//    public StringSubstitutor setVariablePrefix(final String prefix) {
+//        Validate.isTrue(prefix != null, "Variable prefix must not be null!");
+//        return setVariablePrefixMatcher(StringMatcherFactory.INSTANCE.stringMatcher(prefix));
+//    }
 
     /**
      * Sets the variable prefix matcher currently in use.
@@ -1227,7 +1227,7 @@ public class StringSubstitutor {
      * @return this, to enable chaining
      * @throws IllegalArgumentException if the prefix matcher is null
      */
-    public StringSubstitutor setVariablePrefixMatcher(final StringMatcher prefixMatcher) {
+    private StringSubstitutor setVariablePrefixMatcher(final StringMatcher prefixMatcher) {
         Validate.isTrue(prefixMatcher != null, "Variable prefix matcher must not be null!");
         this.prefixMatcher = prefixMatcher;
         return this;
@@ -1239,7 +1239,7 @@ public class StringSubstitutor {
      * @param variableResolver the VariableResolver
      * @return this, to enable chaining
      */
-    public StringSubstitutor setVariableResolver(final StringLookup variableResolver) {
+    private StringSubstitutor setVariableResolver(final StringLookup variableResolver) {
         this.variableResolver = variableResolver;
         return this;
     }
@@ -1254,9 +1254,9 @@ public class StringSubstitutor {
      * @param suffix the suffix character to use
      * @return this, to enable chaining
      */
-    public StringSubstitutor setVariableSuffix(final char suffix) {
-        return setVariableSuffixMatcher(StringMatcherFactory.INSTANCE.charMatcher(suffix));
-    }
+//    public StringSubstitutor setVariableSuffix(final char suffix) {
+//        return setVariableSuffixMatcher(StringMatcherFactory.INSTANCE.charMatcher(suffix));
+//    }
 
     /**
      * Sets the variable suffix to use.
@@ -1269,10 +1269,10 @@ public class StringSubstitutor {
      * @return this, to enable chaining
      * @throws IllegalArgumentException if the suffix is null
      */
-    public StringSubstitutor setVariableSuffix(final String suffix) {
-        Validate.isTrue(suffix != null, "Variable suffix must not be null!");
-        return setVariableSuffixMatcher(StringMatcherFactory.INSTANCE.stringMatcher(suffix));
-    }
+//    public StringSubstitutor setVariableSuffix(final String suffix) {
+//        Validate.isTrue(suffix != null, "Variable suffix must not be null!");
+//        return setVariableSuffixMatcher(StringMatcherFactory.INSTANCE.stringMatcher(suffix));
+//    }
 
     /**
      * Sets the variable suffix matcher currently in use.
@@ -1285,7 +1285,7 @@ public class StringSubstitutor {
      * @return this, to enable chaining
      * @throws IllegalArgumentException if the suffix matcher is null
      */
-    public StringSubstitutor setVariableSuffixMatcher(final StringMatcher suffixMatcher) {
+    private StringSubstitutor setVariableSuffixMatcher(final StringMatcher suffixMatcher) {
         Validate.isTrue(suffixMatcher != null, "Variable suffix matcher must not be null!");
         this.suffixMatcher = suffixMatcher;
         return this;
@@ -1307,7 +1307,7 @@ public class StringSubstitutor {
      * @param length the length within the builder to be processed, must be valid
      * @return true if altered
      */
-    protected boolean substitute(final TextStringBuilder builder, final int offset, final int length) {
+    private boolean substitute(final TextStringBuilder builder, final int offset, final int length) {
         return substitute(builder, offset, length, null).altered;
     }
 

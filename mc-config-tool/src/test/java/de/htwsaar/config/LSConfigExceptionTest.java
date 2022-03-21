@@ -13,11 +13,11 @@ public class LSConfigExceptionTest {
 	@Test
 	public void constructInstance(){
 		try{
-			EnvConfiguration ec = new ClasspathBasedConfig("config-test.xml", null);
+			EnvConfiguration ec = new ClasspathBasedConfig("config-test.properties", null);
 			LSConfigException ex = new LSConfigException(ec, "Dummy config error");
 			throw ex;
 		}catch(LSConfigException ex){
-			assertThat(ex).hasMessageContaining("config-test.xml")
+			assertThat(ex).hasMessageContaining("config-test.properties")
 				.hasMessageContaining("Dummy config error");
 		}
 	}
@@ -47,7 +47,7 @@ public class LSConfigExceptionTest {
 	@Test
 	public void constructInstanceWithNullArgument3(){
 		try{
-			EnvConfiguration ec = new ClasspathBasedConfig("config-test.xml", null);
+			EnvConfiguration ec = new ClasspathBasedConfig("config-test.properties", null);
 			LSConfigException ex = new LSConfigException(ec, "Dummy config error", new IOException("Dummy"));
 			throw ex;
 		}catch(LSConfigException ex){

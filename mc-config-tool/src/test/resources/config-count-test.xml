@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <class-path>target/test-classes</class-path>
-    <author-root>src/test/resources/virtual-file-system</author-root>
-	<application-path>/tmp/mathcoach-app</application-path>
-</configuration>

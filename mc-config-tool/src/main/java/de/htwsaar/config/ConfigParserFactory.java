@@ -17,7 +17,8 @@ public final class ConfigParserFactory {
 		Objects.requireNonNull(configFile, "Config file must not be null");
 		String fileName = configFile.getName();
 		if(fileName.endsWith("xml")){
-			return new XMLConfigParser();
+			/*return new XMLConfigParser();*/
+            throw new RuntimeException("xml is not supported any more");
 		}else if(fileName.endsWith("properties")){
 			return new PropertiesConfigParser();
 		}else{

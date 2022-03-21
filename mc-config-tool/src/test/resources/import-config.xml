@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- diese datei wird aus einem anderem Datei importiert.
-	Sie kann keinen anderen Datei mehr importieren
--->
-<configuration>
-	<import-param-a>A</import-param-a>
-	<param-b>B</param-b>
-	<param-c>c</param-c>
-</configuration>
