@@ -61,7 +61,7 @@ public final class StringSubstitutor {
         }
         final int offset = 0;
         final int length = source.length();
-        final TextStringBuilder buf = new TextStringBuilder(length).append(source, offset, length);
+        final /*Text*/StringBuilder buf = new /*Text*/StringBuilder(length).append(source, offset, length);
         if (!substitute(buf, 0, length)) {
             return false;
         }
@@ -108,11 +108,11 @@ public final class StringSubstitutor {
      * @param length the length within the builder to be processed, must be valid
      * @return true if altered
      */
-    private boolean substitute(final TextStringBuilder builder, final int offset, final int length) {
+    private boolean substitute(final /*Text*/StringBuilder builder, final int offset, final int length) {
         return substitute(builder, offset, length, null).altered;
     }
     
-    private Result substitute(final TextStringBuilder builder, final int offset, final int length, List<String> priorVariables) {
+    private Result substitute(final /*Text*/StringBuilder builder, final int offset, final int length, List<String> priorVariables) {
         Objects.requireNonNull(builder, "builder");
         /*final StringMatcher prefixMatcher = getVariablePrefixMatcher();*/
         /*final StringMatcher suffixMatcher = getVariableSuffixMatcher();*/
@@ -176,10 +176,13 @@ public final class StringSubstitutor {
                                 continue outer;
                             }
                             // get var name
-                            String varNameExpr = builder.midString(startPos + startMatchLen,
-                                pos - startPos - startMatchLen);
+                            final int varIndex = startPos + startMatchLen;
+                            final int varLength = pos - startPos - startMatchLen;
+                            /*String varNameExpr = builder.midString(startPos + startMatchLen,
+                                pos - startPos - startMatchLen);*/
+                            String varNameExpr = substr(builder, varIndex, length);
                             if (substitutionInVariablesEnabled) {
-                                final TextStringBuilder bufName = new TextStringBuilder(varNameExpr);
+                                final /*Text*/StringBuilder bufName = new /*Text*/StringBuilder(varNameExpr);
                                 substitute(bufName, 0, bufName.length());
                                 varNameExpr = bufName.toString();
                             }
@@ -213,7 +216,7 @@ public final class StringSubstitutor {
                             // on the first call initialize priorVariables
                             if (priorVariables == null) {
                                 priorVariables = new ArrayList<>();
-                                priorVariables.add(builder.midString(offset, length));
+                                priorVariables.add( /*builder.midString(offset, length)*/ substr(builder, offset, length));
                             }
 
                             // handle cyclic substitution
@@ -304,7 +307,7 @@ public final class StringSubstitutor {
         if (source == null) {
             return null;
         }
-        final TextStringBuilder buf = new TextStringBuilder().append(source);
+        final /*Text*/StringBuilder buf = new /*Text*/StringBuilder().append(source);
         substitute(buf, 0, buf.length());
         return buf.toString();
     }
