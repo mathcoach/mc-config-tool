@@ -180,9 +180,9 @@ public final class StringSubstitutor {
                             final int varLength = pos - startPos - startMatchLen;
                             /*String varNameExpr = builder.midString(startPos + startMatchLen,
                                 pos - startPos - startMatchLen);*/
-                            String varNameExpr = substr(builder, varIndex, length);
+                            String varNameExpr = substr(builder, varIndex, varLength);
                             if (substitutionInVariablesEnabled) {
-                                final /*Text*/StringBuilder bufName = new /*Text*/StringBuilder(varNameExpr);
+                                final StringBuilder bufName = new StringBuilder(varNameExpr);
                                 substitute(bufName, 0, bufName.length());
                                 varNameExpr = bufName.toString();
                             }
@@ -313,7 +313,19 @@ public final class StringSubstitutor {
     }
     
     /**
-     * replacement for TextStringBuilder.midString(int index, int length).
+     * (Origin from TextStringBuilder)
+     * internal method to extract some characters from the middle of the string builder without throwing an exception.
+     * <p>
+     * This method extracts {@code length} characters from the builder at the specified index. If the index is negative
+     * it is treated as zero. If the index is greater than the builder size, it is treated as the builder size. If the
+     * length is negative, the empty string is returned. If insufficient characters are available in the builder, as
+     * much as possible is returned. Thus the returned string may be shorter than the length requested.
+     * </p>
+     *
+     * @param origin the origin StringBuilder
+     * @param index the index to start at, negative means zero
+     * @param length the number of characters to extract, negative returns empty string
+     * @return The new string
      */
     static String substr(StringBuilder origin, int index, int length) {
         final int size = origin.length();
