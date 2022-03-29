@@ -31,7 +31,7 @@ package de.htwsaar.config.text;
  * @since 1.3
  */
 @FunctionalInterface
-public interface StringLookup {
+interface StringLookup {
 
     /**
      * Looks up a String key to provide a String value.

@@ -39,16 +39,16 @@ abstract class AbstractStringLookup implements StringLookup {
     /**
      * Creates a lookup key for a given file and key.
      */
-    static String toLookupKey(final String left, final String right) {
-        return toLookupKey(left, SPLIT_STR, right);
-    }
+//    static String toLookupKey(final String left, final String right) {
+//        return toLookupKey(left, SPLIT_STR, right);
+//    }
 
     /**
      * Creates a lookup key for a given file and key.
      */
-    static String toLookupKey(final String left, final String separator, final String right) {
-        return left + separator + right;
-    }
+//    static String toLookupKey(final String left, final String separator, final String right) {
+//        return left + separator + right;
+//    }
 
     /**
      * Returns the substring after the first occurrence of {@code ch} in {@code value}.

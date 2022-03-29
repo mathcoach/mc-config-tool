@@ -24,7 +24,7 @@ package de.htwsaar.config.text;
  *
  * @since 1.3
  */
-public interface StringMatcher {
+interface StringMatcher {
 
     /**
      * Returns a matcher that matches this matcher followed by the given matcher.
@@ -142,9 +142,8 @@ public interface StringMatcher {
      * @return The number of matching characters, zero if there is no match.
      * @since 1.9
      */
-    default int isMatch(final CharSequence buffer, final int start, final int bufferStart, final int bufferEnd) {
-        throw new UnsupportedOperationException();
-        //return isMatch(CharSequenceUtils.toCharArray(buffer), start, bufferEnd, bufferEnd);
+    default int isMatch(final CharSequence buffer, final int start, final int bufferStart, final int bufferEnd) {        
+        return isMatch(toCharArray(buffer), start, bufferEnd, bufferEnd);
     }
 
     /**
@@ -156,5 +155,20 @@ public interface StringMatcher {
     default int size() {
         return 0;
     }
-
+    
+    final char[] EMPTY_CHAR_ARRAY = new char[0];
+    static char[] toCharArray(final CharSequence source) {
+        final int len = StringUtils.length(source);
+        if (len == 0) {
+            return EMPTY_CHAR_ARRAY;
+        }
+        if (source instanceof String) {
+            return ((String) source).toCharArray();
+        }
+        final char[] array = new char[len];
+        for (int i = 0; i < len; i++) {
+            array[i] = source.charAt(i);
+        }
+        return array;
+    }
 }

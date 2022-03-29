@@ -45,9 +45,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	 */
 	public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
 		classPathDir = new HashSet<>(10);
-		// collect classpath'directory in Thread' class loader
+		LOGGER.info("collect classpath'directory in Thread's class loader");
 		collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
-		// collect classpath in the own classloader
+		LOGGER.info("collect classpath in the own classloader");
 		collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
 		// collect classpath in String
 		collectDirInSystemClassPath(classPathDir);

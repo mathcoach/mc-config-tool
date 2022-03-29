@@ -73,7 +73,7 @@ import java.util.Objects;
  *
  * @since 1.3
  */
-public class TextStringBuilder implements CharSequence, Appendable, Serializable/*, Builder<String>*/ {
+class TextStringBuilder implements CharSequence, Appendable, Serializable/*, Builder<String>*/ {
 
     /**
      * Inner class to allow StrBuilder to operate as a reader.

@@ -10,10 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 //import org.apache.commons.lang3.text.StrBuilder;
 //import org.apache.commons.text.TextStringBuilder;
-import de.htwsaar.config.text.TextStringBuilder;
+//import de.htwsaar.config.text.TextStringBuilder;
 
 //import org.apache.commons.lang3.text.StrSubstitutor;
-//import org.apache.commons.text.StringSubstitutor;
+//import org.apache.commons.text.OriginStringSubstitutor;
 import de.htwsaar.config.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,13 +71,27 @@ public interface EnvConfiguration {
 	}
 
 	/**
-	 * @return the url, from which the config are saved, or null if unknown!
+     * should return the URL, from which the configuration saved, or null if 
+     * unknown. Use for Debug only
+     * 
+	 * @return the URL, from which the config are saved, or null if unknown!
 	 */
 	@Override
 	String toString();
 
 	Set<String> getAllConfigKeys();
 
+    
+    /**
+     * resolve an config-file, which is imported by an other configure-file.
+     * This method is intended to be used by an implementation of {@link EnvConfiguration}.
+     * 
+     * @param configFile the imported configure-file
+     * @param parser a parser, which can parse the configure file.
+     * 
+     * @return configure as a Map of paar of configure-parameter and its value
+     * 
+     */
 	static Map<String, String> resolveImportConfig(File configFile, ConfigParser parser) {
 
 		Map<String, String> temp = parser.parseConfigFile(configFile);
@@ -103,6 +117,36 @@ public interface EnvConfiguration {
 
 	}
 
+    /**
+     * resolve variables in configure values of a configure-parameter. Variables
+     * are marked by <code>${var_name}</code>. <code>var_name</code> should be 
+     * consist of only numeric-alphabetical character, the minus and underscore 
+     * character. The special variable <code>HOME</code> is automatically resolved
+     * to value of Java-System variable <code>user.home</code>.
+     * 
+     * For example: given a Map of pair of configure parameters
+     * and their values:
+     * 
+     * <pre>
+     * <code>
+     * application-home=${HOME}/some-dir
+     * icons-path=${application-home}/icons
+     * style-path=${application-home}/style
+     * </code></pre>
+     * within a java Runtime with <code>user.home</code> is set to <code>/home/otto</code>. 
+     * This map is resolved to
+     * <pre><code>
+     * application-home=/home/otto/some-dir
+     * icons-path=/home/otto/some-dir/icons
+     * style-path=/home/otto/some-dir/style
+     * </code></pre>
+     * 
+     * the origin map is not changed.
+     * 
+     * @param originConfigTable
+     * @return new map, its values are resolved.
+     * @throws LSConfigException when at least a variable is not resolved.
+     */
 	static Map<String, String> resolveConfigVariables(final Map<String, String> originConfigTable) {
 		final Logger logger = LoggerFactory.getLogger(EnvConfiguration.class);
 		try {
@@ -143,13 +187,14 @@ public interface EnvConfiguration {
 	) {
 		Matcher matcher = VAR_PATTERN.matcher(newValue);
 		if (matcher.find()) {// If the value has a variable
-			TextStringBuilder b = new TextStringBuilder(newValue);
-			StringSubstitutor st = new StringSubstitutor(configTable);
-			boolean substable = st.replaceIn(b);
+			/*TextStringBuilder builder = new TextStringBuilder(newValue);*/
+            StringBuilder bufferedValue = new StringBuilder(newValue);
+			StringSubstitutor substitutor = new StringSubstitutor(configTable);
+			boolean substable = substitutor.replaceIn(bufferedValue);
 			if (substable) {
-				String resolvedValue = b.build();
+				String resolvedValue = /*builder.build()*/bufferedValue.toString();
 				Matcher afterSubstMatcher = VAR_PATTERN.matcher(resolvedValue);
-				if (afterSubstMatcher.find()) {//If there is one or more not resolveable variables
+				if (afterSubstMatcher.find()) {//If there is at least one not resolveable variables
 					throw new LSConfigException("Cannot find the variable '" + afterSubstMatcher.group(0) + "in '" + newValue + "'");
 				} else {
 					configTable.put(configParameter, resolvedValue);

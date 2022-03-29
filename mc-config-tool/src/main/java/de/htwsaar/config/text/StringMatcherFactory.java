@@ -28,7 +28,7 @@ import java.lang.reflect.Array;
  *
  * @since 1.3
  */
-public final class StringMatcherFactory {
+final class StringMatcherFactory {
 
     /**
      * Matches the comma character.
