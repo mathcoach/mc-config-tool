@@ -310,6 +310,24 @@ public final class StringSubstitutor {
     }
     
     /**
+     * replacement for TextStringBuilder.midString(int index, int length).
+     */
+    static String substr(StringBuilder origin, int index, int length) {
+        final int size = origin.length();
+        if(index < 0) {
+            index = 0;
+        }
+        if(length <= 0 || index >= size ) {
+            return "";
+        }
+        int lastIndex = index + length ;
+        if(size <= lastIndex) {
+            lastIndex = size;
+        }
+        return origin.substring(index, lastIndex);        
+    }
+    
+    /**
      * The low-level result of a substitution.
      *     
      */

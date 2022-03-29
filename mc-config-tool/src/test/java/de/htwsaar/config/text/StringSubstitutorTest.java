@@ -105,7 +105,7 @@ class StringSubstitutorTest {
     }
     
     @Test
-    void restReplaceSystemPropertiesCausesExceptionWhenVariableNotFound() {
+    void testReplaceSystemProperties_CausesExceptionWhenVariableNotFound() {
         String source = "undef.var = ${undefined.var}";
         try {
             StringSubstitutor.replaceSystemProperties(source);
@@ -114,6 +114,52 @@ class StringSubstitutorTest {
         }
     }
     
+    // internal tests for replacement of TextStringBuilder
+    @Test
+    void testSubstr_regular() {
+        String origin = "0123456789_10";        
+        StringBuilder dummy = new StringBuilder(origin);
+        String sub = StringSubstitutor.substr(dummy, 3, 5);
+        assertThat(sub).isEqualTo("34567");
+    }
     
+    @Test
+    void testSubstr_negativIndex() {
+        String origin = "0123456789_10";        
+        StringBuilder dummy = new StringBuilder(origin);        
+        String sub = StringSubstitutor.substr(dummy, -3, 5);
+        assertThat(sub).isEqualTo("01234");
+    }
     
+    @Test
+    void testSubstr_IndexGreaterThanSize() {
+        String origin = "0123456789_10";
+        StringBuilder dummy = new StringBuilder(origin);        
+        String sub = StringSubstitutor.substr(dummy, 13, 5);
+        assertThat(sub).isEqualTo("");
+    }
+    
+    @Test
+    void testSubstr_ZeroLength() {
+        String origin = "0123456789_10";
+        StringBuilder dummy = new StringBuilder(origin);        
+        String sub = StringSubstitutor.substr(dummy, 3, 0);
+        assertThat(sub).isEqualTo("");
+    }
+    
+    @Test
+    void testSubstr_NegativeLength() {
+        String origin = "0123456789_10";
+        StringBuilder dummy = new StringBuilder(origin);        
+        String sub = StringSubstitutor.substr(dummy, 3, -1);
+        assertThat(sub).isEqualTo("");
+    }
+    
+    @Test
+    void testSubstr_size_less_thanIndexPlusLength() {
+        String origin = "0123456789_10";
+        StringBuilder dummy = new StringBuilder(origin);        
+        String sub = StringSubstitutor.substr(dummy, 3, 20);
+        assertThat(sub).isEqualTo("3456789_10");
+    }
 }
