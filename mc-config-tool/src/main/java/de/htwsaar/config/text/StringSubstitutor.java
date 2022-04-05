@@ -61,7 +61,7 @@ public final class StringSubstitutor {
         }
         final int offset = 0;
         final int length = source.length();
-        final /*Text*/StringBuilder buf = new /*Text*/StringBuilder(length).append(source, offset, length);
+        final StringBuilder buf = new StringBuilder(length).append(source, offset, length);
         if (!substitute(buf, 0, length)) {
             return false;
         }
@@ -108,11 +108,11 @@ public final class StringSubstitutor {
      * @param length the length within the builder to be processed, must be valid
      * @return true if altered
      */
-    private boolean substitute(final /*Text*/StringBuilder builder, final int offset, final int length) {
+    private boolean substitute(final StringBuilder builder, final int offset, final int length) {
         return substitute(builder, offset, length, null).altered;
     }
     
-    private Result substitute(final /*Text*/StringBuilder builder, final int offset, final int length, List<String> priorVariables) {
+    private Result substitute(final StringBuilder builder, final int offset, final int length, List<String> priorVariables) {
         Objects.requireNonNull(builder, "builder");
         /*final StringMatcher prefixMatcher = getVariablePrefixMatcher();*/
         /*final StringMatcher suffixMatcher = getVariableSuffixMatcher();*/
@@ -180,7 +180,7 @@ public final class StringSubstitutor {
                             final int varLength = pos - startPos - startMatchLen;
                             /*String varNameExpr = builder.midString(startPos + startMatchLen,
                                 pos - startPos - startMatchLen);*/
-                            String varNameExpr = substr(builder, varIndex, varLength);
+                            String varNameExpr = StringUtils.substr(builder, varIndex, varLength);
                             if (substitutionInVariablesEnabled) {
                                 final StringBuilder bufName = new StringBuilder(varNameExpr);
                                 substitute(bufName, 0, bufName.length());
@@ -216,7 +216,7 @@ public final class StringSubstitutor {
                             // on the first call initialize priorVariables
                             if (priorVariables == null) {
                                 priorVariables = new ArrayList<>();
-                                priorVariables.add( /*builder.midString(offset, length)*/ substr(builder, offset, length));
+                                priorVariables.add( StringUtils.substr(builder, offset, length));
                             }
 
                             // handle cyclic substitution
@@ -307,40 +307,12 @@ public final class StringSubstitutor {
         if (source == null) {
             return null;
         }
-        final /*Text*/StringBuilder buf = new /*Text*/StringBuilder().append(source);
+        final StringBuilder buf = new StringBuilder().append(source);
         substitute(buf, 0, buf.length());
         return buf.toString();
     }
     
-    /**
-     * (Origin from TextStringBuilder)
-     * internal method to extract some characters from the middle of the string builder without throwing an exception.
-     * <p>
-     * This method extracts {@code length} characters from the builder at the specified index. If the index is negative
-     * it is treated as zero. If the index is greater than the builder size, it is treated as the builder size. If the
-     * length is negative, the empty string is returned. If insufficient characters are available in the builder, as
-     * much as possible is returned. Thus the returned string may be shorter than the length requested.
-     * </p>
-     *
-     * @param origin the origin StringBuilder
-     * @param index the index to start at, negative means zero
-     * @param length the number of characters to extract, negative returns empty string
-     * @return The new string
-     */
-    static String substr(StringBuilder origin, int index, int length) {
-        final int size = origin.length();
-        if(index < 0) {
-            index = 0;
-        }
-        if(length <= 0 || index >= size ) {
-            return "";
-        }
-        int lastIndex = index + length ;
-        if(size <= lastIndex) {
-            lastIndex = size;
-        }
-        return origin.substring(index, lastIndex);        
-    }
+    
     
     /**
      * The low-level result of a substitution.

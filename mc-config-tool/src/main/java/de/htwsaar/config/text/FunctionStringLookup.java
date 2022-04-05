@@ -27,7 +27,7 @@ import java.util.function.Function;
  *
  * @since 1.9
  */
-final class FunctionStringLookup<V> extends AbstractStringLookup {
+final class FunctionStringLookup<V> /*extends AbstractStringLookup*/ implements StringLookup {
 
     /**
      * Creates a new instance backed by a Function.
@@ -62,6 +62,7 @@ final class FunctionStringLookup<V> extends AbstractStringLookup {
      * @param function the function, may be null.
      */
     private FunctionStringLookup(final Function<String, V> function) {
+        Objects.requireNonNull(function, "function must not be null");
         this.function = function;
     }
 
@@ -76,10 +77,7 @@ final class FunctionStringLookup<V> extends AbstractStringLookup {
      * @return The function result as a string, may be null.
      */
     @Override
-    public String lookup(final String key) {
-        if (function == null) {
-            return null;
-        }
+    public String lookup(final String key) {        
         final V obj;
         try {
             obj = function.apply(key);
@@ -93,7 +91,7 @@ final class FunctionStringLookup<V> extends AbstractStringLookup {
 
     @Override
     public String toString() {
-        return super.toString() + " [function=" + function + "]";
+        return this.getClass().getName() + " [function=" + function + "]";
     }
 
 }

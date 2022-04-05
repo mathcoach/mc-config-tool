@@ -183,75 +183,75 @@ final class StringLookupFactory {
      */
     public static final StringLookupFactory INSTANCE = new StringLookupFactory();
 
-    /**
-     * Decodes Base64 Strings.
-     * <p>
-     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
-     * </p>
-     *
-     * <pre>
-     * StringLookupFactory.INSTANCE.base64DecoderStringLookup().lookup("SGVsbG9Xb3JsZCE=");
-     * </pre>
-     * <p>
-     * Using a {@link StringSubstitutor}:
-     * </p>
-     *
-     * <pre>
-     * StringSubstitutor.createInterpolator().replace("... ${base64Decoder:SGVsbG9Xb3JsZCE=} ..."));
-     * </pre>
-     * <p>
-     * The above examples convert {@code "SGVsbG9Xb3JsZCE="} to {@code "HelloWorld!"}.
-     * </p>
-     */
-    static final FunctionStringLookup<String> INSTANCE_BASE64_DECODER = FunctionStringLookup
-        .on(key -> new String(Base64.getDecoder().decode(key), StandardCharsets.ISO_8859_1));
+//    /**
+//     * Decodes Base64 Strings.
+//     * <p>
+//     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringLookupFactory.INSTANCE.base64DecoderStringLookup().lookup("SGVsbG9Xb3JsZCE=");
+//     * </pre>
+//     * <p>
+//     * Using a {@link StringSubstitutor}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringSubstitutor.createInterpolator().replace("... ${base64Decoder:SGVsbG9Xb3JsZCE=} ..."));
+//     * </pre>
+//     * <p>
+//     * The above examples convert {@code "SGVsbG9Xb3JsZCE="} to {@code "HelloWorld!"}.
+//     * </p>
+//     */
+//    static final FunctionStringLookup<String> INSTANCE_BASE64_DECODER = FunctionStringLookup
+//        .on(key -> new String(Base64.getDecoder().decode(key), StandardCharsets.ISO_8859_1));
 
-    /**
-     * Encodes Base64 Strings.
-     * <p>
-     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
-     * </p>
-     *
-     * <pre>
-     * StringLookupFactory.INSTANCE.base64EncoderStringLookup().lookup("HelloWorld!");
-     * </pre>
-     * <p>
-     * Using a {@link StringSubstitutor}:
-     * </p>
-     *
-     * <pre>
-     * StringSubstitutor.createInterpolator().replace("... ${base64Encoder:HelloWorld!} ..."));
-     * </pre>
-     * <p>
-     * The above examples convert {@code "HelloWorld!"} to {@code "SGVsbG9Xb3JsZCE="}.
-     * </p>
-     * Defines the singleton for this class.
-     */
-    static final FunctionStringLookup<String> INSTANCE_BASE64_ENCODER = FunctionStringLookup
-        .on(key -> Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.ISO_8859_1)));
+//    /**
+//     * Encodes Base64 Strings.
+//     * <p>
+//     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringLookupFactory.INSTANCE.base64EncoderStringLookup().lookup("HelloWorld!");
+//     * </pre>
+//     * <p>
+//     * Using a {@link StringSubstitutor}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringSubstitutor.createInterpolator().replace("... ${base64Encoder:HelloWorld!} ..."));
+//     * </pre>
+//     * <p>
+//     * The above examples convert {@code "HelloWorld!"} to {@code "SGVsbG9Xb3JsZCE="}.
+//     * </p>
+//     * Defines the singleton for this class.
+//     */
+//    static final FunctionStringLookup<String> INSTANCE_BASE64_ENCODER = FunctionStringLookup
+//        .on(key -> Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.ISO_8859_1)));
 
-    /**
-     * Looks up keys from environment variables.
-     * <p>
-     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
-     * </p>
-     *
-     * <pre>
-     * StringLookupFactory.INSTANCE.dateStringLookup().lookup("USER");
-     * </pre>
-     * <p>
-     * Using a {@link StringSubstitutor}:
-     * </p>
-     *
-     * <pre>
-     * StringSubstitutor.createInterpolator().replace("... ${env:USER} ..."));
-     * </pre>
-     * <p>
-     * The above examples convert (on Linux) {@code "USER"} to the current user name. On Windows 10, you would use
-     * {@code "USERNAME"} to the same effect.
-     * </p>
-     */
-    static final FunctionStringLookup<String> INSTANCE_ENVIRONMENT_VARIABLES = FunctionStringLookup.on(System::getenv);
+//    /**
+//     * Looks up keys from environment variables.
+//     * <p>
+//     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringLookupFactory.INSTANCE.dateStringLookup().lookup("USER");
+//     * </pre>
+//     * <p>
+//     * Using a {@link StringSubstitutor}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringSubstitutor.createInterpolator().replace("... ${env:USER} ..."));
+//     * </pre>
+//     * <p>
+//     * The above examples convert (on Linux) {@code "USER"} to the current user name. On Windows 10, you would use
+//     * {@code "USERNAME"} to the same effect.
+//     * </p>
+//     */
+//    static final FunctionStringLookup<String> INSTANCE_ENVIRONMENT_VARIABLES = FunctionStringLookup.on(System::getenv);
 
     /**
      * Defines the FunctionStringLookup singleton that always returns null.
@@ -263,124 +263,124 @@ final class StringLookupFactory {
      */
     static final FunctionStringLookup<String> INSTANCE_SYSTEM_PROPERTIES = FunctionStringLookup.on(System::getProperty);
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_BASE64_DECODER}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_BASE64_DECODER = "base64Decoder";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_BASE64_DECODER}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_BASE64_DECODER = "base64Decoder";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_BASE64_ENCODER}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_BASE64_ENCODER = "base64Encoder";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_BASE64_ENCODER}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_BASE64_ENCODER = "base64Encoder";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_CONST}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_CONST = "const";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_CONST}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_CONST = "const";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_DATE}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_DATE = "date";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_DATE}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_DATE = "date";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_DNS}.
-     *
-     * @since 1.8
-     */
-    public static final String KEY_DNS = "dns";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_DNS}.
+//     *
+//     * @since 1.8
+//     */
+//    public static final String KEY_DNS = "dns";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_ENV}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_ENV = "env";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_ENV}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_ENV = "env";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_FILE}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_FILE = "file";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_FILE}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_FILE = "file";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_JAVA}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_JAVA = "java";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_JAVA}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_JAVA = "java";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_LOCALHOST}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_LOCALHOST = "localhost";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_LOCALHOST}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_LOCALHOST = "localhost";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_PROPERTIES}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_PROPERTIES = "properties";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_PROPERTIES}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_PROPERTIES = "properties";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_RESOURCE_BUNDLE}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_RESOURCE_BUNDLE = "resourceBundle";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_RESOURCE_BUNDLE}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_RESOURCE_BUNDLE = "resourceBundle";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_SCRIPT}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_SCRIPT = "script";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_SCRIPT}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_SCRIPT = "script";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_SYS}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_SYS = "sys";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_SYS}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_SYS = "sys";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_URL}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_URL = "url";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_URL}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_URL = "url";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_URL_DECODER}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_URL_DECODER = "urlDecoder";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_URL_DECODER}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_URL_DECODER = "urlDecoder";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_URL_ENCODER}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_URL_ENCODER = "urlEncoder";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_URL_ENCODER}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_URL_ENCODER = "urlEncoder";
 
-    /**
-     * Default lookup key for interpolation {@value #KEY_XML}.
-     *
-     * @since 1.6
-     */
-    public static final String KEY_XML = "xml";
+//    /**
+//     * Default lookup key for interpolation {@value #KEY_XML}.
+//     *
+//     * @since 1.6
+//     */
+//    public static final String KEY_XML = "xml";
 
 //    /**
 //     * Clears any static resources.
@@ -610,33 +610,33 @@ final class StringLookupFactory {
 //        return DnsStringLookup.INSTANCE;
 //    }
 
-    /**
-     * Returns the EnvironmentVariableStringLookup singleton instance where the lookup key is an environment variable
-     * name.
-     * <p>
-     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
-     * </p>
-     *
-     * <pre>
-     * StringLookupFactory.INSTANCE.dateStringLookup().lookup("USER");
-     * </pre>
-     * <p>
-     * Using a {@link StringSubstitutor}:
-     * </p>
-     *
-     * <pre>
-     * StringSubstitutor.createInterpolator().replace("... ${env:USER} ..."));
-     * </pre>
-     * <p>
-     * The above examples convert (on Linux) {@code "USER"} to the current user name. On Windows 10, you would use
-     * {@code "USERNAME"} to the same effect.
-     * </p>
-     *
-     * @return The EnvironmentVariableStringLookup singleton instance.
-     */
-    public StringLookup environmentVariableStringLookup() {
-        return StringLookupFactory.INSTANCE_ENVIRONMENT_VARIABLES;
-    }
+//    /**
+//     * Returns the EnvironmentVariableStringLookup singleton instance where the lookup key is an environment variable
+//     * name.
+//     * <p>
+//     * Using a {@link StringLookup} from the {@link StringLookupFactory}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringLookupFactory.INSTANCE.dateStringLookup().lookup("USER");
+//     * </pre>
+//     * <p>
+//     * Using a {@link StringSubstitutor}:
+//     * </p>
+//     *
+//     * <pre>
+//     * StringSubstitutor.createInterpolator().replace("... ${env:USER} ..."));
+//     * </pre>
+//     * <p>
+//     * The above examples convert (on Linux) {@code "USER"} to the current user name. On Windows 10, you would use
+//     * {@code "USERNAME"} to the same effect.
+//     * </p>
+//     *
+//     * @return The EnvironmentVariableStringLookup singleton instance.
+//     */
+//    StringLookup environmentVariableStringLookup() {
+//        return StringLookupFactory.INSTANCE_ENVIRONMENT_VARIABLES;
+//    }
 
 //    /**
 //     * Returns the FileStringLookup singleton instance.
@@ -826,7 +826,7 @@ final class StringLookupFactory {
      * @param map the map.
      * @return a new MapStringLookup.
      */
-    public <V> StringLookup mapStringLookup(final Map<String, V> map) {
+    <V> StringLookup mapStringLookup(final Map<String, V> map) {
         return FunctionStringLookup.on(map);
     }
 
@@ -994,7 +994,7 @@ final class StringLookupFactory {
      *
      * @return The SystemPropertyStringLookup singleton instance.
      */
-    public StringLookup systemPropertyStringLookup() {
+    StringLookup systemPropertyStringLookup() {
         return StringLookupFactory.INSTANCE_SYSTEM_PROPERTIES;
     }
 

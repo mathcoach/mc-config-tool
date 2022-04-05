@@ -143,7 +143,7 @@ interface StringMatcher {
      * @since 1.9
      */
     default int isMatch(final CharSequence buffer, final int start, final int bufferStart, final int bufferEnd) {        
-        return isMatch(toCharArray(buffer), start, bufferEnd, bufferEnd);
+        return isMatch(StringUtils.toCharArray(buffer), start, bufferEnd, bufferEnd);
     }
 
     /**
@@ -156,19 +156,5 @@ interface StringMatcher {
         return 0;
     }
     
-    final char[] EMPTY_CHAR_ARRAY = new char[0];
-    static char[] toCharArray(final CharSequence source) {
-        final int len = StringUtils.length(source);
-        if (len == 0) {
-            return EMPTY_CHAR_ARRAY;
-        }
-        if (source instanceof String) {
-            return ((String) source).toCharArray();
-        }
-        final char[] array = new char[len];
-        for (int i = 0; i < len; i++) {
-            array[i] = source.charAt(i);
-        }
-        return array;
-    }
+    
 }
