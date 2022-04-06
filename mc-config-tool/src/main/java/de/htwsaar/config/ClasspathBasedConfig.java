@@ -45,11 +45,11 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 	 */
 	public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
 		classPathDir = new HashSet<>(10);
-		LOGGER.info("collect classpath'directory in Thread's class loader");
+		LOGGER.info("Collect directories in Thread's class loader");
 		collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
-		LOGGER.info("collect classpath in the own classloader");
+		LOGGER.info("Collect directories in the own classloader");
 		collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
-		// collect classpath in String
+		LOGGER.info("Collect directories in System classpath defined by java.class.path");
 		collectDirInSystemClassPath(classPathDir);
 
 		searchConfigFileInDir(primaryConfigFileName);
@@ -149,8 +149,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 		}
 	}
 	
-	protected final void collectDirInSystemClassPath(Set<Path> classPathDir) {
-		LOGGER.trace("Collect directories in java.class.path");
+	protected final void collectDirInSystemClassPath(Set<Path> classPathDir) {		
 		String sessionClassPath = System.getProperty("java.class.path");
 		String[] classpath = sessionClassPath.split(File.pathSeparator);
 		for (String path : classpath) {

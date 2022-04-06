@@ -292,6 +292,8 @@ public class EnvConfigurationTest {
 			failBecauseExceptionWasNotThrown(ImportCfgFileNotFound.class);
 		}catch(ImportCfgFileNotFound ex) {
 			assertThat(ex).hasMessageContaining(dummyNotExistFile);
+            Path dummy = ex.getImportedPath();
+            assertThat(dummy).doesNotExist();
 		}
 	}
 	
