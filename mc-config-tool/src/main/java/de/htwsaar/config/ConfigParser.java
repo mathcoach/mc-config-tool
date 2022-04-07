@@ -13,5 +13,5 @@ public interface ConfigParser { //NOSONAR
 	
 	default void reset(){
 		//Nothing
-	};
+	}
 }

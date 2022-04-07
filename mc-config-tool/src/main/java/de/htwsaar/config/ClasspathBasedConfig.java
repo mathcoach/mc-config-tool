@@ -57,7 +57,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 			LOGGER.info("Test Config file {} not found!", primaryConfigFileName);
 			LOGGER.info("Test Config file is not in following directory:");
 			if (LOGGER.isInfoEnabled()) {
-				classPathDir.forEach( f -> 	LOGGER.info(" -> {}", f.toString() ) );
+				classPathDir.forEach( f -> 	LOGGER.info(" -> {}", f ) );
 			}
 			searchConfigFileInDir(secondaryConfigFileName);
 			if (configFile == null) {

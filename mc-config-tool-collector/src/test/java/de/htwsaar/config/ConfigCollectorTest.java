@@ -5,39 +5,40 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 import org.assertj.core.api.Condition;
-//import org.fest.assertions.core.Condition;
 /**
  *
  * @author hbui
  */
-public class ConfigCollectorTest {
+class ConfigCollectorTest {
 	
 
 	@Test
-	public void validateName() {
+	void validateName() {
 		Map<String, ConfigEntries.Entry> configEntryMap = ConfigCollector.collectConfigAsMap();
-		assertThat(configEntryMap).containsKey(ConfigMockGenerator.DUMMY_CONFIG);
-		assertThat(configEntryMap).containsKey(OtherConfigMockGenerator.OTHER_DUMMY_CONFIG);
+		assertThat(configEntryMap)
+            .containsKey(ConfigMockGenerator.DUMMY_CONFIG)
+            .containsKey(OtherConfigMockGenerator.OTHER_DUMMY_CONFIG);
 
 		ConfigEntries.Entry dummyConfigEntry = configEntryMap.get(ConfigMockGenerator.DUMMY_CONFIG);
 		Set<ConfigEntries.ConfigUser> configUsers = dummyConfigEntry.useIn();
-		assertThat(configUsers).hasSize(2);
-		assertThat(configUsers).areExactly(1, new Condition<ConfigEntries.ConfigUser>(){
-			@Override
-			public boolean matches(ConfigEntries.ConfigUser value) {
-				return value.getName().equals(ConfigMockGenerator.class.getName());
-			}
-		});
-		assertThat(configUsers).areExactly(1, new Condition<ConfigEntries.ConfigUser>(){
-			@Override
-			public boolean matches(ConfigEntries.ConfigUser value) {
-				return value.name.equals(OtherConfigMockGenerator.class.getName());
-			}
-		});
+		assertThat(configUsers)
+            .hasSize(2)
+            .areExactly(1, new Condition<ConfigEntries.ConfigUser>(){
+                @Override
+                public boolean matches(ConfigEntries.ConfigUser value) {
+                    return value.getName().equals(ConfigMockGenerator.class.getName());
+                }
+            })
+            .areExactly(1, new Condition<ConfigEntries.ConfigUser>(){
+                @Override
+                public boolean matches(ConfigEntries.ConfigUser value) {
+                    return value.name.equals(OtherConfigMockGenerator.class.getName());
+                }
+            });
 	}
 	
 	@Test
-	public void configInLibraryAreMerged() {
+	void configInLibraryAreMerged() {
 		Map<String, ConfigEntries.Entry> configEntryMap = ConfigCollector.collectConfigAsMap();
 		ConfigEntries.Entry artificialConfig = configEntryMap.get(ConfigMockGenerator.ARTIFICIAL_CONFIG);
 		assertThat(artificialConfig.getName()).isEqualTo(ConfigMockGenerator.ARTIFICIAL_CONFIG);
@@ -46,7 +47,7 @@ public class ConfigCollectorTest {
 	}
 	
 	@Test
-	public void addAnSugguestValueToAConfig() {
+	void addAnSugguestValueToAConfig() {
 		Map<String, ConfigEntries.Entry> configEntryMap = ConfigCollector.collectConfigAsMap();
 		ConfigEntries.Entry artificialConfig = configEntryMap.get(ConfigMockGenerator.ARTIFICIAL_CONFIG);
 		assertThat(artificialConfig.getName()).isEqualTo(ConfigMockGenerator.ARTIFICIAL_CONFIG);

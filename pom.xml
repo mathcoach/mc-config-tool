@@ -103,12 +103,12 @@
 	</build>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
+			<!--dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-text</artifactId>
 				<version>1.9</version>
 				<type>jar</type>
-			</dependency>
+			</dependency-->
             <dependency>
                 <groupId>org.netbeans.api</groupId>
                 <artifactId>org-openide-util-lookup</artifactId>

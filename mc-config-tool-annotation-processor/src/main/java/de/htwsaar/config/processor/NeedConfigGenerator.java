@@ -17,7 +17,8 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import org.apache.commons.lang3.StringEscapeUtils;
+import de.htwsaar.config.processor.text.StringEscapeUtils;
+
 
 /**
  *
@@ -155,7 +156,7 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 	}
 
 	private static String buildUUIDClassName() {
-		return "GenConfigEntry";
+		return "GenConfigEntry";//NOSONAR for now it works well, but keep it as a method for changing in future
 	}
 
 	private static String getDescription(String[] descriptionArray) {

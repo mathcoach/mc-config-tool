@@ -5,6 +5,8 @@ import java.io.Writer;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -12,11 +14,21 @@ import javax.tools.JavaFileObject;
  *
  * @author hbui
  */
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 	
-	public  static final String PACKAGE_REG_VALIDATOR = 
-		//"([a-zA-Z]+[a-zA-Z0-9]*)(\\.[a-zA-Z]+[a-zA-Z0-9]*)*";
-		//"(?i)^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+[0-9a-z_]$" 
+    /**
+     * Regular expression to check if a package name is valid.
+     * 
+     * Some alternatives for the value of this static attribute are:
+     * 
+     * <pre>"([a-zA-Z]+[a-zA-Z0-9]*)(\\.[a-zA-Z]+[a-zA-Z0-9]*)*";</pre>
+     * 
+     * or 
+     * 
+     * <pre>"(?i)^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+[0-9a-z_]$" </pre>
+     */
+	public  static final String PACKAGE_REG_VALIDATOR = 		
 		"(?i)^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*+$" 
 	;
 	

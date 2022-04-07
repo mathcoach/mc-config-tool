@@ -8,7 +8,7 @@ import java.nio.file.Path;
  */
 public class ImportCfgFileNotFound extends LSConfigException {
 
-	private final Path importedPath;
+	private final transient Path importedPath;
 	
 	public ImportCfgFileNotFound(Path importedPath) {
 		super("Imported file '" + importedPath.normalize().toString() + "' not found");

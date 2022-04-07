@@ -11,10 +11,10 @@ import static org.assertj.core.api.Assertions.*;
  *
  * @author hbui
  */
-public class ConfigEntriesTest {
+class ConfigEntriesTest {
 	// Test part for Entry
 	@Test
-	public void useIn_is_Imutable(){
+	void useIn_is_Imutable(){
 		final String configUser = "de.htwsaar.config.testing";
 		final String configDescription = "a test value";
 		Entry entry = new Entry("config-parmeter");
@@ -26,7 +26,7 @@ public class ConfigEntriesTest {
 				.containsOnly(new ConfigUser(configUser, configDescription));
 	}
 	@Test
-	public void suggestValue_is_Imutable(){
+	void suggestValue_is_Imutable(){
 		Entry entry = new Entry("config-parmeter");
 		String suggestValue = "1. a posible value";
 		final String otherSuggestValue = "2. an other posible value";
@@ -43,7 +43,7 @@ public class ConfigEntriesTest {
 	}
 	
 	@Test
-	public void onlyConfigNameIsMatterByComparision(){
+	void onlyConfigNameIsMatterByComparision(){
 		String sameConfig = "sameconfig";
 		String otherConfig = "otherConfig";
 		//using compare
@@ -64,7 +64,7 @@ public class ConfigEntriesTest {
 	}
 	
 	@Test
-	public void noExceptionByCallingToString(){
+	void noExceptionByCallingToString(){
 		try{
 			Entry entry = new Entry("test-to-string")
 					.setValue("a value")
@@ -78,7 +78,7 @@ public class ConfigEntriesTest {
 	}
 
 	@Test
-	public void equalityConcernOnlyName() {
+	void equalityConcernOnlyName() {
 		String entryName = "test-entry-name";
 		Entry e1 = new Entry(entryName).setValue("e1");
 		Entry e2 = new Entry(entryName).setValue("e2");
@@ -86,7 +86,7 @@ public class ConfigEntriesTest {
 	}
 
 	@Test
-	public void notEqualityConcernOnlyName() {
+	void notEqualityConcernOnlyName() {
 		String entryName = "test-entry-name";
 		Entry e1 = new Entry(entryName).setValue("e1");
 		Entry e2 = new Entry(entryName+ "-extra").setValue("e1");
@@ -94,10 +94,10 @@ public class ConfigEntriesTest {
 	}
 
 	@Test
-	public void compareBadType() {
+	void compareBadType() {
 		String entryName = "test-entry-name";
 		Entry e1 = new Entry(entryName).setValue("e1");
-		assertThat(e1.equals(entryName)).isFalse();
+		assertThat(e1.equals(entryName)).isFalse(); //NOSONAR call explicit equals here!
 		assertThat(e1.getName()).isEqualTo(entryName);
 	}
 	

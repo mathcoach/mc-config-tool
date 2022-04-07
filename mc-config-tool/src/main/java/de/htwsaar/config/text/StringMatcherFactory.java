@@ -37,9 +37,9 @@ class StringMatcherFactory {
      */
     StringMatcher stringMatcher(final char... chars) {
         final int length = getArrayLength(chars);
-        return length == 0 ? NONE_MATCHER
-            : length == 1 ? new AbstractStringMatcher.CharMatcher(chars[0])
-                : new AbstractStringMatcher.CharArrayMatcher(chars); //NOSONAR
+        if(length == 0) return NONE_MATCHER;
+        if(length == 1) return new AbstractStringMatcher.CharArrayMatcher(chars[0]);
+        return new AbstractStringMatcher.CharArrayMatcher(chars);
     }
     
     /**
