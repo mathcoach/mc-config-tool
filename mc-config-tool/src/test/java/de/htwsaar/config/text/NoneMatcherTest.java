@@ -15,7 +15,7 @@ class NoneMatcherTest {
     void testMatchString() {
         final NoneMatcher m = new NoneMatcher();
         final int matchLength = m.isMatch("test", 0);
-        assertThat(matchLength).isEqualTo(0);
+        assertThat(matchLength).isZero();
     }
     
     
@@ -23,13 +23,13 @@ class NoneMatcherTest {
     void testMatchArray() {
         final NoneMatcher m = new NoneMatcher();
         final int matchLength = m.isMatch( new char[]{'a'}, 0);
-        assertThat(matchLength).isEqualTo(0);
+        assertThat(matchLength).isZero();
     }
     
     @Test
     void testSize() {
         final NoneMatcher m = new NoneMatcher();
-        assertThat(m.size()).isEqualTo(0);
+        assertThat(m.size()).isZero();
     }
     
 }

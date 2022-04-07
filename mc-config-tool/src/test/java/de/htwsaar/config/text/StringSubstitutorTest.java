@@ -17,7 +17,7 @@ class StringSubstitutorTest {
         StringSubstitutor substitutor = new StringSubstitutor(values);
         boolean isReplaced = substitutor.replaceIn(source);
         assertThat(isReplaced).isTrue();
-        assertThat(source.toString()).isEqualTo("The quick brown fox jumps over the lazy dog.");
+        assertThat((CharSequence)source).hasToString("The quick brown fox jumps over the lazy dog.");        
     }
     
     @Test
@@ -40,7 +40,8 @@ class StringSubstitutorTest {
         StringSubstitutor substitutor = new StringSubstitutor(values);
         boolean isReplaced = substitutor.replaceIn(source);
         assertThat(isReplaced).isFalse();
-        assertThat(source.toString()).isEqualTo("nothing to change");
+        assertThat((CharSequence)source).hasToString("nothing to change");
+        //assertThat(source.toString()).isEqualTo("nothing to change");
     }
     
     

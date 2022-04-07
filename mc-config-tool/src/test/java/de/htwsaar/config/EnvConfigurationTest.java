@@ -17,7 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
  *
  * @author hbui
  */
-public class EnvConfigurationTest {
+class EnvConfigurationTest {
 	
 
 	@Test
@@ -161,10 +161,13 @@ public class EnvConfigurationTest {
 		
 		File simpleConfig = MAIN_CONFIG_FILE.toFile();//Dummy file only
 		Map<String,String> config = EnvConfiguration.resolveImportConfig(simpleConfig, new DummyConfigParser());
-		assertThat(config.get("param-a")).isEqualTo("a");        //only main config has param-a
-		assertThat(config.get("import-param-a")).isEqualTo("A"); //only imported config has import-param-a
-		assertThat(config.get("param-b")).isEqualTo("B");        //imported config has precedence
-		assertThat(config.get("param-c")).isEqualTo("c");        //like param-a, other name
+		
+        assertThat(config)
+            .containsEntry("param-a", "a")        // only main config has param-a
+            .containsEntry("import-param-a", "A") //only imported config has import-param-a
+            .containsEntry("param-b", "B")        //imported config has precedence
+            .containsEntry("param-c", "c")        //like param-a, other name            
+            ;		
 		assertThat(config.get("param-e")).isNull();              //neither nor is configed
 	}
 	
@@ -202,8 +205,9 @@ public class EnvConfigurationTest {
 	@Test
 	void throwExceptionIfImportCycle() {		
 		File simpleConfig = MAIN_CONFIG_FILE.toFile();
+        ConfigParser p = new CycleConfigParser() ;
 		try{
-			EnvConfiguration.resolveImportConfig(simpleConfig, new CycleConfigParser() );
+			EnvConfiguration.resolveImportConfig(simpleConfig, p);
 			failBecauseExceptionWasNotThrown(LSConfigException.class);
 		}catch(LSConfigException ex){			
 			assertThat(ex).hasMessageContaining("Import too many level");
@@ -285,9 +289,9 @@ public class EnvConfigurationTest {
 	@Test
 	void raiseExceptionIfImportFileNotExist() {
 		final String dummyNotExistFile = "dummy_not_exist_file";
-		try{
-			ConfigParser p = new ImportNotExistFileParser(dummyNotExistFile);
-			File ignoredCfgFile = new File("ignore_me");
+        File ignoredCfgFile = new File("ignore_me");
+        ConfigParser p = new ImportNotExistFileParser(dummyNotExistFile);
+		try{			
 			EnvConfiguration.resolveImportConfig(ignoredCfgFile, p);
 			failBecauseExceptionWasNotThrown(ImportCfgFileNotFound.class);
 		}catch(ImportCfgFileNotFound ex) {

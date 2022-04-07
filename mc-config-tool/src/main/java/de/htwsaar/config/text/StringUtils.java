@@ -6,6 +6,9 @@ package de.htwsaar.config.text;
  */
 class StringUtils {
     
+    private StringUtils() {
+        throw new IllegalStateException("Utility class");
+    }
     
     /**
      * Gets a CharSequence length or {@code 0} if the CharSequence is

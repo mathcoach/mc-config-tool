@@ -20,18 +20,18 @@ public final class StringSubstitutor {
     private static final String DEFAULT_VAR_END = "}";
     private final StringMatcher suffixMatcher = StringMatcherFactory.INSTANCE.stringMatcher (DEFAULT_VAR_END);
     
-    private final char escapeCh = '$';
+    private static final char escapeCh = '$';//NOSONAR
     
     private static final String DEFAULT_VAR_DEFAULT = ":-";
     private final StringMatcher valueDelimMatcher = StringMatcherFactory.INSTANCE.stringMatcher(DEFAULT_VAR_DEFAULT);
     
-    private final boolean substitutionInVariablesEnabled = false;
+    private static final boolean substitutionInVariablesEnabled = false;//NOSONAR
     
-    private final boolean substitutionInValuesDisabled = false;
+    private static final boolean substitutionInValuesDisabled = false;//NOSONAR
     
-    private final boolean undefinedVariableException = false;
+    private static final boolean undefinedVariableException = false;//NOSONAR
     
-    private final boolean preserveEscapes = false;
+    private static final boolean preserveEscapes = false;//NOSONAR
     
     /**
      * Creates a new instance and initializes it. Uses defaults for variable prefix and suffix and the escaping
@@ -112,23 +112,15 @@ public final class StringSubstitutor {
         return substitute(builder, offset, length, null).altered;
     }
     
-    private Result substitute(final StringBuilder builder, final int offset, final int length, List<String> priorVariables) {
+    private Result substitute(final StringBuilder builder, final int offset, final int length, List<String> priorVariables) { //NOSONAR
         Objects.requireNonNull(builder, "builder");
-        /*final StringMatcher prefixMatcher = getVariablePrefixMatcher();*/
-        /*final StringMatcher suffixMatcher = getVariableSuffixMatcher();*/
-        /*final char escapeCh = getEscapeChar();*/
-        /*final StringMatcher valueDelimMatcher = getValueDelimiterMatcher();*/
-        /*final boolean substitutionInVariablesEnabled = isEnableSubstitutionInVariables();*/
-        /*final boolean substitutionInValuesDisabled = isDisableSubstitutionInValues();*/
-        /*final boolean undefinedVariableException = isEnableUndefinedVariableException();*/
-        /*final boolean preserveEscapes = isPreserveEscapes();*/
-        
+                
         boolean altered = false;
         int lengthChange = 0;
         int bufEnd = offset + length;
         int pos = offset;
         int escPos = -1;
-        outer: while (pos < bufEnd) {
+        outer: while (pos < bufEnd) { //NOSONAR
             final int startMatchLen = prefixMatcher.isMatch(builder, pos, offset, bufEnd);
             if (startMatchLen == 0) {
                 pos++;
@@ -149,7 +141,7 @@ public final class StringSubstitutor {
                 pos += startMatchLen;
                 int endMatchLen = 0;
                 int nestedVarCount = 0;
-                while (pos < bufEnd) {
+                while (pos < bufEnd) { //NOSONAR
                     if (substitutionInVariablesEnabled && prefixMatcher.isMatch(builder, pos, offset, bufEnd) != 0) {
                         // found a nested variable start
                         endMatchLen = prefixMatcher.isMatch(builder, pos, offset, bufEnd);
@@ -172,14 +164,12 @@ public final class StringSubstitutor {
                                 altered = true;
                                 bufEnd--;
                                 pos = startPos + 1;
-                                startPos--;
+                                startPos--;//NOSONAR
                                 continue outer;
                             }
                             // get var name
                             final int varIndex = startPos + startMatchLen;
-                            final int varLength = pos - startPos - startMatchLen;
-                            /*String varNameExpr = builder.midString(startPos + startMatchLen,
-                                pos - startPos - startMatchLen);*/
+                            final int varLength = pos - startPos - startMatchLen;                            
                             String varNameExpr = StringUtils.substr(builder, varIndex, varLength);
                             if (substitutionInVariablesEnabled) {
                                 final StringBuilder bufName = new StringBuilder(varNameExpr);
@@ -195,7 +185,7 @@ public final class StringSubstitutor {
                             if (valueDelimMatcher != null) {
                                 final char[] varNameExprChars = varNameExpr.toCharArray();
                                 int valueDelimiterMatchLen = 0;
-                                for (int i = 0; i < varNameExprChars.length; i++) {
+                                for (int i = 0; i < varNameExprChars.length; i++) { //NOSONAR
                                     // if there's any nested variable when nested variable substitution disabled,
                                     // then stop resolving name and default value.
                                     if (!substitutionInVariablesEnabled && prefixMatcher.isMatch(varNameExprChars, i, i,

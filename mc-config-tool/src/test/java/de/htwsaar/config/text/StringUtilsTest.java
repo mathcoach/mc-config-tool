@@ -2,12 +2,14 @@ package de.htwsaar.config.text;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  *
  * @author hbui
  */
-public class StringUtilsTest {
+class StringUtilsTest {
     
     @Test
     void testLengthOfAregularString() {
@@ -18,13 +20,13 @@ public class StringUtilsTest {
     @Test
     void testLengthOfEmptyString() {
         int l = StringUtils.length("");
-        assertThat(l).isEqualTo(0);
+        assertThat(l).isZero();
     }
     
     @Test
     void testLengthOfNullString() {
         int l = StringUtils.length(null);
-        assertThat(l).isEqualTo(0);
+        assertThat(l).isZero();
     }
     
     
@@ -41,23 +43,14 @@ public class StringUtilsTest {
     }
     
     
-    @Test
-    void testCheckEmptyOfSpaceOnyString() {
-        boolean empty = StringUtils.isEmpty(" ");
+    @ParameterizedTest
+    @ValueSource(strings = {" ", " something ", "something"})
+    void testOfNotEmptyString(String arg) {
+        boolean empty = StringUtils.isEmpty(arg);
         assertThat(empty).isFalse();
     }
     
-    @Test
-    void testCheckEmptyOfSpaceAroundingeOnyString() {
-        boolean empty = StringUtils.isEmpty(" someting ");
-        assertThat(empty).isFalse();
-    }
     
-    @Test
-    void testCheckEmptyOfRegularString() {
-        boolean empty = StringUtils.isEmpty("someting");
-        assertThat(empty).isFalse();
-    }
     
     @Test
     void testSubstr_regular() {
@@ -80,7 +73,7 @@ public class StringUtilsTest {
         String origin = "0123456789_10";
         StringBuilder dummy = new StringBuilder(origin);        
         String sub = StringUtils.substr(dummy, 13, 5);
-        assertThat(sub).isEqualTo("");
+        assertThat(sub).isEmpty();
     }
     
     @Test
@@ -88,7 +81,7 @@ public class StringUtilsTest {
         String origin = "0123456789_10";
         StringBuilder dummy = new StringBuilder(origin);        
         String sub = StringUtils.substr(dummy, 3, 0);
-        assertThat(sub).isEqualTo("");
+        assertThat(sub).isEmpty();
     }
     
     @Test
@@ -96,7 +89,7 @@ public class StringUtilsTest {
         String origin = "0123456789_10";
         StringBuilder dummy = new StringBuilder(origin);        
         String sub = StringUtils.substr(dummy, 3, -1);
-        assertThat(sub).isEqualTo("");
+        assertThat(sub).isEmpty();
     }
     
     @Test

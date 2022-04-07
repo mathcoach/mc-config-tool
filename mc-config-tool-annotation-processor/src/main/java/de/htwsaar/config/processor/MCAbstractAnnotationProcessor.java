@@ -17,7 +17,7 @@ public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 	public  static final String PACKAGE_REG_VALIDATOR = 
 		//"([a-zA-Z]+[a-zA-Z0-9]*)(\\.[a-zA-Z]+[a-zA-Z0-9]*)*";
 		//"(?i)^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+[0-9a-z_]$" 
-		"(?i)^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$" 
+		"(?i)^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*+$" 
 	;
 	
 	public static final int MAX_PACKAGE_NAME_LENGTH = 256;

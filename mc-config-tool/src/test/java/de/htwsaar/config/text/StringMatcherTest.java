@@ -35,7 +35,7 @@ class StringMatcherTest {
     @Test
     void testSize() {
         int l = m.size();
-        assertThat(l).isEqualTo(0);
+        assertThat(l).isZero();
     }
     
 }

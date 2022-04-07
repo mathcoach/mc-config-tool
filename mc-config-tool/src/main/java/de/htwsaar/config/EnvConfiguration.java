@@ -8,12 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-//import org.apache.commons.lang3.text.StrBuilder;
-//import org.apache.commons.text.TextStringBuilder;
-//import de.htwsaar.config.text.TextStringBuilder;
 
-//import org.apache.commons.lang3.text.StrSubstitutor;
-//import org.apache.commons.text.OriginStringSubstitutor;
 import de.htwsaar.config.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,12 +145,8 @@ public interface EnvConfiguration {
 	static Map<String, String> resolveConfigVariables(final Map<String, String> originConfigTable) {
 		final Logger logger = LoggerFactory.getLogger(EnvConfiguration.class);
 		try {
-			Map<String, String> envVar = new HashMap<String, String>(8) {
-				{
-					put("HOME", System.getProperty("user.home"));
-				}
-			};
-			HashMap<String, String> configTable = new HashMap();
+			Map<String, String> envVar = Map.of("HOME", System.getProperty("user.home"));
+			HashMap<String, String> configTable = new HashMap<>();
 			originConfigTable.entrySet().stream().forEach(entry -> {
 				String k = entry.getKey();
 				String v = StringSubstitutor.replace(entry.getValue(), originConfigTable);
@@ -176,8 +167,7 @@ public interface EnvConfiguration {
 				.replace("${HOME}", "${user.home}")
 				.replace("$PWD", "${user.dir}")
 				.replace("${PWD}", "${user.dir}");
-		return StringSubstitutor.replaceSystemProperties(resolvedText);
-		//return resolvedText;
+		return StringSubstitutor.replaceSystemProperties(resolvedText);	
 	}
 
 	static void setConfigValue(
@@ -186,13 +176,12 @@ public interface EnvConfiguration {
 			final Map<String, String> configTable
 	) {
 		Matcher matcher = VAR_PATTERN.matcher(newValue);
-		if (matcher.find()) {// If the value has a variable
-			/*TextStringBuilder builder = new TextStringBuilder(newValue);*/
+		if (matcher.find()) {// If the value has a variable			
             StringBuilder bufferedValue = new StringBuilder(newValue);
 			StringSubstitutor substitutor = new StringSubstitutor(configTable);
 			boolean substable = substitutor.replaceIn(bufferedValue);
 			if (substable) {
-				String resolvedValue = /*builder.build()*/bufferedValue.toString();
+				String resolvedValue = bufferedValue.toString();
 				Matcher afterSubstMatcher = VAR_PATTERN.matcher(resolvedValue);
 				if (afterSubstMatcher.find()) {//If there is at least one not resolveable variables
 					throw new LSConfigException("Cannot find the variable '" + afterSubstMatcher.group(0) + "in '" + newValue + "'");

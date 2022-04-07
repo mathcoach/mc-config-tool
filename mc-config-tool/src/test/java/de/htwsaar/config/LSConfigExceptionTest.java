@@ -8,10 +8,10 @@ import static org.assertj.core.api.Assertions.*;
  *
  * @author hbui
  */
-public class LSConfigExceptionTest {
+class LSConfigExceptionTest {
 
 	@Test
-	public void constructInstance(){
+	void constructInstance(){
 		try{
 			EnvConfiguration ec = new ClasspathBasedConfig("config-test.properties", null);
 			LSConfigException ex = new LSConfigException(ec, "Dummy config error");
@@ -23,7 +23,7 @@ public class LSConfigExceptionTest {
 	}
 	
 	@Test
-	public void constructInstanceWithNullArgument(){
+	void constructInstanceWithNullArgument(){
 		try{
 			LSConfigException ex = new LSConfigException(null, "Dummy config error");
 			throw ex;
@@ -34,7 +34,7 @@ public class LSConfigExceptionTest {
 	}
 	
 	@Test
-	public void constructInstanceWithNullArgument2(){
+	void constructInstanceWithNullArgument2(){
 		try{
 			LSConfigException ex = new LSConfigException(null, "Dummy config error", null);
 			throw ex;
@@ -45,7 +45,7 @@ public class LSConfigExceptionTest {
 	}
 	
 	@Test
-	public void constructInstanceWithNullArgument3(){
+	void constructInstanceWithNullArgument3(){
 		try{
 			EnvConfiguration ec = new ClasspathBasedConfig("config-test.properties", null);
 			LSConfigException ex = new LSConfigException(ec, "Dummy config error", new IOException("Dummy"));

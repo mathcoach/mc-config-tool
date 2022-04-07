@@ -16,41 +16,43 @@ import org.junit.jupiter.api.BeforeEach;
  *
  * @author hbui
  */
-public class PropertiesConfigParserTest {
+class PropertiesConfigParserTest {
 
 	private PropertiesConfigParser parser;
 	
 	@BeforeEach
-	public void init(){
+	void init(){
 		parser = new PropertiesConfigParser();
 	}
 
 	@Test
-	public void parserASimpleConfigFile() {
+	void parserASimpleConfigFile() {
 		String path = "./src/test/resources/test-config.properties";
 		File simpleConfig = new File(path);
 		Map<String,String> config = parser.parseConfigFile(simpleConfig);
-		
-		assertThat(config.get("param-a")).isEqualTo("a");
-		assertThat(config.get("param-b")).isEqualTo("b");
-		assertThat(config.get("param-c")).isEqualTo("");
-		assertThat(config.get("param-d")).isEqualTo("");
-		assertThat(config.get("param-e")).isNull();
+        assertThat(config)
+            .containsEntry("param-a", "a")
+            .containsEntry("param-b", "b")
+            .containsEntry("param-c", "")
+            .containsEntry("param-d", "");
+        assertThat(config.get("param-e")).isNull();		
 	}
 	
 	@Test
-	public void parseConfigFileWithImport(){
+	void parseConfigFileWithImport(){
 		String path = "./src/test/resources/test-config-with-import.properties";
 		File simpleConfig = new File(path);
 		Map<String,String> config = parser.parseConfigFile(simpleConfig);
-		assertThat(config).containsKey("import");
-		assertThat(config.get("import")).isEqualTo("${PWD}/src/test/resources/import-config.properties");
+		assertThat(config)
+            .containsKey("import")
+            .containsEntry("import", "${PWD}/src/test/resources/import-config.properties");		
 	}
 	
 	@Test
-	public void parseNotExistFile() {
+	void parseNotExistFile() {
+        final File notExistingPropertiesFile = new File("not-exist-path.properties");
 		try{
-			parser.parseConfigFile(new File("not-exist-path.properties"));
+			parser.parseConfigFile(notExistingPropertiesFile);
 			failBecauseExceptionWasNotThrown(LSConfigException.class);
 		}catch(LSConfigException ex){
 			System.out.println("error msg:" + ex.getMessage());
@@ -58,7 +60,7 @@ public class PropertiesConfigParserTest {
 	}
 	
 	@Test
-	public void parserNullFile() {
+	void parserNullFile() {
 		try{
 			parser.parseConfigFile(null);
 			failBecauseExceptionWasNotThrown(LSConfigException.class);

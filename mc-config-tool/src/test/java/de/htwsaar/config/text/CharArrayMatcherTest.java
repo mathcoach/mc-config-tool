@@ -1,7 +1,6 @@
 package de.htwsaar.config.text;
 
 import de.htwsaar.config.text.AbstractStringMatcher.CharArrayMatcher;
-import de.htwsaar.config.text.AbstractStringMatcher.CharMatcher;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
  
@@ -9,7 +8,7 @@ import static org.assertj.core.api.Assertions.*;
  *
  * @author hbui
  */
-public class CharArrayMatcherTest {
+class CharArrayMatcherTest {
 
     //Tests for CharArrayMatcher
     @Test

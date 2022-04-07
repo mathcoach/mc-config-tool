@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Test;
  *
  * @author hbui
  */
-public class NeedConfigGeneratorTest {
+class NeedConfigGeneratorTest {
 	
 	// testing for common usecases
 	@Test
-	public void processASingleConfig(){
+	void processASingleConfig(){
 		final String source = 
 "package de.htwsaar.config.testing.singleconfig;\n" +
 "\n" +
@@ -42,7 +42,7 @@ public class NeedConfigGeneratorTest {
 	}
 	
 	@Test
-	public void processAMultipleConfig() {
+	void processAMultipleConfig() {
 		
 		final String source = 
 "package de.htwsaar.config.testing;\n" +
@@ -75,7 +75,7 @@ public class NeedConfigGeneratorTest {
 	
 	// testing for packages
 	@Test
-	public void processASingleConfigWithoutConfigPackage(){
+	void processASingleConfigWithoutConfigPackage(){
 		final String source = 
 "package de.htwsaar.config.testing.implicitpackage;\n" +
 "\n" +
@@ -99,7 +99,7 @@ public class NeedConfigGeneratorTest {
 	}
 	
 	@Test
-	public void processASingleConfigWithInvalidConfigPackage(){
+	void processASingleConfigWithInvalidConfigPackage(){
 		final String source = 
 "package de.htwsaar.config.testing.invalidpackage;\n" +
 "\n" +
@@ -125,7 +125,7 @@ public class NeedConfigGeneratorTest {
 	
 	//
 	@Test
-	public void processASingleConfigWithoutConfigPackageForManyClasses(){
+	void processASingleConfigWithoutConfigPackageForManyClasses(){
 		String[] source1 ={
         "de.htwsaar.config.testing.common.package_1.HelloWorld",
 "package de.htwsaar.config.testing.common.package_1;\n" +
@@ -171,7 +171,7 @@ public class NeedConfigGeneratorTest {
 	
 	// Processe description
 	@Test
-	public void processAnEmptyDescription(){
+	void processAnEmptyDescription(){
 		final String source = 
 "package de.htwsaar.config.testing.emptydescription;\n" +
 "\n" +

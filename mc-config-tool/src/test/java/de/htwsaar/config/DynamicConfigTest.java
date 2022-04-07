@@ -10,16 +10,16 @@ import static org.assertj.core.api.Assertions.*;
  *
  * @author hbui
  */
-public class DynamicConfigTest {
+class DynamicConfigTest {
 	
 	@Test
-	public void createAEmptyConfig(){
+	void createAEmptyConfig(){
 		DynamicConfig config = new DynamicConfig();
 		assertThat(config.getAllConfigKeys() ).isEmpty();
 	}
 	
 	@Test
-	public void variablesInMusterConfiIsReolved(){
+	void variablesInMusterConfiIsReolved(){
 		Map<String,String> musterConfig = new HashMap<String,String>(){{
 			put("config-dir","${HOME}/my-config"); // System variable
 			put("param-a", "a");
@@ -33,7 +33,7 @@ public class DynamicConfigTest {
 	}
 	
 	@Test
-	public void originConfigIsAdapted(){
+	void originConfigIsAdapted(){
 		Map<String,String> musterConfig = new HashMap<String,String>(){{
 			put("config-dir","${HOME}/my-config"); // System variable
 			put("param-a", "a");
@@ -48,7 +48,7 @@ public class DynamicConfigTest {
 	}
 	
 	@Test
-	public void variableIsResolvedBySetANewConfig(){
+	void variableIsResolvedBySetANewConfig(){
 		Map<String,String> musterConfig = new HashMap<String,String>(){{
 			put("config-dir","${HOME}/my-config"); // System variable
 			put("param-a", "a");
@@ -60,7 +60,7 @@ public class DynamicConfigTest {
 	}
 	
 	@Test
-	public void mergeConfigOverrideOldValue(){
+	void mergeConfigOverrideOldValue(){
 		Map<String,String> musterConfig = new HashMap<String,String>(){{
 			put("config-dir","${HOME}/my-config"); // System variable
 			put("param-a", "a");

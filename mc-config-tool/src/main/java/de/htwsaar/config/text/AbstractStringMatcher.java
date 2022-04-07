@@ -27,8 +27,7 @@ package de.htwsaar.config.text;
  *
  * @since 1.3
  */
-abstract class AbstractStringMatcher implements StringMatcher {
-
+interface AbstractStringMatcher extends StringMatcher {
     
 
     /**
@@ -37,7 +36,7 @@ abstract class AbstractStringMatcher implements StringMatcher {
      * Thread=safe.
      * </p>
      */
-    static final class CharArrayMatcher extends AbstractStringMatcher {
+    static final class CharArrayMatcher implements StringMatcher {
 
         /** The string to match, as a character array, implementation treats as immutable. */
         private final char[] chars;
@@ -127,7 +126,7 @@ abstract class AbstractStringMatcher implements StringMatcher {
      * Thread=safe.
      * </p>
      */
-    static final class CharMatcher extends AbstractStringMatcher {
+    static final class CharMatcher implements StringMatcher {
 
         /** The character to match. */
         private final char ch;
@@ -194,7 +193,7 @@ abstract class AbstractStringMatcher implements StringMatcher {
      * Thread=safe.
      * </p>
      */
-    static final class NoneMatcher extends AbstractStringMatcher {
+    static final class NoneMatcher implements StringMatcher {
 
         /**
          * Constructs a new instance of {@code NoMatcher}.
@@ -243,13 +242,6 @@ abstract class AbstractStringMatcher implements StringMatcher {
 
     }
 
-    
-
-    /**
-     * Constructor.
-     */
-    protected AbstractStringMatcher() {
-        super();
-    }
+   
 
 }

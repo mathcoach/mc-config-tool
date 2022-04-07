@@ -17,25 +17,12 @@
 
 package de.htwsaar.config.text;
 
-//import org.apache.commons.lang3.CharSequenceUtils;
-
 /**
  * Determines if a character array portion matches.
  *
  * @since 1.3
  */
 interface StringMatcher {
-
-    /**
-     * Returns a matcher that matches this matcher followed by the given matcher.
-     *
-     * @param stringMatcher the next matcher.
-     * @return a matcher that matches this matcher followed by the given matcher.
-     * @since 1.9
-     */
-//    default StringMatcher andThen(final StringMatcher stringMatcher) {
-//        return StringMatcherFactory.INSTANCE.andMatcher(this, stringMatcher);
-//    }
 
     /**
      * Returns the number of matching characters, zero for no match.

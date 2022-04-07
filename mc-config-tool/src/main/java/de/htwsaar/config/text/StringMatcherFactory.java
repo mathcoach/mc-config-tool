@@ -39,7 +39,7 @@ class StringMatcherFactory {
         final int length = getArrayLength(chars);
         return length == 0 ? NONE_MATCHER
             : length == 1 ? new AbstractStringMatcher.CharMatcher(chars[0])
-                : new AbstractStringMatcher.CharArrayMatcher(chars);
+                : new AbstractStringMatcher.CharArrayMatcher(chars); //NOSONAR
     }
     
     /**
