@@ -17,8 +17,7 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
+				<artifactId>maven-surefire-plugin</artifactId>				
 				<configuration>					
 					<forkCount>1</forkCount>
 					<argLine>${argLine} -Xmx2048m</argLine>
@@ -27,8 +26,7 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.22.2</version>
+				<artifactId>maven-failsafe-plugin</artifactId>				
 				<configuration>
 					<forkCount>1</forkCount>
 					<argLine>${argLine} -Xmx2048m</argLine>
