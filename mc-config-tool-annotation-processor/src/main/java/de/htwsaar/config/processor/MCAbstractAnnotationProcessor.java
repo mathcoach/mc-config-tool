@@ -35,7 +35,7 @@ public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 	public static final int MAX_PACKAGE_NAME_LENGTH = 256;
 	
 	private Messager messager;
-	private LogWriter lw;
+	protected LogWriter lw;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -79,13 +79,13 @@ public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 		}
 	}
 
-	protected final boolean validePackageName(String packageName){
+	protected static boolean validePackageName(String packageName){
 		return packageName.length() <= MAX_PACKAGE_NAME_LENGTH  // catch RegDOS by checking length of packageName
 				&& packageName.matches(PACKAGE_REG_VALIDATOR) ; //NOSONAR
 	}
 	
 
-	protected final LogWriter getLogWriter(){
+	protected final synchronized LogWriter getLogWriter(){
 		return new LogWriter() {
 			@Override
 			public void error(CharSequence msg) {

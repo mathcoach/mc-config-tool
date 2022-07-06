@@ -192,4 +192,57 @@ class NeedConfigGeneratorTest {
 		assertThat(compilation).succeeded();
 		
 	}
+    
+    @Test
+	void processANullDescription(){
+		final String source = 
+"package de.htwsaar.config.testing.nulldescription;\n" +
+"\n" +
+"import de.htwsaar.config.annotation.NeedConfig;\n" +
+"\n" +
+"@NeedConfig(\n" +
+"	name = \"config-single-testing\"\n" + 
+")\n" +
+"public class HelloWorld {\n" +
+"	\n" +
+"}";
+		
+		Compilation compilation =javac()
+			.withOptions("-Aconfig.package=de.htwsaar.config.testing.nulldescription")
+			.withProcessors( new NeedConfigGenerator() )
+			.compile(JavaFileObjects.forSourceString("de.htwsaar.config.testing.nulldescription.HelloWorld", source) );
+		assertThat(compilation).succeeded();
+		
+	}
+    
+    
+    // Process sugguestValue
+    @Test
+	void processASuggestValue(){
+		final String source = 
+"package de.htwsaar.config.testing.suggestval;\n" +
+"\n" +
+"import de.htwsaar.config.annotation.NeedConfig;\n" +
+"\n" +
+"@NeedConfig(\n" +
+"	name = \"config-single-testing\",\n" + 
+"	description = \"Some description\"," + 
+"   sugguestValues = {\"sugguestValues 1\", \"sugguestValues 2\"} " +            
+")\n" +
+"public class ASuggestValue {\n" +
+"	\n" +
+"}";
+		
+		Compilation compilation =javac()
+			.withOptions("-Aconfig.package=de.htwsaar.config.testing.suggestval")
+			.withProcessors( new NeedConfigGenerator() )
+			.compile(JavaFileObjects.forSourceString("de.htwsaar.config.testing.suggestval.ASuggestValue", source) );
+		assertThat(compilation).succeeded();
+        StringSubject genSrc = assertThat(compilation)
+            .generatedSourceFile("de.htwsaar.config.testing.suggestval.GenConfigEntry")
+            .contentsAsUtf8String();
+        genSrc.contains(".addSuggestValue(\"sugguestValues 1\")");
+        genSrc.contains(".addSuggestValue(\"sugguestValues 2\")");
+	}
+    
 }

@@ -36,6 +36,7 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		debug("NeedConfigGenerator called");
+        
 		try {
 			int i = 0;
 			Map<String, Entry> configParam = new HashMap<>();
@@ -44,7 +45,7 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 			// Process multiple annotations
 			for (Element elem : roundEnv.getElementsAnnotatedWith(NeedConfigs.class)) {
 				final String userName = getElementName(elem);
-				updatePackage(packages, userName);
+				PackageNameHandling.updatePackage(packages, userName, lw);
 				NeedConfigs param = elem.getAnnotation(NeedConfigs.class);
 				for (NeedConfig p : param.value()) {
 					transform(userName, p, configParam);
@@ -55,16 +56,16 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 			// Process simple annotation
 			for (Element elem : roundEnv.getElementsAnnotatedWith(NeedConfig.class)) {
 				final String userName = getElementName(elem);
-				updatePackage(packages, userName);
+				PackageNameHandling.updatePackage(packages, userName, lw);
 				NeedConfig param = elem.getAnnotation(NeedConfig.class);
 				transform(userName, param, configParam);
 			}
-
-			String apackage = buildPackage(packages);
-			info("\tFinal package name of GenNeedConfigEntry is '" + apackage + "'.");
+            String configuratedPackage = processingEnv.getOptions().get(CONFIG_PACKAGE);
+			String finalPackageName = PackageNameHandling.buildPackage(packages, configuratedPackage, lw);
+			info("\tFinal package name of GenNeedConfigEntry is '" + finalPackageName + "'.");
 			String className = buildUUIDClassName();
 			if (!configParam.isEmpty()) {
-				MConfigEntry configEntryTemplate = new MConfigEntry(apackage, className);
+				MConfigEntry configEntryTemplate = new MConfigEntry(finalPackageName, className);
 				configParam.forEach((configParameterName, configEntry) -> {
 					MEntry newEntry = configEntryTemplate.newEntry(configParameterName);
 					configEntry.useIn().forEach(u
@@ -76,7 +77,7 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 							s -> newEntry.newSuggestValue(StringEscapeUtils.escapeJava(s))
 					);
 				});
-				writeJavaFileToDisk(configEntryTemplate.toString(), apackage + "." + className);
+				writeJavaFileToDisk(configEntryTemplate.toString(), finalPackageName + "." + className);
 			}
 			info("Generate Configuration Information Finish");
 		} catch (Exception ex) {
@@ -107,60 +108,16 @@ public class NeedConfigGenerator extends MCAbstractAnnotationProcessor {
 		info(name);
 		return name;
 	}
-
-	private void updatePackage(List<String> packages, String name) {
-		String[] split = name.split("\\.");
-		debug("split.length " + split.length);
-		if (packages.isEmpty()) {
-			info("package is empty");
-			for (int i = 0; i < split.length - 1; i++) {
-				debug("add " + split[i] + " to package");
-				packages.add(split[i]);
-			}
-		} else {
-			int i;
-			int shorter = split.length - 1 < packages.size()
-					? split.length - 1
-					: packages.size();
-			String p;
-			for (i = 0; i < shorter; ++i) {
-				p = packages.get(i);
-				debug("compare " + p + " to " + split[i]);
-				if (!p.equals(split[i])) {
-					break;
-				}
-			}
-			while (packages.size() > i) {
-				packages.remove(packages.size() - 1);
-			}
-		}
-	}
-
-	private String buildPackage(List<String> packages ) {
-		String apackage = processingEnv.getOptions().get(CONFIG_PACKAGE);
-		info("\tConfigurated package name of GenNeedConfigEntry is " + (apackage == null ? "null." : "'" + apackage + "'."));
-		if (apackage == null || apackage.trim().length() == 0) {
-			warn("\tCannot use given package name of GenNeedConfigEntry '"
-					+ apackage + "'.");
-			apackage = String.join(".", packages);
-		} else {
-			if (!validePackageName(apackage)) {
-				warn("\t" + apackage + " is not a valide Java Package");
-				apackage = String.join(".", packages);
-			}
-		}
-		if (apackage.isEmpty()) {
-			apackage = "auto.gen.config";
-		}
-		return apackage;
-	}
-
+    
 	private static String buildUUIDClassName() {
 		return "GenConfigEntry";//NOSONAR for now it works well, but keep it as a method for changing in future
 	}
 
+    /** 
+     * because default of descript is an empty array, so {@code description = null} is not allowed.
+     */
 	private static String getDescription(String[] descriptionArray) {
-		if (descriptionArray == null || descriptionArray.length == 0) {
+		if (descriptionArray.length == 0) {
 			return "";
 		} else {
 			return String.join("", descriptionArray);
