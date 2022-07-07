@@ -7,14 +7,13 @@ import java.io.Writer;
  *
  * @author hbui
  */
-final class UnicodeEscaper extends CharSequenceTranslator{
+final class OutsideRangeUnicodeEscaper extends CharSequenceTranslator{
     
     /** int value representing the lowest codepoint boundary. */
     private final int below;
     /** int value representing the highest codepoint boundary. */
     private final int above;
-    /** whether to escape between the boundaries or outside them. */
-    private final boolean between;
+
     
     /**
      * <p>Constructs a {@code UnicodeEscaper} for the specified range. This is
@@ -24,17 +23,15 @@ final class UnicodeEscaper extends CharSequenceTranslator{
      *
      * @param below int value representing the lowest codepoint boundary
      * @param above int value representing the highest codepoint boundary
-     * @param between whether to escape between the boundaries or outside them
      */
-    private UnicodeEscaper(final int below, final int above, final boolean between) {
+    private OutsideRangeUnicodeEscaper(final int below, final int above) {
         this.below = below;
         this.above = above;
-        this.between = between;
     }
     
     
-    static UnicodeEscaper outsideOf(int below, int above) {
-        return new UnicodeEscaper(below, above, false);
+    static OutsideRangeUnicodeEscaper outsideOf(int below, int above) {
+        return new OutsideRangeUnicodeEscaper(below, above);
     }
     
     /**
@@ -48,15 +45,10 @@ final class UnicodeEscaper extends CharSequenceTranslator{
     }
     
     private boolean translate(final int codepoint, final Writer out) throws IOException {
-        if (between) {
-            if (codepoint < below || codepoint > above) {
-                return false;
-            }
-        } else {
-            if (codepoint >= below && codepoint <= above) {
-                return false;
-            }
+        if (codepoint >= below && codepoint <= above) {
+            return false;
         }
+
 
         if (codepoint > 0xffff) {
             out.write(toUtf16Escape(codepoint));

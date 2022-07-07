@@ -44,7 +44,7 @@ public final class StringEscapeUtils {
                 new LookupTranslator(Collections.unmodifiableMap(escapeJavaMap)),
                 new LookupTranslator(JAVA_CTRL_CHARS_ESCAPE),
                 //JavaUnicodeEscaper.outsideOf(32, 0x7f)
-                UnicodeEscaper.outsideOf(32, 0x7f)
+                OutsideRangeUnicodeEscaper.outsideOf(32, 0x7f)
         );
     }
     
