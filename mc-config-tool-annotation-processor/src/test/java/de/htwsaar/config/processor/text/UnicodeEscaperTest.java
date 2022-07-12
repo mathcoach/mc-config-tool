@@ -39,7 +39,7 @@ class UnicodeEscaperTest {
             translateCount += e.translate(umlauter, i, out);
         }
         assertThat(translateCount).isEqualTo(umlauter.length());
-        assertThat(out.toString()).isEqualTo("\\u002B\\u002D\\u00E4\\u00C4\\u00F6\\u00D6\\u00FC\\u00DC\\u00DF");
+        assertThat(out).hasToString("\\u002B\\u002D\\u00E4\\u00C4\\u00F6\\u00D6\\u00FC\\u00DC\\u00DF");
     }
     
     @Test
@@ -54,6 +54,16 @@ class UnicodeEscaperTest {
             i += offset;
         }
         assertThat(translateCount).isEqualTo(1);  // only 1 character with 2 bytes
-        assertThat(out.toString()).isEqualTo("\\uD800\\uDC00");
+        assertThat(out).hasToString("\\uD800\\uDC00");
     }
+    
+    @Test
+    void testTranslateUTF16_2() throws IOException {
+        OutsideRangeUnicodeEscaper e  = OutsideRangeUnicodeEscaper.outsideOf(MIN_ASCII, MAX_ASCII);
+        String umlauter = "𐀀-werd"; // \u10000
+        StringWriter out = new StringWriter();
+        e.translate(umlauter, out);
+        assertThat(out).hasToString("\\uD800\\uDC00\\u002Dwerd");
+    }
+    
 }

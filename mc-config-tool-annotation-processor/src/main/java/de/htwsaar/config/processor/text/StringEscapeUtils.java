@@ -28,6 +28,9 @@ public final class StringEscapeUtils {
         "\r", "\\r"
     );
     
+    private static final int ASCII_CODE_BEGIN_NON_CONTROL_CHAR = 32; // [SPACE]
+    private static final int ASCII_CODE_END_NON_CONTROL_CHAR = 0x7f; // [DEL]
+    
     /**
      * Translator object for escaping Java.
      *
@@ -42,9 +45,8 @@ public final class StringEscapeUtils {
         escapeJavaMap.put("\\", "\\\\");
         ESCAPE_JAVA = new AggregateTranslator(
                 new LookupTranslator(Collections.unmodifiableMap(escapeJavaMap)),
-                new LookupTranslator(JAVA_CTRL_CHARS_ESCAPE),
-                //JavaUnicodeEscaper.outsideOf(32, 0x7f)
-                OutsideRangeUnicodeEscaper.outsideOf(32, 0x7f)
+                new LookupTranslator(JAVA_CTRL_CHARS_ESCAPE),                
+                OutsideRangeUnicodeEscaper.outsideOf(ASCII_CODE_BEGIN_NON_CONTROL_CHAR, ASCII_CODE_END_NON_CONTROL_CHAR)
         );
     }
     
