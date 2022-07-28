@@ -1,16 +1,16 @@
 # Anleitung
 
-Version: 2.4.x
+Version: 3.0.0
 
 ## Problem
 
 Die Bibliothek `lib-a` braucht zur Laufzeit die Konfigurationsparameter (abk.:KP)
-`db-user` und `db-password`. Diese KP wird als Parameter von *Konstruktor* 
+`db-user` und `db-password`. Diese KP wird als Parameter von *Konstruktor*
 bzw. von *Setter* oder von *Builder* weiter gegeben, auf jedenfalls sind sie
 als Argumenten einer Methode und nicht fest codiert. Der Wert des KP ist
 an unterschiedlichen Stelle unterschiedlich.
 
-* Zum Testen müssen die Test-Klassen die Werten der KP an produktiven Code 
+* Zum Testen müssen die Test-Klassen die Werten der KP an produktiven Code
 weiter leiten, es heißt, die oben genannten Methoden mit richtigen Werten
 aufzurufen.
 
@@ -19,9 +19,9 @@ braucht die Bibliothek `lib-a`.
 Also die Web-Anwendung `web-x` muss irgendwie die KP auch an Code in `lib-a`
 weiterleiten.
 
-Da verschiedenen Entwickler verschiedenen Werten der KP haben, und die 
+Da verschiedenen Entwickler verschiedenen Werten der KP haben, und die
 Web-Anwendung muss auf unterschiedlichen Maschinen deployable sein, darf man
-die KP nicht in einem festen Datei, die in Source Code Management System 
+die KP nicht in einem festen Datei, die in Source Code Management System
 (SCM) angelegt wird. Also man braucht:
 
 * Individuellen KP für Test
@@ -59,7 +59,7 @@ lib-a
     |--test
        |--resources
 	        |--config-alternative-1.properties (Nicht sichtbar in Web-x)
-			|--config-alternative-2.properties (Nicht sichtbar in Web-x) 
+			|--config-alternative-2.properties (Nicht sichtbar in Web-x)
 
 Web-x (gilt auch für App-z)
  |--src
@@ -110,7 +110,7 @@ Für die automatische Sammlung von Konfigurationsparameters:
 
 ### Die Konfigurationsdatei
 
-Die aktuelle Implementierung verwendet Properties-Format. 
+Die aktuelle Implementierung verwendet Properties-Format.
 Die Konfigurationsdatei sieht etwa so aus:
 
 ```properties
@@ -138,7 +138,7 @@ glossary.database.username=sysad
 glossary.database.password=topsecret
 
 # NOTE:
-# Sensible data are stored in a local machine-specified file, outside of 
+# Sensible data are stored in a local machine-specified file, outside of
 # project source base.
 ```
 
@@ -167,16 +167,16 @@ mehrere Funktionalität für andere Projekten zur Verfügung stellt.
 
 Eine Instanz der Interface `EnvConfiguration` repräsentiert die ganze
 Konfiguration in einer Runtime-Umgebung. Somit kann man die Format der
-Konfigurationsdatei abstrahieren. Für eine Änderung der Format von 
+Konfigurationsdatei abstrahieren. Für eine Änderung der Format von
 Konfigurationsdatei muss man eine andere Implementierung der Interface
 `EnvConfiguration` schreiben.
 
 Die aktuelle Implementierung der Interface `EnvConfiguration` ist die Klasse
 `ClasspathBasedConfig`. In einem Bibliothek Projekt soll man in produktive Code
 nicht gegen diese Klasse programmieren, sondern nur gegen die Interface.
-In Test-Code (etwa `src/test/java`) schreibt ein Konfiguration Manager, 
+In Test-Code (etwa `src/test/java`) schreibt ein Konfiguration Manager,
 die ein Instanz dieser Klasse erstellt, und es wird nur für Unit-Test bzw.
-Integration-Test verwendet. Die Ordner-Struktur sieht so aus: 
+Integration-Test verwendet. Die Ordner-Struktur sieht so aus:
 
 ```text
 lib-a
@@ -209,7 +209,7 @@ public class ConfigurationManager {
 }
 ```
 
-Die Klasse `ConfigUser` kann eine Method `setConfig(EnvConfiguration env)` haben, 
+Die Klasse `ConfigUser` kann eine Method `setConfig(EnvConfiguration env)` haben,
 die die Konfigurationsparameter auswerten.
 
 In einer TestUnit-Klasse verwendet man die Klasse `ConfigurationManager` um die
@@ -232,9 +232,9 @@ public doTestWithConfigAlternative_2(){
 ```
 
 Braucht man zusätzlich Konfigurationsparameter, die von Runtime-Umgebung abhängig sind,
-kann man wie oben schon erwähnt, ein `import`-Property hinzufügen. Sinnvolle 
-Runtime-Umgebung-Konfigurationsparameter sind etwa Zugang-Daten für Test Datenbank 
-(aus Sicherheitsgrund), Timeout für *Longlife*-Thread (hängt von Kapazität der 
+kann man wie oben schon erwähnt, ein `import`-Property hinzufügen. Sinnvolle
+Runtime-Umgebung-Konfigurationsparameter sind etwa Zugang-Daten für Test Datenbank
+(aus Sicherheitsgrund), Timeout für *Longlife*-Thread (hängt von Kapazität der
 Rechner ab (CPU/RAM/Network)).
 
 
@@ -244,7 +244,7 @@ Application-Artig Projekten sind Projekten, die von (End)-Benutzer benutzt werde
 Sie sind z.B. eine Desktop Anwendung oder eine Web-Anwendung.
 
 * Im Test-Phase (`src/test/resources`) von Application-artige Projekt kann man die Konzept wie ein
-  Bibliothek-artige Projekt verwenden. 
+  Bibliothek-artige Projekt verwenden.
 
 * In der Betrieb-Phase (`src/main/resources`) erstellt man eine Klasse, die eine Instanz
   der Interface `EnvConfiguration` erstellt etwa `WebConfigManager` oder
@@ -293,7 +293,7 @@ public class AJavaClass{
 ```
 
 Seit Java 8 kann man Multiple Annotation benutzen, deshalb kann man für eine
-Klasse auch mehrfach die Annotation `NeedConfig` anwenden. Von Java 7 abwärts kann man 
+Klasse auch mehrfach die Annotation `NeedConfig` anwenden. Von Java 7 abwärts kann man
 etwa so schreiben:
 
 ```java
