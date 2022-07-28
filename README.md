@@ -91,7 +91,7 @@ Für die Nutzung von API:
 
 ```xml
 <dependency>
-	<groupId>de.htwsaar</groupId>
+	<groupId>io.github.mathcoach</groupId>
 	<artifactId>mc-config-tool</artifactId>
 	<version>${mc.config.version}</version>
 </dependency>
@@ -101,7 +101,7 @@ Für die automatische Sammlung von Konfigurationsparameters:
 
 ```xml
 <dependency>
-	<groupId>de.htwsaar</groupId>
+	<groupId>io.github.mathcoach</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
 	<version>${mc.config.version}</version>
 	<scope>compile</scope>
@@ -269,7 +269,7 @@ In POM-Datei:
 
 ```xml
 <dependency>
-	<groupId>de.htwsaar</groupId>
+	<groupId>io.github.mathcoach</groupId>
 	<artifactId>mc-config-tool-anotation-processor</artifactId>
 	<version>${mc.config.version}</version>
 	<scope>compile</scope>
