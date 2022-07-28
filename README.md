@@ -8,7 +8,7 @@ Die Bibliothek `lib-a` braucht zur Laufzeit die Konfigurationsparameter (abk.:KP
 `db-user` und `db-password`. Diese KP wird als Parameter von *Konstruktor*
 bzw. von *Setter* oder von *Builder* weiter gegeben, auf jedenfalls sind sie
 als Argumenten einer Methode und nicht fest codiert. Der Wert des KP ist
-an unterschiedlichen Stelle unterschiedlich.
+an unterschiedlichen Laufzeitsumgebungen unterschiedlich.
 
 * Zum Testen müssen die Test-Klassen die Werten der KP an produktiven Code
 weiter leiten, es heißt, die oben genannten Methoden mit richtigen Werten
@@ -58,22 +58,22 @@ lib-a
     |--main
     |--test
        |--resources
-	        |--config-alternative-1.properties (Nicht sichtbar in Web-x)
-			|--config-alternative-2.properties (Nicht sichtbar in Web-x)
+            |--config-alternative-1.properties (Nicht sichtbar in Web-x)
+            |--config-alternative-2.properties (Nicht sichtbar in Web-x)
 
 Web-x (gilt auch für App-z)
  |--src
     |--main
-	|   |--resources
-	|       |--config.xml   (dient lediglig um Konfigurationsdatei in locale Umgebung zu verwerten)
-	|--test
-	    |--resources
-		    |--config-alternative-1.properties (Nur in Test-Phase sichtbar)
-			|--config-alternative-2.properties (Nur in Test-Phase sichtbar)
+    |   |--resources
+    |       |--config.xml   (dient lediglig um Konfigurationsdatei in locale Umgebung zu verwerten)
+    |--test
+        |--resources
+            |--config-alternative-1.properties (Nur in Test-Phase sichtbar)
+            |--config-alternative-2.properties (Nur in Test-Phase sichtbar)
 ```
 
 (Über die Format der Konfigurationsdatei (XML, Property, JSON) diskutieren wir
-später.)
+irgendwann.)
 
 Mit diesem Konzept kann man die Konfiguration für Test und Laufzeit trennen.
 Nun haben wir die Konfigurationsdateien für die Besonderheit jeweiliger
@@ -91,9 +91,9 @@ Für die Nutzung von API:
 
 ```xml
 <dependency>
-	<groupId>io.github.mathcoach</groupId>
-	<artifactId>mc-config-tool</artifactId>
-	<version>${mc.config.version}</version>
+    <groupId>io.github.mathcoach</groupId>
+    <artifactId>mc-config-tool</artifactId>
+    <version>${mc.config.version}</version>
 </dependency>
 ```
 
@@ -101,10 +101,10 @@ Für die automatische Sammlung von Konfigurationsparameters:
 
 ```xml
 <dependency>
-	<groupId>io.github.mathcoach</groupId>
-	<artifactId>mc-config-tool-anotation-processor</artifactId>
-	<version>${mc.config.version}</version>
-	<scope>compile</scope>
+    <groupId>io.github.mathcoach</groupId>
+    <artifactId>mc-config-tool-anotation-processor</artifactId>
+    <version>${mc.config.version}</version>
+    <scope>compile</scope>
 </dependency>
 ```
 
@@ -199,13 +199,13 @@ Die Beispiel-Code der Klasse `ConfigurationManager` könnte so aussehen:
 
 ```java
 public class ConfigurationManager {
-	public static EnvConfiguration getConfigAlternative1() {
-		return new ClasspathBasedConfig("config-alternative-1.xml");
-	}
+    public static EnvConfiguration getConfigAlternative1() {
+        return new ClasspathBasedConfig("config-alternative-1.xml");
+    }
 
-	public static EnvConfiguration getConfigAlternative2() {
-		return new ClasspathBasedConfig("config-alternative-2.xml");
-	}
+    public static EnvConfiguration getConfigAlternative2() {
+        return new ClasspathBasedConfig("config-alternative-2.xml");
+    }
 }
 ```
 
@@ -218,16 +218,16 @@ Klasse `ConfigUser` zu konfigurieren, etwa
 ```java
 @Test
 public doTestWithConfigAlternative_1(){
-	ConfigUser cu = new ConfigUser();
-	cu.setConfig( ConfigurationManager.getConfigAlternative1() );
-	//Do some test and assert here
+    ConfigUser cu = new ConfigUser();
+    cu.setConfig( ConfigurationManager.getConfigAlternative1() );
+    //Do some test and assert here
 }
 
 @Test
 public doTestWithConfigAlternative_2(){
-	ConfigUser cu = new ConfigUser();
-	cu.setConfig( ConfigurationManager.getConfigAlternative2() );
-	//Do some test and assert here
+    ConfigUser cu = new ConfigUser();
+    cu.setConfig( ConfigurationManager.getConfigAlternative2() );
+    //Do some test and assert here
 }
 ```
 
@@ -269,10 +269,10 @@ In POM-Datei:
 
 ```xml
 <dependency>
-	<groupId>io.github.mathcoach</groupId>
-	<artifactId>mc-config-tool-anotation-processor</artifactId>
-	<version>${mc.config.version}</version>
-	<scope>compile</scope>
+    <groupId>io.github.mathcoach</groupId>
+    <artifactId>mc-config-tool-anotation-processor</artifactId>
+    <version>${mc.config.version}</version>
+    <scope>compile</scope>
 </dependency>
 ```
 
@@ -280,12 +280,12 @@ In Java-Datei, welche ein Konfiguration-Parameter braucht.
 
 ```java
 @NeedConfig(
-	name= "Name der Konfiguration-parameter 1",
-	description= "Die Beschreibung der KP",
-	sugguestValues= {
-		"Value 1",
-		"Value 2"
-	}
+    name= "Name der Konfiguration-parameter 1",
+    description= "Die Beschreibung der KP",
+    sugguestValues= {
+        "Value 1",
+        "Value 2"
+    }
 )
 public class AJavaClass{
 
@@ -298,22 +298,22 @@ etwa so schreiben:
 
 ```java
 @NeedConfigs({
-	@NeedConfig(
-		name= "Name der Konfiguration-parameter 1",
-		description= "Die Beschreibung der KP",
-		sugguestValues= {
-			"Value 1",
-			"Value 2"
-		}
-	),
-	@NeedConfig(
-		name= "Name der Konfiguration-parameter 2",
-		description= "Die Beschreibung der KP",
-		sugguestValues= {
-			"Value 1",
-			"Value 2"
-		}
-	)
+    @NeedConfig(
+        name= "Name der Konfiguration-parameter 1",
+        description= "Die Beschreibung der KP",
+        sugguestValues= {
+            "Value 1",
+            "Value 2"
+        }
+    ),
+    @NeedConfig(
+        name= "Name der Konfiguration-parameter 2",
+        description= "Die Beschreibung der KP",
+        sugguestValues= {
+            "Value 1",
+            "Value 2"
+        }
+    )
 })
 public class AJavaClass{
 
