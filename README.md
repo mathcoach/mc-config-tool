@@ -334,7 +334,7 @@ bereits markiert, kann man die KP zur Laufzeit sammeln:
     <version>${mc.config.version}</version>
     <scope>compile</scope>
 </dependency>
-
+```
 
 ```java
 Map<String, ConfigEntries.Entry> usedConfigParam = ConfigCollector.collectConfigAsMap();
