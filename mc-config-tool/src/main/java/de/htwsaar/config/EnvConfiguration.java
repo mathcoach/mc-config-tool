@@ -14,6 +14,86 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * One can use this interface as the entry point to access configuration
+ * parameter. Common usage pattern:
+ * <pre><code>
+ * public final class AppCfg {
+ *
+ *     public static final String CONFIG_FILE = "configuration.properties";
+ *     public static final String TEST_CONFIG_FILE = "configuration-test.properties";
+ *
+ *     private static EnvConfiguration config;
+ *
+ *
+ *     public static EnvConfiguration getConfig() {
+ *         if (config == null) {
+ *             synchronized(AppCfg.class) {
+ *                 config = new ClasspathBasedConfig(TEST_CONFIG_FILE, CONFIG_FILE);
+ *            }
+ *         }
+ *         return config;
+ *     }
+ * }
+ * </code></pre>
+ *
+ * Then, if a class need some configuration parameters, it can use
+ *
+ * <pre><code>
+ * EnvConfiguration config = AppCfg.getConfig();
+ * String dbUser = config.env.getConfigValue("database.user");
+ * String dbPassword = onfig.env.getConfigValue("database.password");
+ * </code></pre>
+ *
+ * In a development machine the developer can create a file
+ * <code>src/test/resources/configuration-test.properties</code> with some
+ * configuration like
+ *
+ * <pre><code>
+ * # File src/test/resources/configuration-test.properties
+ * database.user = testuser
+ * database.password = testpassword
+ * </code></pre>
+ *
+ * At the test-runtime, this file is used to configure the (unit) tests.
+ *
+ * To overwrite this configuration in a productive machine the developer must
+ * create a file <code>src/main/resources/configuration.properties</code> which
+ * contains an import instruction, pointing to a configuration file outside of
+ * source tree of this project, e.g.
+ *
+ * <pre><code>
+ * # File src/main/resources/configuration.properties
+ * import = ${HOME}/my-app/configuration.properties
+ * </code></pre>
+ *
+ * At the productive runtime, the file
+ * <code>src/main/resources/configuration.properties</code> is used to configure
+ * the app, and the file <code>${HOME}/my-app/configuration.properties</code> is
+ * then imported.
+ *
+ * Contents of file <code>${HOME}/my-app/configuration.properties</code> can be
+ *
+ * <pre><code>
+ * # File ${HOME}/my-app/configuration.properties
+ * database.user = serveruser
+ * database.password = topsecret
+ * </code></pre>
+ *
+ * <code>${HOME}</code> is a environment variable and is resolved to the
+ * HOME-directory of the user, who starts the java process. On Linux it is
+ * <code>/home/username</code>, On Windows it is
+ * <code>C:\\Users\\username</code>. <code>EnvConfiguration</code> knows
+ *
+ * <ul>
+ * <li><code>${HOME}</code> and <code>$HOME</code> are resolved to
+ * Home-Directory of current user.
+ * </li>
+ * <li><code>${PWD}</code> and <code>$PWD</code> are resolved to Working*
+ * directory of the java * process.
+ * </li>
+ * </ul>
+ *
+ *
  *
  * @author hbui
  */
@@ -66,9 +146,9 @@ public interface EnvConfiguration {
 	}
 
 	/**
-     * should return the URL, from which the configuration saved, or null if 
+     * should return the URL, from which the configuration saved, or null if
      * unknown. Use for Debug only
-     * 
+     *
 	 * @return the URL, from which the config are saved, or null if unknown!
 	 */
 	@Override
@@ -76,16 +156,16 @@ public interface EnvConfiguration {
 
 	Set<String> getAllConfigKeys();
 
-    
+
     /**
      * resolve an config-file, which is imported by an other configure-file.
      * This method is intended to be used by an implementation of {@link EnvConfiguration}.
-     * 
+     *
      * @param configFile the imported configure-file
      * @param parser a parser, which can parse the configure file.
-     * 
+     *
      * @return configure as a Map of paar of configure-parameter and its value
-     * 
+     *
      */
 	static Map<String, String> resolveImportConfig(File configFile, ConfigParser parser) {
 
@@ -114,30 +194,30 @@ public interface EnvConfiguration {
 
     /**
      * resolve variables in configure values of a configure-parameter. Variables
-     * are marked by <code>${var_name}</code>. <code>var_name</code> should be 
-     * consist of only numeric-alphabetical character, the minus and underscore 
+     * are marked by <code>${var_name}</code>. <code>var_name</code> should be
+     * consist of only numeric-alphabetical character, the minus and underscore
      * character. The special variable <code>HOME</code> is automatically resolved
      * to value of Java-System variable <code>user.home</code>.
-     * 
+     *
      * For example: given a Map of pair of configure parameters
      * and their values:
-     * 
+     *
      * <pre>
      * <code>
      * application-home=${HOME}/some-dir
      * icons-path=${application-home}/icons
      * style-path=${application-home}/style
      * </code></pre>
-     * within a java Runtime with <code>user.home</code> is set to <code>/home/otto</code>. 
+     * within a java Runtime with <code>user.home</code> is set to <code>/home/otto</code>.
      * This map is resolved to
      * <pre><code>
      * application-home=/home/otto/some-dir
      * icons-path=/home/otto/some-dir/icons
      * style-path=/home/otto/some-dir/style
      * </code></pre>
-     * 
+     *
      * the origin map is not changed.
-     * 
+     *
      * @param originConfigTable
      * @return new map, its values are resolved.
      * @throws LSConfigException when at least a variable is not resolved.
@@ -167,7 +247,7 @@ public interface EnvConfiguration {
 				.replace("${HOME}", "${user.home}")
 				.replace("$PWD", "${user.dir}")
 				.replace("${PWD}", "${user.dir}");
-		return StringSubstitutor.replaceSystemProperties(resolvedText);	
+		return StringSubstitutor.replaceSystemProperties(resolvedText);
 	}
 
 	static void setConfigValue(
@@ -176,7 +256,7 @@ public interface EnvConfiguration {
 			final Map<String, String> configTable
 	) {
 		Matcher matcher = VAR_PATTERN.matcher(newValue);
-		if (matcher.find()) {// If the value has a variable			
+		if (matcher.find()) {// If the value has a variable
             StringBuilder bufferedValue = new StringBuilder(newValue);
 			StringSubstitutor substitutor = new StringSubstitutor(configTable);
 			boolean substable = substitutor.replaceIn(bufferedValue);
