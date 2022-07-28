@@ -3,10 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.mathcoach</groupId>
-    <artifactId>mc-config-tool-metapom</artifactId>	
-    <version>3.0.0-SNAPSHOT</version>	
+    <artifactId>mc-config-tool-metapom</artifactId>
+    <version>3.0.0</version>
     <packaging>pom</packaging>
-
+    <name>${project.artifactId}</name>
+    <description>
+        Parent-Project to setup projects
+        `mc-config-{annotation,tool,tool-annotation-processor,tool-collector,tool-bom}` at once
+    </description>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -14,18 +18,28 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
+    <url>https://github.com/mathcoach/mc-config-tool</url>
+    <scm>
+        <url>https://github.com/mathcoach/mc-config-tool</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>Hong-Phuc Bui</name>
+            <email>hong-phuc.bui@htwsaar.de</email>
+            <organization>HTW Saar</organization>
+        </developer>
+    </developers>
     <modules>
         <module>mc-config-tool</module>
         <module>mc-config-annotation</module>
         <module>mc-config-tool-annotation-processor</module>
-        <module>mc-config-tool-collector</module>		
+        <module>mc-config-tool-collector</module>
         <module>mc-config-tool-bom</module>
     </modules>
-	
+
     <properties>
         <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>		
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jacoco.version>0.8.8</jacoco.version>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <sonar.exclusions>${project.basedir}/target/generated-sources/**</sonar.exclusions>
@@ -39,27 +53,27 @@
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
         -->
-		
+
     </properties>
     <distributionManagement>
         <repository>
-            <id>central</id>			
-            <url>https://bayes.htwsaar.de/nexus/repository/maven-releases</url>
+            <id>${useServer}</id>
+            <url>${releaseRepoUrl}</url>
         </repository>
         <snapshotRepository>
-            <id>snapshots</id>			
-            <url>https://bayes.htwsaar.de/nexus/repository/maven-snapshots</url>
+            <id>${useServer}</id>
+            <url>${snapshotRepoUrl}</url>
         </snapshotRepository>
     </distributionManagement>
 
-	
+
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.version}</version>								
+                    <version>${jacoco.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -71,25 +85,30 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>2.22.2</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
             </plugins>
-        </pluginManagement>		
-        <plugins>			
+        </pluginManagement>
+        <plugins>
             <plugin>
                 <!-- Java Compiler / Annotation Processor Options -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
-                <configuration>					
+                <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                     <optimize>true</optimize>
                     <debug>true</debug>
                     <fork>true</fork>
-                </configuration>				
+                </configuration>
             </plugin>
-            
-            <plugin>				
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.2.1</version>
@@ -109,13 +128,26 @@
                 <configuration>
                     <additionalOptions>-Xdoclint:none -html5</additionalOptions>
                     <source>8</source>
-                    <detectJavaApiLink>false</detectJavaApiLink> 
+                    <detectJavaApiLink>false</detectJavaApiLink>
                 </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -144,15 +176,15 @@
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>          
-                <version>${junit.jupiter.version}</version>  
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>3.9.0</version>
-                <scope>test</scope>			
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
