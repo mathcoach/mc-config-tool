@@ -325,6 +325,17 @@ dazu die Konfigurationsparameter einer Klasse zu markieren, damit sie während
 der Kompilierungszeit gesammelt werden kann. Wenn man die Klasse der Annotation `@NeedConfig`
 bereits markiert, kann man die KP zur Laufzeit sammeln:
 
+
+```xml
+<!-- pom.xml -->
+<dependency>
+    <groupId>io.github.mathcoach</groupId>
+    <artifactId>mc-config-tool-collector</artifactId>
+    <version>${mc.config.version}</version>
+    <scope>compile</scope>
+</dependency>
+
+
 ```java
 Map<String, ConfigEntries.Entry> usedConfigParam = ConfigCollector.collectConfigAsMap();
 ```
