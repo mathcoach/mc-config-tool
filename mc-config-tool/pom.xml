@@ -5,11 +5,11 @@
     <parent>
         <groupId>io.github.mathcoach</groupId>
         <artifactId>mc-config-tool-metapom</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>mc-config-tool</artifactId>
-
+    <name>mc-config-tool</name>
     <packaging>jar</packaging>
 
 
