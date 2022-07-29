@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 import org.assertj.core.data.MapEntry;
@@ -18,7 +19,7 @@ import org.junit.jupiter.api.BeforeAll;
  * @author hbui
  */
 class EnvConfigurationTest {
-	
+
 
 	@Test
 	void resolveHOME_Variable() {
@@ -30,7 +31,7 @@ class EnvConfigurationTest {
 			.endsWith("/mypath/test.xml")
 			.hasSize(home.length() + "/mypath/test.xml".length());
 	}
-	
+
 	@Test
 	void resolveHOME_Variable2() {
 		String pathWithHomeVar = "$HOME/mypath/test.xml";
@@ -53,13 +54,13 @@ class EnvConfigurationTest {
 				.contains(MapEntry.entry("a", "A"))
 				.contains(MapEntry.entry("b", "A"));
 	}
-	
+
 	@Test
 	void detectCycleInVariableResolution(){
 		Map<String,String> originConfig = new HashMap<String,String>(){{
 			put("a", "A");
 			put("b", "${a}");
-			
+
 			put("c", "${d}");
 			put("d", "${e}");
 			put("e", "${c}");
@@ -70,7 +71,7 @@ class EnvConfigurationTest {
 			assertThat(ex).hasMessageContaining("Infinite loop in property interpolation of ${d}");
 		}
 	}
-	
+
 	@Test
 	void resolveSystemVar(){
 		Map<String,String> originConfig = new HashMap<String,String>(){{
@@ -82,8 +83,8 @@ class EnvConfigurationTest {
 			.contains(MapEntry.entry("home", System.getProperty("user.home")))
 			.contains(MapEntry.entry("working-dir", System.getProperty("user.dir")));
 	}
-	
-	
+
+
 	@Test
 	void doNotSetNewConfigIfVarNotSolved(){
 		Map<String,String> originConfig = new HashMap<String,String>(){{
@@ -98,7 +99,7 @@ class EnvConfigurationTest {
 			assertThat(originConfig).doesNotContainKey("new-param");
 		}
 	}
-	
+
 	@Test
 	void doNotSetNewConfigIfVarNotSolved2(){
 		Map<String,String> originConfig = new HashMap<String,String>(){{
@@ -116,7 +117,7 @@ class EnvConfigurationTest {
 					.contains(MapEntry.entry("param-a", "a"));
 		}
 	}
-	
+
 	@Test
 	void setNewConfigIfVarSolved(){
 		Map<String,String> originConfig = new HashMap<String,String>(){{
@@ -129,7 +130,7 @@ class EnvConfigurationTest {
 			.contains(MapEntry.entry("param-b", "b"))
 			.contains(MapEntry.entry("new-param", "use param-a |a|"));
 	}
-	
+
 	@Test
 	void setNewConfigIfNoVarRef(){
 		Map<String,String> originConfig = new HashMap<String,String>(){{
@@ -142,10 +143,10 @@ class EnvConfigurationTest {
 			.contains(MapEntry.entry("param-b", "b"))
 			.contains(MapEntry.entry("new-param", "new-config"));
 	}
-	
+
 	static final Path IMPORT_CONFIG_FILE = Paths.get("./target/import-config.txt");// <= problematic with path
 	static final Path MAIN_CONFIG_FILE = Paths.get("./target/main-config");
-	
+
 	@BeforeAll
 	static void initDummyConfigFiles() throws IOException{
 		//Path configFile = Paths.get(IMPORT_CONFIG_FILE);
@@ -155,43 +156,43 @@ class EnvConfigurationTest {
 			// Nothing to do
 		}
 	}
-	
+
 	@Test
 	void parserAConfigFileWithImportRelativeFile() {
-		
+
 		File simpleConfig = MAIN_CONFIG_FILE.toFile();//Dummy file only
 		Map<String,String> config = EnvConfiguration.resolveImportConfig(simpleConfig, new DummyConfigParser());
-		
+
         assertThat(config)
             .containsEntry("param-a", "a")        // only main config has param-a
             .containsEntry("import-param-a", "A") //only imported config has import-param-a
             .containsEntry("param-b", "B")        //imported config has precedence
-            .containsEntry("param-c", "c")        //like param-a, other name            
-            ;		
+            .containsEntry("param-c", "c")        //like param-a, other name
+            ;
 		assertThat(config.get("param-e")).isNull();              //neither nor is configed
 	}
-	
+
 	class DummyConfigParser implements ConfigParser{
-		
+
 		final Map<String,String> masterConfig = new HashMap<String,String>(){{
 			put(EnvConfiguration.IMPORT_KEY, IMPORT_CONFIG_FILE.toString() );
 			put("param-a", "a");
 			put("param-b", "b");
 			put("param-c", "c");
 		}};
-		
+
 		final Map<String,String> importedConfig = new HashMap<String,String>(){{
 			put("import-param-a","A");
 			put("param-b", "B");
 		}};
-		
-		
+
+
 		@Override
 		public Map<String, String> parseConfigFile(File configFile) {
 			Path normalizeConfig = configFile.toPath().normalize();
 			Path normalizeMainCfg = MAIN_CONFIG_FILE.normalize();
 			Path normalizeImportCfg = IMPORT_CONFIG_FILE.normalize();
-			
+
 			if ( normalizeConfig.endsWith(normalizeMainCfg) ){
 				return masterConfig;
 			}else if( normalizeConfig.endsWith(normalizeImportCfg) ) {
@@ -201,35 +202,35 @@ class EnvConfigurationTest {
 			}
 		}
 	}
-	
+
 	@Test
-	void throwExceptionIfImportCycle() {		
+	void throwExceptionIfImportCycle() {
 		File simpleConfig = MAIN_CONFIG_FILE.toFile();
         ConfigParser p = new CycleConfigParser() ;
 		try{
 			EnvConfiguration.resolveImportConfig(simpleConfig, p);
 			failBecauseExceptionWasNotThrown(LSConfigException.class);
-		}catch(LSConfigException ex){			
+		}catch(LSConfigException ex){
 			assertThat(ex).hasMessageContaining("Import too many level");
 		}
 	}
 
 	class CycleConfigParser implements ConfigParser{
-		
+
 		final Map<String,String> masterConfig = new HashMap<String,String>(){{
 			put(EnvConfiguration.IMPORT_KEY, IMPORT_CONFIG_FILE.toString());
 		}};
-		
+
 		final Map<String,String> importedConfig = new HashMap<String,String>(){{
 			put(EnvConfiguration.IMPORT_KEY, MAIN_CONFIG_FILE.toString() );
 		}};
-		
+
 		@Override
 		public Map<String, String> parseConfigFile(File configFile) {
 			Path normalizeConfig = configFile.toPath().normalize();
 			Path normalizeMainCfg = MAIN_CONFIG_FILE.normalize();
 			Path normalizeImportCfg = IMPORT_CONFIG_FILE.normalize();
-			
+
 			if ( normalizeConfig.endsWith(normalizeMainCfg) ){
 				return masterConfig;
 			}else if( normalizeConfig.endsWith(normalizeImportCfg) ) {
@@ -238,9 +239,9 @@ class EnvConfigurationTest {
 				throw new IllegalStateException(configFile.getAbsolutePath() + " not match " + normalizeMainCfg. toString() + " or " + normalizeImportCfg);
 			}
 		}
-		
+
 	}
-	
+
 	@Test
 	void useDefaultValueWhenConfigurationNotExist() {
 		EnvConfiguration configuration = new DynamicConfig();
@@ -285,13 +286,54 @@ class EnvConfigurationTest {
 		assertThat(configValue).isEqualTo(myValue);
 	}
 
-	
+    @Test
+    void useConverterToConvertStringToInt() {
+        String myConfig = "my-config";
+        String myValue = "5";
+        EnvConfiguration configuration = new DynamicConfig(
+            new HashMap<String, String>() {
+            {
+                put(myConfig, myValue);
+            }
+        }
+        );
+        int expectedValue = 5;
+        int getValue = configuration.getConfigValue(myConfig, (key, value) -> {
+            return Integer.parseInt(value);
+        });
+        assertThat(getValue).isEqualTo(expectedValue);
+    }
+
+    @Test
+    void useConverterToHandleException() {
+        String myConfig = "my-config";
+        String myValue = "not-a-number";
+        EnvConfiguration configuration = new DynamicConfig(
+            new HashMap<String, String>() {
+            {
+                put(myConfig, myValue);
+            }
+        }
+        );
+        final int expectedValue = 1;
+        BiFunction<String, String, Integer> fn = (key, value) -> {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException ex) {
+                return 1;
+            }
+        };
+        int getValue = configuration.getConfigValue(myConfig, fn);
+        assertThat(getValue).isEqualTo(expectedValue);
+    }
+
+
 	@Test
 	void raiseExceptionIfImportFileNotExist() {
 		final String dummyNotExistFile = "dummy_not_exist_file";
         File ignoredCfgFile = new File("ignore_me");
         ConfigParser p = new ImportNotExistFileParser(dummyNotExistFile);
-		try{			
+		try{
 			EnvConfiguration.resolveImportConfig(ignoredCfgFile, p);
 			failBecauseExceptionWasNotThrown(ImportCfgFileNotFound.class);
 		}catch(ImportCfgFileNotFound ex) {
@@ -300,7 +342,7 @@ class EnvConfigurationTest {
             assertThat(dummy).doesNotExist();
 		}
 	}
-	
+
 	class ImportNotExistFileParser implements ConfigParser {
 
 		Map<String,String> config ;
@@ -308,16 +350,16 @@ class EnvConfigurationTest {
 		public ImportNotExistFileParser(String notExistFile) {
 			config = Map.of(EnvConfiguration.IMPORT_KEY, notExistFile);
 		}
-		
-		
+
+
 		@Override
 		public Map<String, String> parseConfigFile(File configFile) {
 			// Ignore the config file
 			return config;
 		}
-		
+
 	}
-	
-	
-	
+
+
+
 }

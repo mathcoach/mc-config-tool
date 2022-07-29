@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.function.BiFunction;
 
 import de.htwsaar.config.text.StringSubstitutor;
 import org.slf4j.Logger;
@@ -129,9 +130,11 @@ public interface EnvConfiguration {
 	}
 
 	/**
-	 * Gibt den Konfigurations-Wert zurück, oder ruft den gegeben handler auf wenn der Konfig nicht existiert.
-	 *
-	 * @param configParameter Der Parameter
+	 * returns the value of a configure parameter, or return
+     * {@code handler.handleMissingConfiguration()} if configure value is null.
+     * @see #getConfigValue(java.lang.String, java.util.function.BiFunction)
+     *
+   	 * @param configParameter Der Parameter
 	 * @param handler Handles missing configuration
 	 *
 	 * @return as description
@@ -145,7 +148,34 @@ public interface EnvConfiguration {
 		return configValue;
 	}
 
-	/**
+    /**
+     * Calls {@code converter.apply(configParameter, configValue)} to convert
+     * the configuration value as string to expected value and type. Example;
+     *
+     * <pre><code>
+     * int poolCount = config.getConfigValue("database.poolCount", (String key, String value, int) -> {
+     *     try {
+     *         return Integer.parseInt(value);
+     *     } catch(NumberFormatException ex)  {
+     *         return 1;
+     *     }
+     * } );
+     * </code></pre>
+     *
+     * @param configParameter the configure parameter
+     * @param converter the method calls
+     * {@code converter.apply(configParameter, configValue);} to calculate the
+     * returned result. Lambda Function {@code converter.apply} must be able to
+     * handle null-value of configValue.
+     *
+     * @return result of {@code converter.apply(configParameter, configValue);}
+     */
+    default <R> R getConfigValue(String configParameter, BiFunction<String, String, R> converter) {
+        String configValue = getConfigValue(configParameter);
+        return converter.apply(configParameter, configValue);
+    }
+
+    /**
      * should return the URL, from which the configuration saved, or null if
      * unknown. Use for Debug only
      *
