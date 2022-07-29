@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	
+
     <parent>
         <groupId>io.github.mathcoach</groupId>
-        <artifactId>mc-config-tool-metapom</artifactId>	
-        <version>3.0.1</version>
+        <artifactId>mc-config-tool-metapom</artifactId>
+        <version>3.0.2</version>
     </parent>
-	
+
     <artifactId>mc-config-tool</artifactId>
-	
+
     <packaging>jar</packaging>
-	
-	
+
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>				
-                <configuration>					
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
                     <forkCount>1</forkCount>
                     <argLine>${argLine} -Xmx2048m</argLine>
                     <!--argLine>-Xmx2048m</argLine-->
@@ -26,7 +26,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>				
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <forkCount>1</forkCount>
                     <argLine>${argLine} -Xmx2048m</argLine>
@@ -56,20 +56,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-                <configuration>					
+                <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                     <optimize>true</optimize>
                     <debug>true</debug>
                     <fork>true</fork>
-                </configuration>				
-            </plugin>			
-			
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
-	
-    <dependencies>        
+
+    <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -78,32 +78,32 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>				
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>		 
-            <scope>test</scope>			
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>          				
+            <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>						
-            <scope>test</scope>			
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.7</version>
+            <version>[1.2.0,)</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-	
+
 
 </project>
 
