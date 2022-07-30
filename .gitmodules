@@ -1,1 +1,4 @@
 
+[submodule "mc-config-site"]
+	path = mc-config-site
+	url = git@github.com:mathcoach/mc-config-site.git
