@@ -4,7 +4,7 @@
 
     <groupId>io.github.mathcoach</groupId>
     <artifactId>mc-config-tool-metapom</artifactId>
-    <version>3.0.3</version>
+    <version>3.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>mc-config-tool-metapom</name>
     <description>

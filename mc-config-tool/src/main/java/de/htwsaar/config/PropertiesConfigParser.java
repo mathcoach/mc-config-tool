@@ -12,7 +12,7 @@ import java.util.Properties;
  *
  * @author hbui
  */
-public class PropertiesConfigParser implements ConfigParser {
+public final class PropertiesConfigParser implements ConfigParser {
 
 	@Override
 	public Map<String, String> parseConfigFile(File configFile) {
@@ -28,5 +28,5 @@ public class PropertiesConfigParser implements ConfigParser {
 			throw new LSConfigException("Config file must not be null", ex);
 		}
 	}
-	
+
 }

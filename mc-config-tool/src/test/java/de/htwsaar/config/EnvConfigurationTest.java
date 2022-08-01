@@ -55,6 +55,24 @@ class EnvConfigurationTest {
 				.contains(MapEntry.entry("b", "A"));
 	}
 
+    @Test
+    void resolveHome_Variable2() {
+        Map<String, String> originConfig = new HashMap<String, String>() {
+            {
+                put("myapp.base", "${HOME}/myapp");
+                put("myapp.data", "${myapp.base}/data");
+                put("myapp.conf", "${myapp.base}/conf");
+            }
+        };
+        Map<String, String> config = EnvConfiguration.resolveConfigVariables(originConfig);
+        String base = System.getProperty("user.home") + "/" + "myapp";
+        String data = base + "/data";
+        String conf = base + "/conf";
+        assertThat(config.get("myapp.base")).isEqualTo(base);
+        assertThat(config.get("myapp.data")).isEqualTo(data);
+        assertThat(config.get("myapp.conf")).isEqualTo(conf);
+    }
+
 	@Test
 	void detectCycleInVariableResolution(){
 		Map<String,String> originConfig = new HashMap<String,String>(){{
@@ -270,7 +288,23 @@ class EnvConfigurationTest {
 		String defaultValue = "myValue";
 		String configValue = configuration.getConfigValue("not-exist-config", (config) -> defaultValue );
 		assertThat(configValue).isEqualTo(defaultValue);
-	}
+    }
+
+    @Test
+    void use_Typed_HandlerWhenConfigurationNotExist() {
+        String key = "count";
+        String value = "  1  ";
+        EnvConfiguration configuration = new DynamicConfig(
+            new HashMap<String, String>() {
+            {
+                put(key, value);
+            }
+        }
+        );
+
+        int configValue = configuration.getConfigValue(key, (p, v) -> Integer.parseInt(v));
+        assertThat(configValue).isEqualTo(1);
+    }
 
 	@Test
 	void doNotCallHandlerWhenConfigurationExist() {
