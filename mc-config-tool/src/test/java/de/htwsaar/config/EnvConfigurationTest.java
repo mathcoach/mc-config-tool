@@ -51,8 +51,8 @@ class EnvConfigurationTest {
 		}};
 		Map<String,String> config = EnvConfiguration.resolveConfigVariables(originConfig);
 		assertThat(config).hasSameSizeAs(originConfig.entrySet())
-				.contains(MapEntry.entry("a", "A"))
-				.contains(MapEntry.entry("b", "A"));
+            .containsEntry("a", "A")
+            .containsEntry("b", "A");
 	}
 
     @Test
@@ -68,9 +68,10 @@ class EnvConfigurationTest {
         String base = System.getProperty("user.home") + "/" + "myapp";
         String data = base + "/data";
         String conf = base + "/conf";
-        assertThat(config.get("myapp.base")).isEqualTo(base);
-        assertThat(config.get("myapp.data")).isEqualTo(data);
-        assertThat(config.get("myapp.conf")).isEqualTo(conf);
+        assertThat(config).hasSameSizeAs(originConfig)
+            .containsEntry("myapp.base", base)
+            .containsEntry("myapp.data", data)
+            .containsEntry("myapp.conf", conf);
     }
 
 	@Test

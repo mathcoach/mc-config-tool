@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.*;
  * @author hbui
  */
 class CharSequenceTranslatorTest {
-   
+
 
     @Test
-    public void testDonNotThrowAnythingWhenInputNull() {
+    void testDonNotThrowAnythingWhenInputNull() {
         DummyCharSequenceTranslator t = new DummyCharSequenceTranslator();
         try {
             String translated = t.translate(null);
@@ -28,9 +28,9 @@ class CharSequenceTranslatorTest {
             fail("Not expected exception but got one", ex);
         }
     }
-    
+
     @Test
-    public void testDonNotThrowAnythingWhenInputNull_1() {
+    void testDonNotThrowAnythingWhenInputNull_1() {
         DummyCharSequenceTranslator t = new DummyCharSequenceTranslator();
         StringWriter w = new StringWriter();
         try {
@@ -50,5 +50,5 @@ class DummyCharSequenceTranslator extends CharSequenceTranslator {
     int translate(CharSequence input, int index, Writer out) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }

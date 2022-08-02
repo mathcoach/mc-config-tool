@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
  * @author hbui
  */
 class StringEscapeUtilsTest {
- 
+
     @Test
     void testLookupTranslator_ThrowExceptionWhenLookupMapNull() {
         Map<CharSequence, CharSequence> lookupMap = null;
@@ -34,10 +34,10 @@ class StringEscapeUtilsTest {
         StringWriter w = new StringWriter();
         LookupTranslator t = new LookupTranslator(upperLower);
         int i = t.translate(input, 0, w);
-        assertThat(i).isEqualTo(0);
-        assertThat(w.toString()).isEqualTo("");
+        assertThat(i).isZero();
+        assertThat(w.toString()).isEmpty();
     }
-    
+
     @Test
     void testLookupTranslator_translateUsingAMap_2() throws IOException {
         Map<CharSequence,CharSequence> upperLower = Map.of(
@@ -49,7 +49,7 @@ class StringEscapeUtilsTest {
         LookupTranslator t = new LookupTranslator(upperLower);
         int i = t.translate(input, 0, w);
         assertThat(i).isEqualTo(1);
-        assertThat(w.toString()).isEqualTo("a");
+        assertThat(w).hasToString("a");
     }
-    
+
 }

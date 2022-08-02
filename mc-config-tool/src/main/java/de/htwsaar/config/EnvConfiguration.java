@@ -15,88 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * One can use this interface as the entry point to access configuration
- * parameter. Common usage pattern:
- * <pre><code>
- * public final class AppCfg {
- *
- *     public static final String CONFIG_FILE = "configuration.properties";
- *     public static final String TEST_CONFIG_FILE = "configuration-test.properties";
- *
- *     private static EnvConfiguration config;
- *
- *
- *     public static EnvConfiguration getConfig() {
- *         if (config == null) {
- *             synchronized(AppCfg.class) {
- *                 config = new ClasspathBasedConfig(TEST_CONFIG_FILE, CONFIG_FILE);
- *            }
- *         }
- *         return config;
- *     }
- * }
- * </code></pre>
- *
- * Then, if a class need some configuration parameters, it can use
- *
- * <pre><code>
- * EnvConfiguration config = AppCfg.getConfig();
- * String dbUser = config.env.getConfigValue("database.user");
- * String dbPassword = onfig.env.getConfigValue("database.password");
- * </code></pre>
- *
- * In a development machine the developer can create a file
- * <code>src/test/resources/configuration-test.properties</code> with some
- * configuration like
- *
- * <pre><code>
- * # File src/test/resources/configuration-test.properties
- * database.user = testuser
- * database.password = testpassword
- * </code></pre>
- *
- * At the test-runtime, this file is used to configure the (unit) tests.
- *
- * To overwrite this configuration in a productive machine the developer must
- * create a file <code>src/main/resources/configuration.properties</code> which
- * contains an import instruction, pointing to a configuration file outside of
- * source tree of this project, e.g.
- *
- * <pre><code>
- * # File src/main/resources/configuration.properties
- * import = ${HOME}/my-app/configuration.properties
- * </code></pre>
- *
- * At the productive runtime, the file
- * <code>src/main/resources/configuration.properties</code> is used to configure
- * the app, and the file <code>${HOME}/my-app/configuration.properties</code> is
- * then imported.
- *
- * Contents of file <code>${HOME}/my-app/configuration.properties</code> can be
- *
- * <pre><code>
- * # File ${HOME}/my-app/configuration.properties
- * database.user = serveruser
- * database.password = topsecret
- * </code></pre>
- *
- * <code>${HOME}</code> is a environment variable and is resolved to the
- * HOME-directory of the user, who starts the java process. On Linux it is
- * <code>/home/username</code>, On Windows it is
- * <code>C:\\Users\\username</code>. <code>EnvConfiguration</code> knows
- *
- * <ul>
- * <li><code>${HOME}</code> and <code>$HOME</code> are resolved to
- * Home-Directory of current user.
- * </li>
- * <li><code>${PWD}</code> and <code>$PWD</code> are resolved to Working*
- * directory of the java * process.
- * </li>
- * </ul>
- *
- *
+ * represents a map of configuration key-value.
  *
  * @author hbui
+ *
  */
 public interface EnvConfiguration {
 
