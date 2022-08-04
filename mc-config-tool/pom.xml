@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.mathcoach</groupId>
         <artifactId>mc-config-tool-metapom</artifactId>
-        <version>3.0.5</version>
+        <version>3.0.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>mc-config-tool</artifactId>
@@ -32,7 +32,7 @@
                     <argLine>${argLine} -Xmx2048m</argLine>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <!-- Java Compiler / Annotation Processor Options -->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>[1.7.2,1.7.30]</version>
+            <version>[1.7.2,)</version>
             <type>jar</type>
         </dependency>
         <dependency>

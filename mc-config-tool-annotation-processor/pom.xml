@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.mathcoach</groupId>
         <artifactId>mc-config-tool-metapom</artifactId>
-        <version>3.0.5</version>
+        <version>3.0.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>mc-config-tool-annotation-processor</artifactId>
