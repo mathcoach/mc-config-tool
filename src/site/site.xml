@@ -1,0 +1,9 @@
+<project>
+    <bannerRight>
+        <src>./icon-208.png</src>
+    </bannerRight>
+
+    <body>
+        <menu ref="reports" inherit="top"/>
+    </body>
+</project>
