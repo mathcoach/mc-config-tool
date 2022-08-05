@@ -10,6 +10,10 @@
     <name>mc-config-annotation</name>
     <packaging>jar</packaging>
 
+    <description>
+        Annotation to mark classes which require configuration. Use this artifact
+        in conjunction with mc-config-annotation-processor.
+    </description>
 
     <build>
         <plugins>

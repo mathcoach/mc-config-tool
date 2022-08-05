@@ -11,7 +11,9 @@
     <artifactId>mc-config-tool</artifactId>
     <name>mc-config-tool</name>
     <packaging>jar</packaging>
-
+    <description>
+        Provide mechanics to Setup and consume configiguration.
+    </description>
 
     <build>
         <plugins>

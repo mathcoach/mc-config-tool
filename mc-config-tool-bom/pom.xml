@@ -10,10 +10,12 @@
 
     <artifactId>mc-config-tool-bom</artifactId>
     <name>mc-config-tool-bom</name>
-
     <packaging>pom</packaging>
 
-    <description>MC Config Tool Bill of Matrials</description>
+    <description>
+        MC Config Tool Bill of Matrials. Use this artifact to put all artifacts
+        of this project to your dependency.
+    </description>
 
     <build>
         <plugins>
