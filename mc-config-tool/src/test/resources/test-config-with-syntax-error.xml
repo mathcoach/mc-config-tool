@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration import="${PWD}/src/test/resources/import-config.xml">
-	<param-a>a</param-a>
-	<param-b>b</param-b-x>
-</configuration>

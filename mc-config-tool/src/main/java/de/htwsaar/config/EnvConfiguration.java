@@ -177,7 +177,10 @@ public interface EnvConfiguration {
 	static Map<String, String> resolveConfigVariables(final Map<String, String> originConfigTable) {
 		final Logger logger = LoggerFactory.getLogger(EnvConfiguration.class);
 		try {
-			Map<String, String> envVar = Map.of("HOME", System.getProperty("user.home"));
+            Map<String, String> envVar = Map.of(
+                "HOME", System.getProperty("user.home"),
+                "PWD", System.getProperty("user.dir")
+            );
 			HashMap<String, String> configTable = new HashMap<>();
 			originConfigTable.entrySet().stream().forEach(entry -> {
 				String k = entry.getKey();

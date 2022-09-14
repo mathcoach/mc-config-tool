@@ -26,15 +26,15 @@ class ClassapathBasedConfigTest {
 		assertThat(configValue).isEqualTo("target/test-classes");
 	}
 
-	
+
 	@Test
-	void checkDirectoryInClasspath() throws Exception{		
+	void checkDirectoryInClasspath() throws Exception{
         File f = new File("./target/test-classes"); // ensure that this directory is in classpath
 		Path path = f.toPath().toAbsolutePath().normalize();
 		ClasspathBasedConfig ec = new ClasspathBasedConfig("config-test.properties", null);
 		String configValue = ec.getConfigValue("class-path");
 		assertThat(configValue).isEqualTo("target/test-classes");
-		
+
 		assertThat(ec.getSearchDir()).contains(path.toString());
 	}
 
@@ -88,10 +88,13 @@ class ClassapathBasedConfigTest {
 		assertThat(home).isEqualTo(System.getProperty("user.home"));
 		String workingdir = ec.getConfigValue("working-dir");
 		System.out.println("working dir:" + workingdir);
-		assertThat(workingdir).isEqualTo(System.getProperty("user.dir"));
+        assertThat(workingdir).isEqualTo(System.getProperty("user.dir"));
+        String workingdir2 = ec.getConfigValue("working-dir-2");
+        System.out.println("working dir 2:" + workingdir2);
+        assertThat(workingdir2).isEqualTo(System.getProperty("user.dir"));
 	}
-	
-	
+
+
 	private Path addTheTestClasseDirToClassPath() throws Exception{
 		File f = new File("./target/test-classes"); // add an directory to classpath
 		Path path = f.toPath().toAbsolutePath().normalize();
