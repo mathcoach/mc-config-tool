@@ -4,11 +4,13 @@ import static de.htwsaar.config.EnvConfiguration.resolveConfigVariables;
 import static de.htwsaar.config.EnvConfiguration.resolveImportConfig;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +45,18 @@ public class ClasspathBasedConfig implements EnvConfiguration {
      *
      */
     public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
-        classPathDir = new HashSet<>(10);
+        classPathDir = new HashSet<>(10);                
+        configTable = new HashMap<>();
+        try {
+            configFile = initConfigByClasspath(primaryConfigFileName, secondaryConfigFileName);
+            Map<String,String> tmp = resolveConfigVariables(resolveImportConfig(configFile, ConfigParserFactory.getParserForFile(configFile)));
+            configTable.putAll(tmp);
+        }catch (ConfigFileNotFoundException ex) {
+            throw ex;
+        }
+    }
+
+    private File initConfigByClasspath(String primaryConfigFileName, String secondaryConfigFileName) {
         LOGGER.info("Collect directories in Thread's class loader");
         collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
         LOGGER.info("Collect directories in the own classloader");
@@ -72,11 +85,8 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         } else {
             LOGGER.info("Use primary config file '{}'", configPath.toAbsolutePath());
         }
-        configFile = configPath.toFile();
-        configTable = resolveConfigVariables(resolveImportConfig(configFile, ConfigParserFactory.getParserForFile(configFile)));
+        return configPath.toFile();
     }
-
-    
     
     /**
      *
@@ -100,6 +110,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         return configTable.get(configParameter);
     }
 
+    
+    
+    
     protected final void collectDirInClassPathLoader(ClassLoader loader, final Set<Path> classPathDir) {
         try {
             LOGGER.info("Collect classpath from {}", loader.getClass().getName());
@@ -158,7 +171,11 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 
     
     /**
-     * @return a Path or null
+     * 
+     * 
+     * @param classPathDir
+     * @param configFileName
+     * @return the path to configuration file if found, else null
      */
     protected final Path searchConfigPathInDir(Set<Path> classPathDir, String configFileName) {
         for (Path dir : classPathDir) {
@@ -167,7 +184,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
                 final Optional<Path> configPath;
                 try ( Stream<Path> stream = Files.list(dir)) {
                     configPath = stream
-                            .filter(p -> p.toFile().isFile() && p.getFileName().toString().equals(configFileName))
+                            .filter(p -> Files.isRegularFile(p) && p.getFileName().toString().equals(configFileName))
                             .findFirst();
                 }                
                 if (configPath.isPresent()) {

@@ -11,6 +11,10 @@ import java.util.regex.Pattern;
 import java.util.function.BiFunction;
 
 import de.htwsaar.config.text.StringSubstitutor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,14 +127,26 @@ public interface EnvConfiguration {
      * @return configure as a Map of paar of configure-parameter and its value
      *
      */
-    static Map<String, String> resolveImportConfig(File configFile, ConfigParser parser) {
+    static Map<String, String> resolveImportConfig(File configFile, ConfigParser parser) {        
+        Map<String, String> origin = parser.parseConfigFile(configFile);
+        String sourceName = configFile.getAbsolutePath();
+        return resolveImport(origin, sourceName, parser);
+    }
 
-        Map<String, String> temp = parser.parseConfigFile(configFile);
+    
+    static Map<String,String> resolveImportConfig(InputStream source, String sourceName, ConfigParser parser) {
+        Map<String, String> origin = parser.parseConfigFile(source);
+        return resolveImport(origin, sourceName, parser);
+    }
+    
+    
+    static Map<String,String> resolveImport(Map<String,String> origin, String sourceName, ConfigParser parser) {
+        Map<String,String> temp = new HashMap<>(origin);
         int importLevel = 0;
         while (temp.containsKey(IMPORT_KEY)) {
             ++importLevel;
             if (importLevel > MAX_IMPORT_LEVEL) {
-                throw new LSConfigException("Import too many levels " + configFile.getAbsolutePath());
+                throw new LSConfigException("Import too many levels " + sourceName);
             } else {
                 parser.reset();
                 Path importedPath = Paths.get(resolveSystemProperties(temp.get(IMPORT_KEY))) //NOSONAR
@@ -145,9 +161,10 @@ public interface EnvConfiguration {
             }
         }
         return temp;
-
     }
-
+    
+    
+    
     /**
      * resolve variables in configure values of a configure-parameter. Variables
      * are marked by <code>${var_name}</code>. <code>var_name</code> should be

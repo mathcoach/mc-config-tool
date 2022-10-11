@@ -57,7 +57,7 @@ public class JarTesting {
         URI uri = URI.create("jar:file:" + jarPath);
         try (FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
             result = Files.walk(fs.getPath(folder))
-                    .filter(Files::isRegularFile)
+                    //.filter(Files::isRegularFile)
                     .collect(Collectors.toList());
         }
         return result;

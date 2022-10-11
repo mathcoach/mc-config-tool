@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Disabled;
  *
  * @author hbui
  */
-class ClassapathBasedConfigTest {
+class ClasspathBasedConfigTest {
 
     @Test
     void constructInstance() {
@@ -50,7 +50,7 @@ class ClassapathBasedConfigTest {
     }
 
     @Test
-    void thowExceptionIfBothConfigFilesNotFound() {
+    void throwExceptionIfBothConfigFilesNotFound() {
         try {
             EnvConfiguration ec = new ClasspathBasedConfig("config-file-not-found.properties", "secondary-config-test.properties");
             failBecauseExceptionWasNotThrown(ConfigFileNotFoundException.class);
