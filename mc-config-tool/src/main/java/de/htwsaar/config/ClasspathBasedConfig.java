@@ -4,12 +4,18 @@ import static de.htwsaar.config.EnvConfiguration.resolveConfigVariables;
 import static de.htwsaar.config.EnvConfiguration.resolveImportConfig;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.ProviderNotFoundException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -54,7 +60,12 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
         }catch (ConfigFileNotFoundException ex) {
-            throw ex; // TODO: put Jar scanner here
+            configPath = initConfigByJar(primaryConfigFileName, secondaryConfigFileName);
+            //InputStream in = getInputStreamFromJar(configPath);
+            //String source = configPath.toString();
+            Map<String,String> configWithResolvedImport = parseConfigFromJar(configPath); //resolveImportConfig(in, source, ConfigParserFactory.getParserForFile(configPath.toFile()));
+            Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
+            configTable.putAll(configWithResolvedVariables);
         }
     }
 
@@ -68,16 +79,14 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         
         Path configPath = searchConfigPathInDir(classPathDir, primaryConfigFileName);
         if(configPath == null) {
-            LOGGER.info("Test Config file {} not found!", primaryConfigFileName);
-            LOGGER.info("Test Config file is not in following directory:");
+            LOGGER.info("Test Config file {} not found in following directories:", primaryConfigFileName);            
             if (LOGGER.isInfoEnabled()) {
                 classPathDir.forEach(f -> LOGGER.info(" -> {}", f));
             }
             configPath = searchConfigPathInDir(classPathDir, secondaryConfigFileName);
             if (configPath == null) {
-                LOGGER.error("Config file {} NOT found!", secondaryConfigFileName);
-                if (LOGGER.isErrorEnabled()) {
-                    LOGGER.error("Config file is NOT in following directory:");
+                LOGGER.error("Config file {} NOT found! in following directories:", secondaryConfigFileName);
+                if (LOGGER.isErrorEnabled()) {                    
                     classPathDir.forEach(f -> LOGGER.error(" -> {}", f));
                 }
                 throw new ConfigFileNotFoundException(primaryConfigFileName, secondaryConfigFileName);
@@ -88,6 +97,44 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             LOGGER.info("Use primary config file '{}'", configPath.toAbsolutePath());
         }
         return configPath;
+    }
+    
+    private Path initConfigByJar(String primaryConfigFilename, String secondaryConfigFilename) {
+        try{
+            URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+            LOGGER.info("Search config files in {}", jarUlr);
+            String jarPath = jarUlr.getPath();
+            URI uri = URI.create("jar:file:" + jarPath);
+            try(FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap() );
+                Stream<Path> walker = Files.list(fs.getPath("/"));) 
+            {
+                Optional<Path> primaryConfigPath = walker.filter(p -> 
+                        Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(primaryConfigFilename)
+                ).findFirst();
+                if ( primaryConfigPath.isPresent() ) {
+                    return primaryConfigPath.get().normalize();
+                } else {
+                    LOGGER.info("Test Config file {} not found in jar file {}!", primaryConfigFilename, jarPath);
+                    try (Stream<Path> secondaryWalker = Files.list(fs.getPath("/"))) {
+                        Optional<Path> secondaryConfigPath = secondaryWalker.filter(p -> 
+                                Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(secondaryConfigFilename)
+                        ).findFirst();
+                        if(secondaryConfigPath.isPresent()) {
+                            return secondaryConfigPath.get().normalize();
+                        } else {
+                            LOGGER.error("Config file {} NOT found in jar file {}!", secondaryConfigFilename, jarPath);
+                            throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
+                        }
+                    }
+                }
+            } 
+        }catch(URISyntaxException|IOException ex) {
+            throw new LSConfigException(ex);
+        }catch(ProviderNotFoundException ex) {
+            LOGGER.warn("Cannot scann Jar file");
+            LOGGER.trace("", ex);
+            throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
+        }
     }
     
     /**
@@ -198,6 +245,22 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         }
         return null;
     }
+    
+    
+    private Map<String,String> parseConfigFromJar(Path configFileInJarPath) {
+        LOGGER.trace("get InputStream from {}", configFileInJarPath);
+        String fileName = configFileInJarPath.getFileName().toString();
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if(inputStream == null) {
+            throw new LSConfigException("Cannot read " + configFileInJarPath);
+        } else {
+            String sourceName = configFileInJarPath.getFileName().toString();
+            File configFile = new File(sourceName);
+            return resolveImportConfig(inputStream, sourceName, ConfigParserFactory.getParserForFile(configFile));
+        }
+    }
+    
     
     /**
      * @param configFileName

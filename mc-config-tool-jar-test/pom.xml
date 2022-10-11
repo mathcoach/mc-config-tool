@@ -47,4 +47,16 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.mathcoach</groupId>
+            <artifactId>mc-config-tool</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>[1.2.0,)</version>
+        </dependency>
+    </dependencies>
 </project>

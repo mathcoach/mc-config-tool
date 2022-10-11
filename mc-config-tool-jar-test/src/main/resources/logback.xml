@@ -1,0 +1,40 @@
+<configuration debug="true">
+    <jmxConfigurator />   	 
+	
+    <!-- =====================================================================
+            logback hat immer ein defaut appender: STDOUT. Man kann seine Layout 
+            konfigurieren, oder die Standart layout verwenden.
+    ======================================================================= -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{ss.SSS} [%thread] %-5level %-5logger [%file:%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+	
+    <!-- ======================================================================
+            setze logger fuer alle classes in de.htwsaar 
+    ======================================================================== -->
+    <logger name="de.htwsaar" level="ERROR">        
+    </logger>
+
+	
+    <logger name="de.htwsaar.config" level="TRACE" />
+	
+    <!-- =================================================================== -->
+    <logger name="ch.qos.logback.classic.LoggerContext" level="INFO">
+    </logger>
+
+
+    
+
+    <!-- turn off all default logger in org.apache.http.* -->
+    <logger name="org.apache.http" level="OFF"/>
+	
+	
+	
+    <!-- setup the root logger -->
+    <root level="FATAL">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
