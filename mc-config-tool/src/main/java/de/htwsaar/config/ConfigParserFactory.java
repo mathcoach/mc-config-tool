@@ -9,18 +9,18 @@ import java.util.Objects;
  */
 public final class ConfigParserFactory {
 
-	private ConfigParserFactory(){
-		//prevent to create an instance of this class
-	}
+    private ConfigParserFactory() {
+        //prevent to create an instance of this class
+    }
 
-	public static final ConfigParser getParserForFile(File configFile){
-		Objects.requireNonNull(configFile, "Config file must not be null");
-		String fileName = configFile.getName();
+    public static final ConfigParser getParserForFile(File configFile) {
+        Objects.requireNonNull(configFile, "Config file must not be null");
+        String fileName = configFile.getName();
         if (fileName.endsWith("properties")) {
-			return new PropertiesConfigParser();
-		}else{
-			throw new LSConfigException("Parser for file " + fileName + " not found");
-		}
-	}
+            return new PropertiesConfigParser();
+        } else {
+            throw new LSConfigException("Parser for file " + fileName + " not found");
+        }
+    }
 
 }

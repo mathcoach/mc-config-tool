@@ -23,165 +23,164 @@ import java.util.stream.Stream;
  * @version $Id: $Id
  */
 public class ClasspathBasedConfig implements EnvConfiguration {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
-	
-	private final HashSet<Path> classPathDir;
-	private File configFile;
-	private final Map<String, String> configTable;
 
-	/**
-	 *
-	 * @param primaryConfigFileName this File will be search firstly in the
-	 * classpath and will be used. If this file is found in Classpath, the
-	 * search-Process is stopped.
-	 *
-	 * @param secondaryConfigFileName if the primaryConfigFileName is not found
-	 * in the classpath, this file will be search in class-path and will be
-	 * used.
-	 *
-	 * <p>
-	 * Constructor for EnvConfiguration.</p>
-	 */
-	public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
-		classPathDir = new HashSet<>(10);
-		LOGGER.info("Collect directories in Thread's class loader");
-		collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
-		LOGGER.info("Collect directories in the own classloader");
-		collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
-		LOGGER.info("Collect directories in System classpath defined by java.class.path");
-		collectDirInSystemClassPath(classPathDir);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
 
-		searchConfigFileInDir(primaryConfigFileName);
-		if (configFile == null) {
-			LOGGER.info("Test Config file {} not found!", primaryConfigFileName);
-			LOGGER.info("Test Config file is not in following directory:");
-			if (LOGGER.isInfoEnabled()) {
-				classPathDir.forEach( f -> 	LOGGER.info(" -> {}", f ) );
-			}
-			searchConfigFileInDir(secondaryConfigFileName);
-			if (configFile == null) {
-				LOGGER.error("Config file {} NOT found!", secondaryConfigFileName);
-				if (LOGGER.isErrorEnabled()) {
-					LOGGER.error("Config file is NOT in following directory:");
-					classPathDir.forEach( f -> LOGGER.error(" -> {}" ,f ) );
-				}
-				throw new ConfigFileNotFoundException(primaryConfigFileName ,secondaryConfigFileName);
-			}else{
-				LOGGER.info("Use secondary config file '{}'", configFile.getAbsoluteFile());
-			}
-		} else {
-			LOGGER.info("Use primary config file '{}'", configFile.getAbsoluteFile());
-		}
-		configTable = resolveConfigVariables(resolveImportConfig(configFile,  ConfigParserFactory.getParserForFile(configFile) ));
-	}
+    private final HashSet<Path> classPathDir;
+    private File configFile;
+    private final Map<String, String> configTable;
 
-	/**
-	 * 
-	 * 
-	 * @return all configuration keys
-	 */
-	@Override
-	public Set<String> getAllConfigKeys() {
-		return configTable.keySet();
-	}
-	
-	/**
-	 * Gibt den Konfiguration-Wert zurück oder {@code null} wenn die
-	 * Konfiguration-Param nicht in dem {@link #configTable} existiert.
-	 *
-	 * @param configParameter a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
-	@Override
-	public String getConfigValue(String configParameter) {
-		return configTable.get(configParameter);
-	}
-	
+    /**
+     *
+     * @param primaryConfigFileName this File will be search firstly in the
+     * classpath and will be used. If this file is found in Classpath, the
+     * search-Process is stopped.
+     *
+     * @param secondaryConfigFileName if the primaryConfigFileName is not found
+     * in the classpath, this file will be search in class-path and will be
+     * used.
+     *
+     *
+     */
+    public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
+        classPathDir = new HashSet<>(10);
+        LOGGER.info("Collect directories in Thread's class loader");
+        collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
+        LOGGER.info("Collect directories in the own classloader");
+        collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
+        LOGGER.info("Collect directories in System classpath defined by java.class.path");
+        collectDirInSystemClassPath(classPathDir);
 
-	protected final void collectDirInClassPathLoader(ClassLoader loader, final Set<Path> classPathDir) {
-		try {
-			LOGGER.info("Collect classpath from {}", loader.getClass().getName());
-			URLClassLoader urlCL = (URLClassLoader) loader;
-			URL[] url = urlCL.getURLs();
-			for (URL u : url) {
-				collectDirFromURL(u, classPathDir);
-			}
-		} catch (ClassCastException ex) {
-			LOGGER.warn("Cannot search config file from classloader {}",
-					loader.getClass().getName());
-			LOGGER.trace("Cause:", ex);
-		}
-	}
-	protected final void collectDirFromURL(URL classPath, final Set<Path> classPathDir) {
-		final String path = classPath.getPath();
-		final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();  //NOSONAR (checked)
-		LOGGER.trace("path: {}", path);
-		if ( classPathFile.toFile().isDirectory()  ) {
-			if ( classPathDir.add(classPathFile) ){
-				LOGGER.trace("Add dir '{}' to search dir", classPathFile);
-			}
-		} else if (  classPathFile .toFile().isFile()  ) {
-			Path searchDir = classPathFile.getParent(); 
-			if (classPathDir.add(searchDir)){
-				LOGGER.trace("Add parent '{}' to search dir", searchDir);
-			}
-		}
-	}
+        searchConfigFileInDir(primaryConfigFileName);
+        if (configFile == null) {
+            LOGGER.info("Test Config file {} not found!", primaryConfigFileName);
+            LOGGER.info("Test Config file is not in following directory:");
+            if (LOGGER.isInfoEnabled()) {
+                classPathDir.forEach(f -> LOGGER.info(" -> {}", f));
+            }
+            searchConfigFileInDir(secondaryConfigFileName);
+            if (configFile == null) {
+                LOGGER.error("Config file {} NOT found!", secondaryConfigFileName);
+                if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error("Config file is NOT in following directory:");
+                    classPathDir.forEach(f -> LOGGER.error(" -> {}", f));
+                }
+                throw new ConfigFileNotFoundException(primaryConfigFileName, secondaryConfigFileName);
+            } else {
+                LOGGER.info("Use secondary config file '{}'", configFile.getAbsoluteFile());
+            }
+        } else {
+            LOGGER.info("Use primary config file '{}'", configFile.getAbsoluteFile());
+        }
+        configTable = resolveConfigVariables(resolveImportConfig(configFile, ConfigParserFactory.getParserForFile(configFile)));
+    }
 
-	protected final void searchConfigFileInDir(String configFileName) {
-		for(Path dir : classPathDir){
-			try{
-				LOGGER.debug("Search config file name '{}' in '{}' but not in subdir",configFileName, dir);
-				final Optional<Path> configPath;
-				try (Stream<Path> stream = Files.list( dir )) {
-					configPath = stream
-							.filter(p -> p.toFile().isFile() && p.getFileName().toString().equals(configFileName) )
-							.findFirst();
-				}
-				if (configPath.isPresent() ){
-					configFile = configPath.get().toFile();
-					return;
-				}
-			}catch(IOException ex){ //Doof
-				configFile = null;
-			}
-		}
-	}
-	
-	protected final void collectDirInSystemClassPath(Set<Path> classPathDir) {		
-		String sessionClassPath = System.getProperty("java.class.path");
-		String[] classpath = sessionClassPath.split(File.pathSeparator);
-		for (String path : classpath) {
-			File f = new File(path);
-			if (f.isDirectory()) {
-				Path absolutPath = f.toPath().toAbsolutePath().normalize();
-				if (!classPathDir.contains( absolutPath )) {
-					classPathDir.add( absolutPath );
-					LOGGER.trace("Add '{}' to search dir", f.getAbsolutePath());
-				} else {
-					LOGGER.trace("Duplex path {}", absolutPath);
-				}
-			} else if (f.isFile()) {
-				File parentFile = f.getParentFile();
-				Path absolutPath = parentFile.toPath().toAbsolutePath().normalize();
-				if (!classPathDir.contains( absolutPath )) {
-					classPathDir.add( absolutPath);
-				}
-			}
-		}
-	}
+    /**
+     *
+     *
+     * @return all configuration keys
+     */
+    @Override
+    public Set<String> getAllConfigKeys() {
+        return configTable.keySet();
+    }
 
-	@Override
-	public String toString() {
-		return "[configuration source: "
-				+ configFile.toPath().toAbsolutePath().normalize().toString()
-				+ "]";
-	}
-	
-	public final String getSearchDir(){
-		return classPathDir.stream()
-				.map( Path::toString )
-				.collect(Collectors.joining(File.pathSeparator));
-	}
+    /**
+     * Gibt den Konfiguration-Wert zurück oder {@code null} wenn die
+     * Konfiguration-Param nicht in dem {@link #configTable} existiert.
+     *
+     * @param configParameter a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
+    @Override
+    public String getConfigValue(String configParameter) {
+        return configTable.get(configParameter);
+    }
+
+    protected final void collectDirInClassPathLoader(ClassLoader loader, final Set<Path> classPathDir) {
+        try {
+            LOGGER.info("Collect classpath from {}", loader.getClass().getName());
+            URLClassLoader urlCL = (URLClassLoader) loader;
+            URL[] url = urlCL.getURLs();
+            for (URL u : url) {
+                collectDirFromURL(u, classPathDir);
+            }
+        } catch (ClassCastException ex) {
+            LOGGER.warn("Cannot search config file from classloader {}",
+                    loader.getClass().getName());
+            LOGGER.trace("Cause:", ex);
+        }
+    }
+
+    protected final void collectDirFromURL(URL classPath, final Set<Path> classPathDir) {
+        final String path = classPath.getPath();
+        final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();  //NOSONAR (checked)
+        LOGGER.trace("path: {}", path);
+        if (classPathFile.toFile().isDirectory()) {
+            if (classPathDir.add(classPathFile)) {
+                LOGGER.trace("Add dir '{}' to search dir", classPathFile);
+            }
+        } else if (classPathFile.toFile().isFile()) {
+            Path searchDir = classPathFile.getParent();
+            if (classPathDir.add(searchDir)) {
+                LOGGER.trace("Add parent '{}' to search dir", searchDir);
+            }
+        }
+    }
+
+    protected final void searchConfigFileInDir(String configFileName) {
+        for (Path dir : classPathDir) {
+            try {
+                LOGGER.debug("Search config file name '{}' in '{}' but not in sub-directory", configFileName, dir);
+                final Optional<Path> configPath;
+                try ( Stream<Path> stream = Files.list(dir)) {
+                    configPath = stream
+                            .filter(p -> p.toFile().isFile() && p.getFileName().toString().equals(configFileName))
+                            .findFirst();
+                }
+                if (configPath.isPresent()) {
+                    configFile = configPath.get().toFile();
+                    return;
+                }
+            } catch (IOException ex) { //Doof
+                configFile = null;
+            }
+        }
+    }
+
+    protected final void collectDirInSystemClassPath(Set<Path> classPathDir) {
+        String sessionClassPath = System.getProperty("java.class.path");
+        String[] classpath = sessionClassPath.split(File.pathSeparator);
+        for (String path : classpath) {
+            File f = new File(path);
+            if (f.isDirectory()) {
+                Path absolutPath = f.toPath().toAbsolutePath().normalize();
+                if (!classPathDir.contains(absolutPath)) {
+                    classPathDir.add(absolutPath);
+                    LOGGER.trace("Add '{}' to search dir", f.getAbsolutePath());
+                } else {
+                    LOGGER.trace("Duplex path {}", absolutPath);
+                }
+            } else if (f.isFile()) {
+                File parentFile = f.getParentFile();
+                Path absolutPath = parentFile.toPath().toAbsolutePath().normalize();
+                if (!classPathDir.contains(absolutPath)) {
+                    classPathDir.add(absolutPath);
+                }
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "[configuration source: "
+                + configFile.toPath().toAbsolutePath().normalize().toString()
+                + "]";
+    }
+
+    public final String getSearchDir() {
+        return classPathDir.stream()
+                .map(Path::toString)
+                .collect(Collectors.joining(File.pathSeparator));
+    }
 }
