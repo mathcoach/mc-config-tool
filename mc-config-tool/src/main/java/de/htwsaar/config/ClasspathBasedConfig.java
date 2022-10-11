@@ -29,7 +29,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathBasedConfig.class);
 
     private final HashSet<Path> classPathDir;
-    private File configFile;
+    private Path configPath;
     private final Map<String, String> configTable;
 
     /**
@@ -48,15 +48,17 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         classPathDir = new HashSet<>(10);                
         configTable = new HashMap<>();
         try {
-            configFile = initConfigByClasspath(primaryConfigFileName, secondaryConfigFileName);
-            Map<String,String> tmp = resolveConfigVariables(resolveImportConfig(configFile, ConfigParserFactory.getParserForFile(configFile)));
-            configTable.putAll(tmp);
+            configPath = initConfigByClasspath(primaryConfigFileName, secondaryConfigFileName);
+            File cf = configPath.toFile();
+            Map<String,String> configWithResolvedImport = resolveImportConfig(cf, ConfigParserFactory.getParserForFile(cf));
+            Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
+            configTable.putAll(configWithResolvedVariables);
         }catch (ConfigFileNotFoundException ex) {
-            throw ex;
+            throw ex; // TODO: put Jar scanner here
         }
     }
 
-    private File initConfigByClasspath(String primaryConfigFileName, String secondaryConfigFileName) {
+    private Path initConfigByClasspath(String primaryConfigFileName, String secondaryConfigFileName) {
         LOGGER.info("Collect directories in Thread's class loader");
         collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
         LOGGER.info("Collect directories in the own classloader");
@@ -85,7 +87,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         } else {
             LOGGER.info("Use primary config file '{}'", configPath.toAbsolutePath());
         }
-        return configPath.toFile();
+        return configPath;
     }
     
     /**
@@ -181,14 +183,14 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         for (Path dir : classPathDir) {
             try {
                 LOGGER.debug("Search config file name '{}' in '{}' but not in sub-directory", configFileName, dir);
-                final Optional<Path> configPath;
+                final Optional<Path> optinalPath;
                 try ( Stream<Path> stream = Files.list(dir)) {
-                    configPath = stream
+                    optinalPath = stream
                             .filter(p -> Files.isRegularFile(p) && p.getFileName().toString().equals(configFileName))
                             .findFirst();
                 }                
-                if (configPath.isPresent()) {
-                    return configPath.get().normalize();                    
+                if (optinalPath.isPresent()) {
+                    return optinalPath.get().normalize();                    
                 }
             } catch (IOException ex) { //Doof
                 LOGGER.info("Search config file {} in path {} caused IOException", configFileName, dir);
@@ -198,33 +200,18 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     }
     
     /**
+     * @param configFileName
      * @deprecated Do not use this
      */
     @Deprecated
     protected final void searchConfigFileInDir(String configFileName) {
-        for (Path dir : classPathDir) {
-            try {
-                LOGGER.debug("Search config file name '{}' in '{}' but not in sub-directory", configFileName, dir);
-                final Optional<Path> configPath;
-                try ( Stream<Path> stream = Files.list(dir)) {
-                    configPath = stream
-                            .filter(p -> p.toFile().isFile() && p.getFileName().toString().equals(configFileName))
-                            .findFirst();
-                }
-                if (configPath.isPresent()) {
-                    configFile = configPath.get().toFile();
-                    return;
-                }
-            } catch (IOException ex) { //Doof
-                configFile = null;
-            }
-        }
+        configPath = searchConfigPathInDir(classPathDir, configFileName);        
     }
     
     @Override
     public String toString() {
         return "[configuration source: "
-                + configFile.toPath().toAbsolutePath().normalize().toString()
+                + configPath
                 + "]";
     }
 
