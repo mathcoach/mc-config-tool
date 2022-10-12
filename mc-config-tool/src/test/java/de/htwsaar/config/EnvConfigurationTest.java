@@ -1,5 +1,6 @@
 package de.htwsaar.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -191,7 +192,6 @@ class EnvConfigurationTest {
 
     @Test
     void parserAConfigFileWithImportRelativeFile() {
-
         File simpleConfig = MAIN_CONFIG_FILE.toFile();//Dummy file only
         Map<String, String> config = EnvConfiguration.resolveImportConfig(simpleConfig, new DummyConfigParser());
 
@@ -204,6 +204,22 @@ class EnvConfigurationTest {
         assertThat(config.get("param-e")).isNull();              //neither nor is configed
     }
 
+    @Test
+    void test_resolveImportConfigWithStream() {
+        InputStream data = new ByteArrayInputStream("some.config.without.effect=somevalue".getBytes());
+        String sourceName = "in-memory";
+        ConfigParser p = new DummyConfigParser();
+        Map<String,String> expectedConfig = EnvConfiguration.resolveImportConfig(data, sourceName, p);
+        assertThat(expectedConfig)
+                .containsEntry("param-a", "a")
+                .containsEntry("import-param-a", "A")
+                .containsEntry("param-b", "B")
+                .containsEntry("param-c", "c")
+                .containsOnlyKeys("param-a", "param-b", "param-c", "import-param-a")
+                ;
+    }
+    
+    
     class DummyConfigParser implements ConfigParser {
 
         final Map<String, String> masterConfig = new HashMap<String, String>() {
@@ -239,7 +255,7 @@ class EnvConfigurationTest {
 
         @Override
         public Map<String, String> parseConfigFile(InputStream configFile) {
-            throw new UnsupportedOperationException("Not supported yet."); 
+            return masterConfig;
         }
     }
 

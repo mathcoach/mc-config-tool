@@ -11,9 +11,6 @@ import java.util.regex.Pattern;
 import java.util.function.BiFunction;
 
 import de.htwsaar.config.text.StringSubstitutor;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,7 +116,7 @@ public interface EnvConfiguration {
     /**
      * resolve an config-file, which is imported by an other configure-file.
      * This method is intended to be used by an implementation of
-     * {@link EnvConfiguration}.
+     * {@link EnvConfiguration}. 
      *
      * @param configFile the imported configure-file
      * @param parser a parser, which can parse the configure file.
@@ -133,7 +130,17 @@ public interface EnvConfiguration {
         return resolveImport(origin, sourceName, parser);
     }
 
-    
+    /**
+     * resolve an config-file, which is imported by an other configure-file. This 
+     * method is intended to be used by an implementation of    {@link EnvConfiguration}. 
+     *
+     * @param source source to be parsed
+     * @param sourceName a name of the source, for example file name, or resource in Jar, ect.
+     * @param parser a parser, which can parse the configure file.
+     *
+     * @return configure as a Map of paar of configure-parameter and its value
+     *
+     */
     static Map<String,String> resolveImportConfig(InputStream source, String sourceName, ConfigParser parser) {
         Map<String, String> origin = parser.parseConfigFile(source);
         return resolveImport(origin, sourceName, parser);

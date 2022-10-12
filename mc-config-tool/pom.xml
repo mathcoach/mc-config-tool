@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.mathcoach</groupId>
         <artifactId>mc-config-tool-metapom</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>mc-config-tool</artifactId>
@@ -22,8 +22,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <forkCount>1</forkCount>
-                    <!--argLine>${argLine} -Xmx2048m</argLine-->
-                    <argLine>-Xmx2048m</argLine>
+                    <argLine>${argLine} -Xmx2048m</argLine>
+                    <!--argLine>-Xmx2048m</argLine-->                    
                 </configuration>
             </plugin>
             <plugin>
@@ -31,8 +31,8 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <forkCount>1</forkCount>
-                    <!--argLine>${argLine} -Xmx2048m</argLine-->
-                    <argLine>-Xmx2048m</argLine>
+                    <argLine>${argLine} -Xmx2048m</argLine>
+                    <!--argLine>-Xmx2048m</argLine-->
                 </configuration>
             </plugin>
 

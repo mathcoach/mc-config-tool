@@ -60,10 +60,8 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
         }catch (ConfigFileNotFoundException ex) {
-            configPath = initConfigByJar(primaryConfigFileName, secondaryConfigFileName);
-            //InputStream in = getInputStreamFromJar(configPath);
-            //String source = configPath.toString();
-            Map<String,String> configWithResolvedImport = parseConfigFromJar(configPath); //resolveImportConfig(in, source, ConfigParserFactory.getParserForFile(configPath.toFile()));
+            configPath = initConfigByJar(primaryConfigFileName, secondaryConfigFileName);            
+            Map<String,String> configWithResolvedImport = parseConfigFromJar(configPath);
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
         }
@@ -77,26 +75,26 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         LOGGER.info("Collect directories in System classpath defined by java.class.path");
         collectDirInSystemClassPath(classPathDir);
         
-        Path configPath = searchConfigPathInDir(classPathDir, primaryConfigFileName);
-        if(configPath == null) {
+        Path configFilePath = searchConfigPathInDir(classPathDir, primaryConfigFileName);
+        if(configFilePath == null) {
             LOGGER.info("Test Config file {} not found in following directories:", primaryConfigFileName);            
             if (LOGGER.isInfoEnabled()) {
                 classPathDir.forEach(f -> LOGGER.info(" -> {}", f));
             }
-            configPath = searchConfigPathInDir(classPathDir, secondaryConfigFileName);
-            if (configPath == null) {
+            configFilePath = searchConfigPathInDir(classPathDir, secondaryConfigFileName);
+            if (configFilePath == null) {
                 LOGGER.error("Config file {} NOT found! in following directories:", secondaryConfigFileName);
                 if (LOGGER.isErrorEnabled()) {                    
                     classPathDir.forEach(f -> LOGGER.error(" -> {}", f));
                 }
                 throw new ConfigFileNotFoundException(primaryConfigFileName, secondaryConfigFileName);
             } else {
-                LOGGER.info("Use secondary config file '{}'", configPath.toAbsolutePath());
+                LOGGER.info("Use secondary config file '{}'", configFilePath.toAbsolutePath());
             }
         } else {
-            LOGGER.info("Use primary config file '{}'", configPath.toAbsolutePath());
+            LOGGER.info("Use primary config file '{}'", configFilePath.toAbsolutePath());
         }
-        return configPath;
+        return configFilePath;
     }
     
     private Path initConfigByJar(String primaryConfigFilename, String secondaryConfigFilename) {
@@ -128,9 +126,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
                     }
                 }
             } 
-        }catch(URISyntaxException|IOException ex) {
+        } catch(URISyntaxException|IOException ex) {
             throw new LSConfigException(ex);
-        }catch(ProviderNotFoundException ex) {
+        } catch(ProviderNotFoundException ex) {
             LOGGER.warn("Cannot scann Jar file");
             LOGGER.trace("", ex);
             throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
