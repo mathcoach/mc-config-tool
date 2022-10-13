@@ -50,7 +50,6 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
@@ -83,8 +82,7 @@
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>[1.2.0,)</version>
+            <artifactId>logback-classic</artifactId>            
             <scope>test</scope>
         </dependency>
     </dependencies>

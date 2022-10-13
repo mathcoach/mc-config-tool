@@ -103,6 +103,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             LOGGER.info("Search config files in {}", jarUlr);
             String jarPath = jarUlr.getPath();
             URI uri = URI.create("jar:file:" + jarPath);
+            LOGGER.trace("search {} and {} in {}", primaryConfigFilename, secondaryConfigFilename, uri);
             try(FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap() );
                 Stream<Path> walker = Files.list(fs.getPath("/"));) 
             {
