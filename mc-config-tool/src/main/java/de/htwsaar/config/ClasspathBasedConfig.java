@@ -130,7 +130,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         } catch(URISyntaxException|IOException ex) {
             throw new LSConfigException(ex);
         } catch(ProviderNotFoundException ex) {
-            LOGGER.warn("Cannot scann Jar file");
+            LOGGER.warn("No FileSystem Provider found for URI schema `jar:file:`");
             LOGGER.trace("", ex);
             throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
         }
