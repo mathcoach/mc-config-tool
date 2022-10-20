@@ -247,9 +247,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     
     
     private Map<String,String> parseConfigFromJar(Path configFileInJarPath) {
-        String pathInfo = configFileInJarPath != null 
-                ? configFileInJarPath.toUri().toString() 
-                : "[configFileInJarPath is null]";
+        String pathInfo =  configFileInJarPath.toUri().toString() ;
         LOGGER.trace("get InputStream from {}", pathInfo);
         String fileName = configFileInJarPath.getFileName().toString();
         ClassLoader classLoader = getClass().getClassLoader();
@@ -266,9 +264,14 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     
     /**
      * @param configFileName
+     * 
+     * 
+     * 
      * @deprecated Do not use this
+     * 
+     * 
      */
-    @Deprecated
+    @Deprecated(since="4.0", forRemoval=true)
     protected final void searchConfigFileInDir(String configFileName) {
         configPath = searchConfigPathInDir(classPathDir, configFileName);        
     }

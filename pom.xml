@@ -4,7 +4,7 @@
 
     <groupId>io.github.mathcoach</groupId>
     <artifactId>mc-config-tool-metapom</artifactId>
-    <version>4.2.0</version>
+    <version>4.2.1</version>
     <packaging>pom</packaging>
     <name>mc-config-tool-metapom</name>
     <description>
@@ -159,7 +159,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--      
+            
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -179,7 +179,7 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
