@@ -11,7 +11,7 @@ public class ImportCfgFileNotFound extends LSConfigException {
     private final transient Path importedPath;
 
     public ImportCfgFileNotFound(Path importedPath) {
-        super("Imported file '" + importedPath.normalize().toString() + "' not found");
+        super(importedPath.normalize().toString());
         this.importedPath = importedPath;
     }
 
