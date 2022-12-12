@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class DynamicConfig implements EnvConfiguration {
 
-    private final Map<String, String> config;
+    protected final Map<String, String> config;
 
     public DynamicConfig() {
         config = new HashMap<>();
