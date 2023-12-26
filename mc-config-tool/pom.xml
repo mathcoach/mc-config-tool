@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.mathcoach</groupId>
         <artifactId>mc-config-tool-metapom</artifactId>
-        <version>4.2.3</version>
+        <version>4.2.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>mc-config-tool</artifactId>
@@ -44,8 +44,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>                    
                     <debug>true</debug>
                     <fork>true</fork>
                 </configuration>
