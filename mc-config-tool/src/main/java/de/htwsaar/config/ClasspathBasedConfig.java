@@ -51,7 +51,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
      *
      */
     public ClasspathBasedConfig(String primaryConfigFileName, String secondaryConfigFileName) {
-        classPathDir = new HashSet<>(10);                
+        classPathDir = new HashSet<>(10);
         configTable = new HashMap<>();
         try {
             configPath = initConfigByClasspath(primaryConfigFileName, secondaryConfigFileName);
@@ -60,7 +60,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
         }catch (ConfigFileNotFoundException ex) {
-            configPath = initConfigByJar(primaryConfigFileName, secondaryConfigFileName);            
+            configPath = initConfigByJar(primaryConfigFileName, secondaryConfigFileName);
             Map<String,String> configWithResolvedImport = parseConfigFromJar(configPath);
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
@@ -74,17 +74,17 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
         LOGGER.info("Collect directories in System classpath defined by java.class.path");
         collectDirInSystemClassPath(classPathDir);
-        
+
         Path configFilePath = searchConfigPathInDir(classPathDir, primaryConfigFileName);
         if(configFilePath == null) {
-            LOGGER.info("Test Config file {} not found in following directories:", primaryConfigFileName);            
+            LOGGER.info("Test Config file {} not found in following directories:", primaryConfigFileName);
             if (LOGGER.isInfoEnabled()) {
                 classPathDir.forEach(f -> LOGGER.info(" -> {}", f));
             }
             configFilePath = searchConfigPathInDir(classPathDir, secondaryConfigFileName);
             if (configFilePath == null) {
                 LOGGER.error("Config file {} NOT found! in following directories:", secondaryConfigFileName);
-                if (LOGGER.isErrorEnabled()) {                    
+                if (LOGGER.isErrorEnabled()) {
                     classPathDir.forEach(f -> LOGGER.error(" -> {}", f));
                 }
                 throw new ConfigFileNotFoundException(primaryConfigFileName, secondaryConfigFileName);
@@ -96,7 +96,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         }
         return configFilePath;
     }
-    
+
     private Path initConfigByJar(String primaryConfigFilename, String secondaryConfigFilename) {
         try{
             URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
@@ -104,29 +104,30 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             String jarPath = jarUlr.getPath();
             URI uri = URI.create("jar:file:" + jarPath);
             LOGGER.trace("search {} and {} in {}", primaryConfigFilename, secondaryConfigFilename, uri);
-            try(FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap() );
-                Stream<Path> walker = Files.list(fs.getPath("/"));) 
-            {
-                Optional<Path> primaryConfigPath = walker.filter(p -> 
-                        Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(primaryConfigFilename)
-                ).findFirst();
-                if ( primaryConfigPath.isPresent() ) {
-                    return primaryConfigPath.get().normalize();
-                } else {
-                    LOGGER.info("Test Config file {} not found in jar file {}!", primaryConfigFilename, jarPath);
-                    try (Stream<Path> secondaryWalker = Files.list(fs.getPath("/"))) {
-                        Optional<Path> secondaryConfigPath = secondaryWalker.filter(p -> 
-                                Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(secondaryConfigFilename)
-                        ).findFirst();
-                        if(secondaryConfigPath.isPresent()) {
-                            return secondaryConfigPath.get().normalize();
-                        } else {
-                            LOGGER.error("Config file {} NOT found in jar file {}!", secondaryConfigFilename, jarPath);
-                            throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
+            try (FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
+                Path rootPath = fs.getRootDirectories().iterator().next();
+                try (Stream<Path> walker = Files.list(rootPath)) {
+                    Optional<Path> primaryConfigPath = walker.filter(p ->
+                            Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(primaryConfigFilename)
+                    ).findFirst();
+                    if (primaryConfigPath.isPresent()) {
+                        return primaryConfigPath.get().normalize();
+                    } else {
+                        LOGGER.info("Test Config file {} not found in jar file {}!", primaryConfigFilename, jarPath);
+                        try (Stream<Path> secondaryWalker = Files.list(rootPath)) {
+                            Optional<Path> secondaryConfigPath = secondaryWalker.filter(p ->
+                                    Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(secondaryConfigFilename)
+                            ).findFirst();
+                            if (secondaryConfigPath.isPresent()) {
+                                return secondaryConfigPath.get().normalize();
+                            } else {
+                                LOGGER.error("Config file {} NOT found in jar file {}!", secondaryConfigFilename, jarPath);
+                                throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
+                            }
                         }
                     }
                 }
-            } 
+            }
         } catch(URISyntaxException|IOException ex) {
             throw new LSConfigException(ex);
         } catch(ProviderNotFoundException ex) {
@@ -135,7 +136,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
         }
     }
-    
+
     /**
      *
      *
@@ -158,9 +159,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         return configTable.get(configParameter);
     }
 
-    
-    
-    
+
+
+
     protected final void collectDirInClassPathLoader(ClassLoader loader, final Set<Path> classPathDir) {
         try {
             LOGGER.info("Collect classpath from {}", loader.getClass().getName());
@@ -168,7 +169,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             URL[] url = urlCL.getURLs();
             for (URL u : url) {
                 collectDirFromURL(u, classPathDir);
-            }            
+            }
         } catch (ClassCastException ex) {
             LOGGER.warn("Cannot search config file from classloader {}",
                     loader.getClass().getName());
@@ -177,22 +178,31 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     }
 
     protected final void collectDirFromURL(URL classPath, final Set<Path> classPathDir) {
-        final String path = classPath.getPath();
-        final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();  //NOSONAR (checked)
-        LOGGER.trace("path: {}", path);
-        if (classPathFile.toFile().isDirectory()) {
-            if (classPathDir.add(classPathFile)) {
-                LOGGER.trace("Add dir '{}' to search dir", classPathFile);
+        try {
+            String path = classPath.getPath();
+            if (path.startsWith("jar:file:")) {
+                path = path.substring(4, path.indexOf("!"));
             }
-        } else if (classPathFile.toFile().isFile()) {
-            Path searchDir = classPathFile.getParent();
-            if (classPathDir.add(searchDir)) {
-                LOGGER.trace("Add parent '{}' to search dir", searchDir);
+            final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();
+            LOGGER.trace("path: {}", path);
+
+            if (classPathFile.toFile().isDirectory()) {
+                if (classPathDir.add(classPathFile)) {
+                    LOGGER.trace("Add dir '{}' to search dir", classPathFile);
+                }
             }
+            else if (classPathFile.toFile().isFile()) {
+                Path searchDir = classPathFile.getParent();
+                if (classPathDir.add(searchDir)) {
+                    LOGGER.trace("Add parent '{}' to search dir", searchDir);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error processing classpath URL: {}", classPath, e);
         }
     }
 
-    
+
 
     protected final void collectDirInSystemClassPath(Set<Path> classPathDir) {
         String sessionClassPath = System.getProperty("java.class.path");
@@ -217,10 +227,10 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         }
     }
 
-    
+
     /**
-     * 
-     * 
+     *
+     *
      * @param classPathDir
      * @param configFileName
      * @return the path to configuration file if found, else null
@@ -234,9 +244,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
                     optinalPath = stream
                             .filter(p -> Files.isRegularFile(p) && p.getFileName().toString().equals(configFileName))
                             .findFirst();
-                }                
+                }
                 if (optinalPath.isPresent()) {
-                    return optinalPath.get().normalize();                    
+                    return optinalPath.get().normalize();
                 }
             } catch (IOException ex) { //Doof
                 LOGGER.info("Search config file {} in path {} caused IOException", configFileName, dir);
@@ -244,8 +254,8 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         }
         return null;
     }
-    
-    
+
+
     private Map<String,String> parseConfigFromJar(Path configFileInJarPath) {
         String pathInfo =  configFileInJarPath.toUri().toString() ;
         LOGGER.trace("get InputStream from {}", pathInfo);
@@ -260,22 +270,22 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             return resolveImportConfig(inputStream, sourceName, ConfigParserFactory.getParserForFile(configFile));
         }
     }
-    
-    
+
+
     /**
      * @param configFileName
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @deprecated Do not use this
-     * 
-     * 
+     *
+     *
      */
     @Deprecated(since="4.0", forRemoval=true)
     protected final void searchConfigFileInDir(String configFileName) {
-        configPath = searchConfigPathInDir(classPathDir, configFileName);        
+        configPath = searchConfigPathInDir(classPathDir, configFileName);
     }
-    
+
     @Override
     public String toString() {
         return "[configuration source: "
