@@ -13,7 +13,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.ProviderNotFoundException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -68,11 +67,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     }
 
     private Path initConfigByClasspath(String primaryConfigFileName, String secondaryConfigFileName) {
-        LOGGER.info("Collect directories in Thread's class loader");
-        collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);
-        LOGGER.info("Collect directories in the own classloader");
-        collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);
-        LOGGER.info("Collect directories in System classpath defined by java.class.path");
+        
+        collectDirInClassPathLoader(Thread.currentThread().getContextClassLoader(), classPathDir);        
+        collectDirInClassPathLoader(getClass().getClassLoader(), classPathDir);        
         collectDirInSystemClassPath(classPathDir);
 
         Path configFilePath = searchConfigPathInDir(classPathDir, primaryConfigFileName);
@@ -100,7 +97,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     private Path initConfigByJar(String primaryConfigFilename, String secondaryConfigFilename) {
         try{
             URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-            LOGGER.info("Search config files in {}", jarUlr);
+            LOGGER.info("################## Search config files in {}", jarUlr);
             String jarPath = jarUlr.getPath();
             URI uri = URI.create("jar:file:" + jarPath);
             LOGGER.trace("search {} and {} in {}", primaryConfigFilename, secondaryConfigFilename, uri);
@@ -160,11 +157,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     }
 
 
-
-
     protected final void collectDirInClassPathLoader(ClassLoader loader, final Set<Path> classPathDir) {
-        try {
-            LOGGER.info("Collect classpath from {}", loader.getClass().getName());
+        LOGGER.info("Collect directories in the classloader {}", loader.getClass().getName());
+        try {            
             URLClassLoader urlCL = (URLClassLoader) loader;
             URL[] url = urlCL.getURLs();
             for (URL u : url) {
@@ -177,15 +172,11 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         }
     }
 
-    protected final void collectDirFromURL(URL classPath, final Set<Path> classPathDir) {
+    protected final void collectDirFromURL(URL url, final Set<Path> classPathDir) {
+        LOGGER.trace("collect directory from URL {}", url);
         try {
-            String path = classPath.getPath();
-            if (path.startsWith("jar:file:")) {
-                path = path.substring(4, path.indexOf("!"));
-            }
-            final Path classPathFile = Paths.get(path).toAbsolutePath().normalize();
-            LOGGER.trace("path: {}", path);
-
+            final Path classPathFile = resolvePathFromUrl(url);
+            LOGGER.trace("resolved path: {}", classPathFile);
             if (classPathFile.toFile().isDirectory()) {
                 if (classPathDir.add(classPathFile)) {
                     LOGGER.trace("Add dir '{}' to search dir", classPathFile);
@@ -198,13 +189,14 @@ public class ClasspathBasedConfig implements EnvConfiguration {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("Error processing classpath URL: {}", classPath, e);
+            LOGGER.error("Processing URL `{}` caused error", url, e);
         }
     }
 
 
 
     protected final void collectDirInSystemClassPath(Set<Path> classPathDir) {
+        LOGGER.info("Collect directories in System classpath defined by java.class.path");
         String sessionClassPath = System.getProperty("java.class.path");
         String[] classpath = sessionClassPath.split(File.pathSeparator);
         for (String path : classpath) {
@@ -227,6 +219,14 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         }
     }
 
+    /**
+     * 
+     * Separate this method to easy debug path-resolving on different platforms. 
+     * DONOT inline it in caller.
+     */
+    private Path resolvePathFromUrl(URL url) throws URISyntaxException {        
+        return Path.of(url.toURI()).toAbsolutePath().normalize();
+    }
 
     /**
      *

@@ -33,7 +33,7 @@
         <module>mc-config-annotation</module>
         <module>mc-config-tool-annotation-processor</module>
         <module>mc-config-tool-collector</module>
-        <module>mc-config-tool-bom</module>        
+        <module>mc-config-tool-bom</module>
     </modules>
 
     <properties>
@@ -177,7 +177,7 @@
                 </executions>
             </plugin>
             
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <executions>
@@ -189,7 +189,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>

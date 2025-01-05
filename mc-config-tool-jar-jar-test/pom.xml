@@ -6,16 +6,11 @@
         <artifactId>mc-config-tool-metapom</artifactId>
         <version>4.2.5-SNAPSHOT</version>
     </parent>
-        
-    <artifactId>mc-config-tool-jar-test</artifactId>    
     
-    <description>
-        This module simulates a Java Application which is packaged and distributed as a fat JAR. A Configuration
-        File is placed in Jar, sothat is can be read as Resource.
-    </description>
+    <artifactId>mc-config-tool-jar-jar-test</artifactId>
     
     <packaging>jar</packaging>
-   
+    
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -27,7 +22,7 @@
                     <appendAssemblyId>true</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>de.htwsaar.config.JarTesting</mainClass>
+                            <mainClass>de.htwsaar.config.JarJarTesting</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -50,13 +45,13 @@
     <dependencies>
         <dependency>
             <groupId>io.github.mathcoach</groupId>
-            <artifactId>mc-config-tool</artifactId>
+            <artifactId>mc-config-tool-jar-test</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
         </dependency>
-    </dependencies>
+    </dependencies>    
 </project>
