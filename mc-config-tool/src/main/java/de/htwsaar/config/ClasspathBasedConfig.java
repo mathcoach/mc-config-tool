@@ -96,10 +96,9 @@ public class ClasspathBasedConfig implements EnvConfiguration {
 
     private Path initConfigByJar(String primaryConfigFilename, String secondaryConfigFilename) {
         try{
-            URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-            LOGGER.info("################## Search config files in {}", jarUlr);
+            final URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
             String jarPath = jarUlr.getPath();
-            URI uri = URI.create("jar:file:" + jarPath);
+            final URI uri = URI.create("jar:file:" + jarPath);
             LOGGER.trace("search {} and {} in {}", primaryConfigFilename, secondaryConfigFilename, uri);
             try (FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
                 Path rootPath = fs.getRootDirectories().iterator().next();
@@ -110,7 +109,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
                     if (primaryConfigPath.isPresent()) {
                         return primaryConfigPath.get().normalize();
                     } else {
-                        LOGGER.info("Test Config file {} not found in jar file {}!", primaryConfigFilename, jarPath);
+                        LOGGER.info("primary config file `{}` not found in jar file {}!", primaryConfigFilename, jarPath);
                         try (Stream<Path> secondaryWalker = Files.list(rootPath)) {
                             Optional<Path> secondaryConfigPath = secondaryWalker.filter(p ->
                                     Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(secondaryConfigFilename)
@@ -118,7 +117,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
                             if (secondaryConfigPath.isPresent()) {
                                 return secondaryConfigPath.get().normalize();
                             } else {
-                                LOGGER.error("Config file {} NOT found in jar file {}!", secondaryConfigFilename, jarPath);
+                                LOGGER.error("secondary config file `{}` NOT found in jar file {}!", secondaryConfigFilename, jarPath);
                                 throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
                             }
                         }

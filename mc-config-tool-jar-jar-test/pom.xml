@@ -26,7 +26,7 @@
                         </manifest>
                     </archive>
                     <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>                        
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                 </configuration>
 
@@ -45,9 +45,14 @@
     <dependencies>
         <dependency>
             <groupId>io.github.mathcoach</groupId>
+            <artifactId>mc-config-tool</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.mathcoach</groupId>
             <artifactId>mc-config-tool-jar-test</artifactId>
             <version>${project.version}</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
