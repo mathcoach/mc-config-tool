@@ -138,7 +138,7 @@ public interface EnvConfiguration {
      * @param sourceName a name of the source, for example file name, or resource in Jar, ect.
      * @param parser a parser, which can parse the configure file.
      *
-     * @return configure as a Map of paar of configure-parameter and its value
+     * @return configure as a Map of pair of configure-parameter and its value
      *
      */
     static Map<String,String> resolveImportConfig(InputStream source, String sourceName, ConfigParser parser) {
