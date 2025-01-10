@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,11 +59,12 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             Map<String,String> configWithResolvedImport = resolveImportConfig(cf, ConfigParserFactory.getParserForFile(cf));
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
-        }catch (ConfigFileNotFoundException ex) {
+        }catch (ConfigFileNotFoundException ex) {            
             configPath = initConfigByJar(primaryConfigFileName, secondaryConfigFileName);
             Map<String,String> configWithResolvedImport = parseConfigFromJar(configPath);
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
+            
         }
     }
 
@@ -92,45 +94,6 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             LOGGER.info("Use primary config file '{}'", configFilePath.toAbsolutePath());
         }
         return configFilePath;
-    }
-
-    private Path initConfigByJar(String primaryConfigFilename, String secondaryConfigFilename) {
-        try{
-            final URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
-            String jarPath = jarUlr.getPath();
-            final URI uri = URI.create("jar:file:" + jarPath);
-            LOGGER.trace("search {} and {} in {}", primaryConfigFilename, secondaryConfigFilename, uri);
-            try (FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
-                Path rootPath = fs.getRootDirectories().iterator().next();
-                try (Stream<Path> walker = Files.list(rootPath)) {
-                    Optional<Path> primaryConfigPath = walker.filter(p ->
-                            Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(primaryConfigFilename)
-                    ).findFirst();
-                    if (primaryConfigPath.isPresent()) {
-                        return primaryConfigPath.get().normalize();
-                    } else {
-                        LOGGER.info("primary config file `{}` not found in jar file {}!", primaryConfigFilename, jarPath);
-                        try (Stream<Path> secondaryWalker = Files.list(rootPath)) {
-                            Optional<Path> secondaryConfigPath = secondaryWalker.filter(p ->
-                                    Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(secondaryConfigFilename)
-                            ).findFirst();
-                            if (secondaryConfigPath.isPresent()) {
-                                return secondaryConfigPath.get().normalize();
-                            } else {
-                                LOGGER.error("secondary config file `{}` NOT found in jar file {}!", secondaryConfigFilename, jarPath);
-                                throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch(URISyntaxException|IOException ex) {
-            throw new LSConfigException(ex);
-        } catch(ProviderNotFoundException ex) {
-            LOGGER.warn("No FileSystem Provider found for URI schema `jar:file:`");
-            LOGGER.trace("", ex);
-            throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
-        }
     }
 
     /**
@@ -254,20 +217,24 @@ public class ClasspathBasedConfig implements EnvConfiguration {
         return null;
     }
 
+    private Path initConfigByJar(String primaryConfigFileName, String secondaryConfigFileName) {        
+        try {
+            final URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+            JarConfigFinder finder = new JarConfigFinder(primaryConfigFileName, secondaryConfigFileName);
+            return finder.findConfigFileInJar(jarUlr);
+        }catch(URISyntaxException ex) {
+            throw new LSConfigException(ex);
+        }
+    }
+    
 
     private Map<String,String> parseConfigFromJar(Path configFileInJarPath) {
-        String pathInfo =  configFileInJarPath.toUri().toString() ;
-        LOGGER.trace("get InputStream from {}", pathInfo);
-        String fileName = configFileInJarPath.getFileName().toString();
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fileName);
-        if(inputStream == null) {
-            throw new LSConfigException("Cannot read " + configFileInJarPath);
-        } else {
-            String sourceName = configFileInJarPath.getFileName().toString();
-            File configFile = new File(sourceName);
-            return resolveImportConfig(inputStream, sourceName, ConfigParserFactory.getParserForFile(configFile));
-        }
+        final String sourceName = configFileInJarPath.getFileSystem().toString();
+        final ConfigParser parser = ConfigParserFactory.getParserForFileName(sourceName);
+        Function<InputStream, Map<String,String>> fn = (in) -> {
+            return resolveImportConfig(in, sourceName, parser);
+        };
+        return JarConfigFinder.parseConfigFromJar(configPath, fn);        
     }
 
 

@@ -15,32 +15,46 @@
  */
 package de.htwsaar.config;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.ProviderNotFoundException;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This class is not intended to be used outsize this artifact!
+ * Origin url 
+ * `file:/home/hbui/aggregate-mc/other-libs/mc-config-tool/mc-config-tool-jar-jar-test/target/mc-config-tool-jar-jar-test-jar-with-dependencies.jar`
  * 
  * @author hbui
  */
-class JarConfigFinder {
+final class JarConfigFinder {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(JarConfigFinder.class);
+    private final String primaryConfigFilename; 
+    private final String secondaryConfigFilename;
     
-    Path initConfigByJar(String primaryConfigFilename, String secondaryConfigFilename) {
-        try{
-            final URI jarUlr =  getClass().getProtectionDomain().getCodeSource().getLocation().toURI(); // mock this class!
+    JarConfigFinder(String primaryConfigFilename, String secondaryConfigFilename) {
+        this.primaryConfigFilename = primaryConfigFilename;
+        this.secondaryConfigFilename = secondaryConfigFilename;
+    }
+    
+    
+    
+    Path findConfigFileInJar(URI jarUlr) {
+        try{            
             String jarPath = jarUlr.getPath();
             final URI uri = URI.create("jar:file:" + jarPath);
             LOGGER.trace("search {} and {} in {}", primaryConfigFilename, secondaryConfigFilename, uri);
@@ -66,9 +80,9 @@ class JarConfigFinder {
                             }
                         }
                     }
-                }
+                }                
             }
-        } catch(URISyntaxException|IOException ex) {
+        } catch(IOException ex) {
             throw new LSConfigException(ex);
         } catch(ProviderNotFoundException ex) {
             LOGGER.warn("No FileSystem Provider found for URI schema `jar:file:`");
@@ -76,6 +90,22 @@ class JarConfigFinder {
             throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
         }
     }
-    
-    
+    /**
+     * 
+     * 
+     * @param configPathInJar <code>jar:file:///path/to/some-file.jar!/config-file.properties</code>
+     * @param fn
+     */
+    static <T> T parseConfigFromJar(Path configPathInJar, Function<InputStream, T> fn) {        
+        URI uri = configPathInJar.toUri();
+        try( FileSystem zfs = FileSystems.newFileSystem(uri, Map.of() ) ) {            
+            ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+            Path pathInZipFile = zfs.getPath(configPathInJar.getFileName().toString());
+            Files.copy(pathInZipFile, out);
+            InputStream in = new ByteArrayInputStream( out.toByteArray() );
+            return fn.apply(in);
+        }catch(IOException ex) {
+            throw new LSConfigException(ex);
+        }
+    }
 }

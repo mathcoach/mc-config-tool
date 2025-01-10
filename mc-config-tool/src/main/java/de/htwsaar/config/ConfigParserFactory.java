@@ -16,11 +16,14 @@ public final class ConfigParserFactory {
     public static final ConfigParser getParserForFile(File configFile) {
         Objects.requireNonNull(configFile, "Config file must not be null");
         String fileName = configFile.getName();
+        return getParserForFileName(fileName);
+    }
+    
+    public static final ConfigParser getParserForFileName(String fileName) {
         if (fileName.endsWith("properties")) {
             return new PropertiesConfigParser();
         } else {
             throw new LSConfigException("Parser for file " + fileName + " not found");
         }
     }
-
 }
