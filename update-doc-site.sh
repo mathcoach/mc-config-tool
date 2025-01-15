@@ -1,8 +1,8 @@
 #! /bin/bash
 
 function make_javadoc () {
-	mvn -DskipTests=true clean compile site:site site:stage
-	cp -rf target/staging/apidocs/ mc-config-site/
+	mvn -DskipTests=true clean compile javadoc:javadoc javadoc:aggregate
+	cp -rf target/site/apidocs/ mc-config-site/
 	mkdir -p mc-config-site/apidocs/resources/fonts/
 	touch mc-config-site/apidocs/resources/fonts/dejavu.css
 }

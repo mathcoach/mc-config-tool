@@ -20,13 +20,13 @@
 # -- Project information -----------------------------------------------------
 
 project = 'mc-config-tool'
-copyright = '2024, Hong-Phuc Bui'
+copyright = '2025, Hong-Phuc Bui'
 author = 'Hong-Phuc Bui'
 
 # The short X.Y version
-version = '3'
+version = '4'
 # The full version, including alpha/beta/rc tags
-release = '4.2.4'
+release = '4.2.5'
 
 
 # -- General configuration ---------------------------------------------------
