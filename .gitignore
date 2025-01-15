@@ -15,6 +15,7 @@ target/
 
 /mc-config-tool-annotation-processor/nbproject/
 /mc-config-annotation/nbproject/
+/mc-config-site/
 
 # IDEs
 .idea/
