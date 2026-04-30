@@ -14,7 +14,7 @@ import javax.tools.JavaFileObject;
  *
  * @author hbui
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public abstract class MCAbstractAnnotationProcessor extends AbstractProcessor{
 	
     /**

@@ -35,8 +35,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class is not intended to be used outsize this artifact!
- * Origin url 
- * `file:/home/hbui/aggregate-mc/other-libs/mc-config-tool/mc-config-tool-jar-jar-test/target/mc-config-tool-jar-jar-test-jar-with-dependencies.jar`
+ *
  * 
  * @author hbui
  */
@@ -67,7 +66,7 @@ final class JarConfigFinder {
                     if (primaryConfigPath.isPresent()) {
                         return primaryConfigPath.get().normalize();
                     } else {
-                        LOGGER.info("Test Config file {} not found in jar file {}!", primaryConfigFilename, jarPath);
+                        LOGGER.info("Test Config file {} not found in jar file `{}`", primaryConfigFilename, jarPath);
                         try (Stream<Path> secondaryWalker = Files.list(rootPath)) {
                             Optional<Path> secondaryConfigPath = secondaryWalker.filter(p ->
                                     Files.isReadable(p) && Files.isRegularFile(p) && p.getFileName().toString().equals(secondaryConfigFilename)
@@ -75,7 +74,7 @@ final class JarConfigFinder {
                             if (secondaryConfigPath.isPresent()) {
                                 return secondaryConfigPath.get().normalize();
                             } else {
-                                LOGGER.error("Config file {} NOT found in jar file {}!", secondaryConfigFilename, jarPath);
+                                LOGGER.error("Config file {} NOT found in jar file `{}`", secondaryConfigFilename, jarPath);
                                 throw new ConfigFileNotFoundException(primaryConfigFilename, secondaryConfigFilename);
                             }
                         }
@@ -91,10 +90,10 @@ final class JarConfigFinder {
         }
     }
     /**
-     * 
+     * parses a config file, which is embedded in a Jar File
      * 
      * @param configPathInJar <code>jar:file:///path/to/some-file.jar!/config-file.properties</code>
-     * @param fn
+     * @param fn Parser-Function, receives an InputStream and parses it to <T>
      */
     static <T> T parseConfigFromJar(Path configPathInJar, Function<InputStream, T> fn) {        
         URI uri = configPathInJar.toUri();

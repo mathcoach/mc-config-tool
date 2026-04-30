@@ -9,12 +9,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.ProviderNotFoundException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -61,6 +57,7 @@ public class ClasspathBasedConfig implements EnvConfiguration {
             configTable.putAll(configWithResolvedVariables);
         }catch (ConfigFileNotFoundException ex) {            
             configPath = initConfigByJar(primaryConfigFileName, secondaryConfigFileName);
+            LOGGER.info("use config URI `{}`", configPath.toUri().toString());
             Map<String,String> configWithResolvedImport = parseConfigFromJar(configPath);
             Map<String,String> configWithResolvedVariables = resolveConfigVariables(configWithResolvedImport);
             configTable.putAll(configWithResolvedVariables);
@@ -228,29 +225,15 @@ public class ClasspathBasedConfig implements EnvConfiguration {
     }
     
 
-    private Map<String,String> parseConfigFromJar(Path configFileInJarPath) {
-        final String sourceName = configFileInJarPath.getFileSystem().toString();
+    private static Map<String,String> parseConfigFromJar(Path configFileInJarPath) {        
+        final String sourceName = configFileInJarPath.toUri().toString();        
         final ConfigParser parser = ConfigParserFactory.getParserForFileName(sourceName);
         Function<InputStream, Map<String,String>> fn = (in) -> {
             return resolveImportConfig(in, sourceName, parser);
         };
-        return JarConfigFinder.parseConfigFromJar(configPath, fn);        
+        return JarConfigFinder.parseConfigFromJar(configFileInJarPath, fn);        
     }
 
-
-    /**
-     * @param configFileName
-     *
-     *
-     *
-     * @deprecated Do not use this
-     *
-     *
-     */
-    @Deprecated(since="4.0", forRemoval=true)
-    protected final void searchConfigFileInDir(String configFileName) {
-        configPath = searchConfigPathInDir(classPathDir, configFileName);
-    }
 
     @Override
     public String toString() {
